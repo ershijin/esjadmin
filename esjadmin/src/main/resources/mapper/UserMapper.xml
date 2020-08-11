@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ershijin.esjadmin.dao.UserMapper" >
+    <resultMap id="BaseResultMap" type="User">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="enabled" column="is_enabled"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="avatar" column="avatar"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <resultMap id="LazyLoadMap" type="User" extends="BaseResultMap">
+        <collection property="menus" fetchType="lazy" ofType="Menu" select="listMenusById"
+                    column="id"></collection>
+        <collection property="roles" fetchType="lazy" ofType="Role" select="listRolesById"
+                    column="id"></collection>
+    </resultMap>
+
+    <select id="selectPageVo" resultType="com.ershijin.esjadmin.model.vo.UserVO">
+        SELECT * FROM user ${ew.customSqlSegment}
+    </select>
+
+    <select id="getByUsername" parameterType="String" resultMap="LazyLoadMap">
+        select * from user where username=#{0}
+    </select>
+
+    <select id="listRolesById" resultType="Role">
+        SELECT r.* FROM user_role ur,role r where ur.role_id=r.id AND ur.user_id=#{id}
+    </select>
+
+    <select id="listMenusById" resultType="Menu">
+        SELECT m.* FROM user_role ur
+        JOIN role r ON ur.role_id=r.id
+        JOIN role_menu rm ON r.id=rm.role_id
+        JOIN menu m ON rm.menu_Id=m.id
+        WHERE ur.user_id=#{id}
+    </select>
+
+    <select id="getById" parameterType="Long" resultType="User">
+        select * from user where id=#{0}
+    </select>
+
+    <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (username,password,name,avatar,is_enabled,remark,create_time)
+        VALUE (#{username}, #{password}, #{name}, #{avatar}, #{enabled}, #{remark}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="User">
+        UPDATE user SET name=#{name},avatar=#{avatar},is_enabled=#{enabled},remark=#{remark},update_time=#{updateTime}
+        <if test="password != null and password">
+            ,password=#{password}
+        </if>
+        WHERE id=#{id}
+    </update>
+
+
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM user WHERE id=#{0}
+    </delete>
+
+</mapper>

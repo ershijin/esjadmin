@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ershijin.esjadmin.dao.UserRoleMapper">
+
+    <insert id="batchInsert">
+        INSERT INTO user_role (user_id,role_id,create_time) VALUES
+        <foreach collection="collection" item="item" separator=",">
+            (#{item.userId}, #{item.roleId}, #{item.createTime})
+        </foreach>
+
+    </insert>
+
+    <select id="listRoleIdsByUserId" resultType="Long">
+        SELECT role_id FROM user_role WHERE user_id=#{0}
+    </select>
+
+    <delete id="deleteByUserId" parameterType="Long">
+        DELETE FROM user_role WHERE user_id=#{0}
+    </delete>
+</mapper>
