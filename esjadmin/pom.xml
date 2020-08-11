@@ -11,7 +11,7 @@
     <groupId>com.ershijin</groupId>
     <artifactId>esjadmin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
+    <name>esjadmin</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

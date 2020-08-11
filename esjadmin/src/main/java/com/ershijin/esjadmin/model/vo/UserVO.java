@@ -15,10 +15,8 @@ public class UserVO implements Serializable {
 
     private Long id;
 
-    @JsonProperty("create_time")
     private Date createTime;
 
-    @JsonProperty("update_time")
     private Date updateTime;
 
     private String name;

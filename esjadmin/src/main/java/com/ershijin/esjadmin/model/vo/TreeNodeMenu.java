@@ -26,7 +26,6 @@ public class TreeNodeMenu implements Serializable {
 
     private String icon;
 
-    @JsonProperty("parent_id")
     private Long parentId;
 
     private int type;
