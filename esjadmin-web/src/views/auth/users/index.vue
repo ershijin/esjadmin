@@ -59,11 +59,11 @@
           <el-image style="width: 32px; height: 32px; " :src="scope.row.avatar" fit="scale-down" lazy />
         </template>
       </el-table-column>
-      <el-table-column prop="create_time" label="创建时间" width="160" />
-      <el-table-column prop="update_time" label="更新时间" width="160" />
+      <el-table-column prop="createTime" label="创建时间" width="160" />
+      <el-table-column prop="updateTime" label="更新时间" width="160" />
       <el-table-column prop="remark" label="备注" />
 
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="125" class-name="small-padding">
         <template slot-scope="{row}">
           <el-button
             type="primary"
@@ -170,7 +170,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="角色">
-          <el-select v-model="temp.role_ids" multiple placeholder="请选择" style="width: 100%">
+          <el-select v-model="temp.roleIds" multiple placeholder="请选择" style="width: 100%">
             <el-option v-for="item in roles" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -210,7 +210,7 @@ const defaultData = {
   name: '',
   avatar: '',
   enabled: true,
-  role_ids: [],
+  roleIds: [],
   remark: ''
 }
 export default {
@@ -266,7 +266,7 @@ export default {
     handleEdit(row) {
       this.dialogType = 'edit'
       listRoleIds({ user_id: row.id }).then(response => {
-        this.temp = Object.assign({}, row, { role_ids: response })
+        this.temp = Object.assign({}, row, { roleIds: response })
         this.dialogFormVisible = true
       })
     },

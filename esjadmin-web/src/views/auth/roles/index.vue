@@ -143,7 +143,7 @@ export default {
       dialogFormVisible: false,
       dialogType: '',
       checkStrictly: false,
-      menusData: [],
+      menusData: null,
       defaultMenuProps: {
         children: 'children',
         label: 'title'
@@ -172,7 +172,7 @@ export default {
       this.dialogType = 'create'
       this.dialogFormVisible = true
       this.temp = deepClone(defaultRoleMenuIds)
-      if (this.menusData === false) {
+      if (this.menusData === null) {
         this.listLoading = true
         await getMenuTree().then(response => {
           this.menusData = response
@@ -244,7 +244,7 @@ export default {
         name: row.name,
         remark: row.remark
       })
-      if (this.menusData === false) {
+      if (this.menusData === null) {
         this.listLoading = true
         getMenuTree().then(response => {
           this.menusData = response

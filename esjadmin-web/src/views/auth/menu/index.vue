@@ -79,8 +79,8 @@
           prop="name"
           label="操作"
           align="center"
-          width="220"
-          class-name="small-padding fixed-width"
+          width="165"
+          class-name="small-padding"
         >
           <template slot-scope="{row}">
             <el-tooltip content="添加子菜单" placement="top">
