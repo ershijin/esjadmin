@@ -11,15 +11,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class DemoApplicationTests {
+public class EsjAdminApplicationTests {
     @Autowired
     UserService userService;
     @Autowired
-    UserMapper userDao;
+    UserMapper userMapper;
 
     @Test
     public void contextLoads() {
-        User user = (User) userDao.getByUsername("admin");
+        User user = (User) userMapper.getByUsername("admin");
         System.out.println(user);
     }
 

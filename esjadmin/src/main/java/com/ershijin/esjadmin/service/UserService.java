@@ -13,6 +13,7 @@ import com.ershijin.esjadmin.model.entity.UserRole;
 import com.ershijin.esjadmin.model.query.UserQuery;
 import com.ershijin.esjadmin.model.vo.UserVO;
 import com.ershijin.esjadmin.util.JsonUtils;
+import com.ershijin.esjadmin.util.MyBeanUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,8 +124,9 @@ public class UserService implements UserDetailsService {
         if (query.getRole_id() != null) {
             queryWrapper.apply("id IN (SELECT user_id FROM user_role WHERE role_id={0})", query.getRole_id());
         }
-        IPage<UserVO> result = userMapper.selectPageVo(page, queryWrapper);
-//        return new PageResult(result.getTotal(), MyBeanUtils.convert(result.getRecords(), UserVO.class));
+        queryWrapper.select(User.class, i -> !i.getColumn().equals("password"));
+        IPage<User> result = userMapper.selectPage(page, queryWrapper);
+        result.setRecords(MyBeanUtils.convert(result.getRecords(), UserVO.class));
         return new PageResult(result.getTotal(), result.getRecords());
     }
 

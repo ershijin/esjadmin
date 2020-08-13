@@ -3,6 +3,7 @@ package com.ershijin.esjadmin.model.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.ershijin.esjadmin.validation.groups.Update;
 import lombok.Data;
+import org.apache.ibatis.type.Alias;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@Alias("Menu")
 public class Menu implements Serializable {
 
     private static final long serialVersionUID = 1L;

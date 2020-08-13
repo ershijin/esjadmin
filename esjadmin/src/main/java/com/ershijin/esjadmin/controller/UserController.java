@@ -68,8 +68,8 @@ public class UserController {
      * @throws Exception
      */
     @GetMapping("get")
-    public User get(@Validated @NotNull Long id) {
-        return userService.get(id);
+    public Result get(@Validated @NotNull Long id) {
+        return Result.success(userService.get(id));
     }
 
     /**
@@ -78,7 +78,7 @@ public class UserController {
      * @return
      */
     @GetMapping("list_role_ids")
-    public Set<Long> listRoleIds(@RequestParam("user_id") Long userId) {
+    public Result listRoleIds(@RequestParam("user_id") Long userId) {
         List<Role> roles = userService.listRolesById(userId);
         if (roles == null) {
             return null;
@@ -87,7 +87,7 @@ public class UserController {
         roles.forEach(role -> {
             roleIds.add(role.getId());
         });
-        return roleIds;
+        return Result.success(roleIds);
     }
 
     @GetMapping("list")
@@ -102,22 +102,25 @@ public class UserController {
      * @throws Exception
      */
     @PostMapping("remove")
-    public void remove(@Validated @RequestBody IdForm idDTO) {
+    @PreAuthorize("hasAuthority('users:remove')")
+    public Result remove(@Validated @RequestBody IdForm idDTO) {
         userService.removeById(idDTO.getId());
+        return Result.success();
     }
 
     /**
      * 添加用户
-     * @param userDTO
+     * @param userForm
      * @return void
      */
     @PostMapping("save")
-    public void save(@Validated({Save.class}) @RequestBody UserForm userDTO) {
+    @PreAuthorize("hasAuthority('users:save')")
+    public Result save(@Validated({Save.class}) @RequestBody UserForm userForm) {
         User user = new User();
-        BeanUtils.copyProperties(userDTO, user);
-        if (userDTO.getRoleIds() != null) {
+        BeanUtils.copyProperties(userForm, user);
+        if (userForm.getRoleIds() != null) {
             user.setRoles(new ArrayList<>());
-            userDTO.getRoleIds().forEach(roleId -> {
+            userForm.getRoleIds().forEach(roleId -> {
                 Role role = new Role();
                 role.setId(roleId);
                 role.setCreateTime(new Date());
@@ -125,20 +128,21 @@ public class UserController {
             });
         }
         userService.save(user);
+        return Result.success();
     }
 
     /**
      * 修改用户
-     * @param userDTO
+     * @param userForm
      */
     @PostMapping("update")
     @PreAuthorize("hasAuthority('users:update')")
-    public void update(@Validated({Update.class}) @RequestBody UserForm userDTO) {
+    public Result update(@Validated({Update.class}) @RequestBody UserForm userForm) {
         User user = new User();
-        BeanUtils.copyProperties(userDTO, user);
+        BeanUtils.copyProperties(userForm, user);
         List<Role> roles = new ArrayList<>();
-        if (userDTO.getRoleIds() != null && !userDTO.getRoleIds().isEmpty()) {
-            userDTO.getRoleIds().forEach(roleId -> {
+        if (userForm.getRoleIds() != null && !userForm.getRoleIds().isEmpty()) {
+            userForm.getRoleIds().forEach(roleId -> {
                 Role role = new Role();
                 role.setId(roleId);
                 roles.add(role);
@@ -146,6 +150,7 @@ public class UserController {
         }
         user.setRoles(roles);
         userService.update(user);
+        return Result.success();
     }
 
     /**
@@ -154,8 +159,9 @@ public class UserController {
      */
     @PostMapping("enable")
     @PreAuthorize("hasAuthority('users:enable')")
-    public void enable(@Validated @RequestBody IdForm idDTO) {
+    public Result enable(@Validated @RequestBody IdForm idDTO) {
         userService.enableById(idDTO.getId());
+        return Result.success();
     }
 
     /**
@@ -163,8 +169,10 @@ public class UserController {
      * @param idDTO
      */
     @PostMapping("disable")
-    public void disable(@Validated @RequestBody IdForm idDTO) {
+    @PreAuthorize("hasAuthority('users:disable')")
+    public Result disable(@Validated @RequestBody IdForm idDTO) {
         userService.disableById(idDTO.getId());
+        return Result.success();
     }
 
 }

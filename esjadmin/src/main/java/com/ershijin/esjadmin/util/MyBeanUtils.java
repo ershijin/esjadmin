@@ -2,9 +2,10 @@ package com.ershijin.esjadmin.util;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,8 @@ public class MyBeanUtils {
      * @param targetElementClass 目标集合元素Bean类型
      * @return
      */
-    public static List convert(List source, Class targetElementClass) throws IOException {
+    @SneakyThrows
+    public static List convert(List source, Class targetElementClass) {
         if (CollectionUtils.isEmpty(source)) {
             return new ArrayList<>();
         }
@@ -25,6 +27,15 @@ public class MyBeanUtils {
         return  (List) objectMapper.readValue(jsonStr,
                 objectMapper.getTypeFactory().constructParametricType(List.class,
                         targetElementClass));
+    }
+
+    /**
+     * 复制source bean属性到target bean
+     * @param source 原始bean
+     * @param target 目标bean
+     */
+    public static void copyProperties(Object source, Object target) {
+        BeanUtils.copyProperties(source, target);
     }
 
 }

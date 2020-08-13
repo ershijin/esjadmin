@@ -19,10 +19,6 @@
                     column="id"></collection>
     </resultMap>
 
-    <select id="selectPageVo" resultType="com.ershijin.esjadmin.model.vo.UserVO">
-        SELECT * FROM user ${ew.customSqlSegment}
-    </select>
-
     <select id="getByUsername" parameterType="String" resultMap="LazyLoadMap">
         select * from user where username=#{0}
     </select>

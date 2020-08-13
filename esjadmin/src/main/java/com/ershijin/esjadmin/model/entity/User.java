@@ -3,6 +3,7 @@ package com.ershijin.esjadmin.model.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.type.Alias;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serializable;
 import java.util.*;
 
+@Alias("User")
 @Data
 public class User implements UserDetails, Serializable {
 
@@ -29,13 +31,15 @@ public class User implements UserDetails, Serializable {
 
     private String avatar;
 
-    @TableField(value = "is_enabled")
+    @TableField("is_enabled")
     private boolean enabled;
 
     private String remark;
 
+    @TableField(exist = false)
     private List<Role> roles;
 
+    @TableField(exist = false)
     private List<Menu> menus;
 
 
