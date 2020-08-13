@@ -1,7 +1,7 @@
 package com.ershijin.esjadmin.config.security.handler;
 
 import com.ershijin.esjadmin.config.security.AuthenticationToken;
-import com.ershijin.esjadmin.model.Result;
+import com.ershijin.esjadmin.model.ApiResult;
 import com.ershijin.esjadmin.service.UserService;
 import com.ershijin.esjadmin.util.JsonUtils;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class TokenLogoutHandler implements LogoutHandler {
         response.setContentType("application/json; charset=utf-8");
         try {
             Writer writer = response.getWriter();
-            writer.write(JsonUtils.toJsonString(Result.success()));
+            writer.write(JsonUtils.toJsonString(ApiResult.success()));
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

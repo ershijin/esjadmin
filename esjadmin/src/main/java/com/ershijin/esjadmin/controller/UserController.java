@@ -1,6 +1,6 @@
 package com.ershijin.esjadmin.controller;
 
-import com.ershijin.esjadmin.model.Result;
+import com.ershijin.esjadmin.model.PageResult;
 import com.ershijin.esjadmin.model.entity.Menu;
 import com.ershijin.esjadmin.model.entity.Role;
 import com.ershijin.esjadmin.model.entity.User;
@@ -38,7 +38,7 @@ public class UserController {
      * @todo 根据当前用户生成菜单，重新组装返回结果格式,删除返回内容中的roles
      */
     @GetMapping("info")
-    public Result info() {
+    public Map<String, Object> info() {
         UserDetails userDetails = UserUtils.getCurrentUser();
         User user = (User) userService.loadUserByUsername(userDetails.getUsername());
         // 获取当前用户拥有的菜单树
@@ -58,7 +58,7 @@ public class UserController {
         map.put("menus", menus);
         map.put("permissions", permissions);
 
-        return Result.success(map);
+        return map;
     }
 
     /**
@@ -68,8 +68,8 @@ public class UserController {
      * @throws Exception
      */
     @GetMapping("get")
-    public Result get(@Validated @NotNull Long id) {
-        return Result.success(userService.get(id));
+    public void get(@Validated @NotNull Long id) {
+        userService.get(id);
     }
 
     /**
@@ -78,7 +78,7 @@ public class UserController {
      * @return
      */
     @GetMapping("list_role_ids")
-    public Result listRoleIds(@RequestParam("user_id") Long userId) {
+    public Set<Long> listRoleIds(@RequestParam("user_id") Long userId) {
         List<Role> roles = userService.listRolesById(userId);
         if (roles == null) {
             return null;
@@ -87,13 +87,13 @@ public class UserController {
         roles.forEach(role -> {
             roleIds.add(role.getId());
         });
-        return Result.success(roleIds);
+        return roleIds;
     }
 
     @GetMapping("list")
     @PreAuthorize("hasAuthority('users:list')")
-    public Result list(int page, int pageSize, UserQuery query) {
-        return Result.success(userService.list(page, pageSize, query));
+    public PageResult list(int page, int pageSize, UserQuery query) {
+        return userService.list(page, pageSize, query);
     }
 
     /**
@@ -103,9 +103,8 @@ public class UserController {
      */
     @PostMapping("remove")
     @PreAuthorize("hasAuthority('users:remove')")
-    public Result remove(@Validated @RequestBody IdForm idDTO) {
+    public void remove(@Validated @RequestBody IdForm idDTO) {
         userService.removeById(idDTO.getId());
-        return Result.success();
     }
 
     /**
@@ -115,7 +114,7 @@ public class UserController {
      */
     @PostMapping("save")
     @PreAuthorize("hasAuthority('users:save')")
-    public Result save(@Validated({Save.class}) @RequestBody UserForm userForm) {
+    public void save(@Validated({Save.class}) @RequestBody UserForm userForm) {
         User user = new User();
         BeanUtils.copyProperties(userForm, user);
         if (userForm.getRoleIds() != null) {
@@ -128,7 +127,6 @@ public class UserController {
             });
         }
         userService.save(user);
-        return Result.success();
     }
 
     /**
@@ -137,7 +135,7 @@ public class UserController {
      */
     @PostMapping("update")
     @PreAuthorize("hasAuthority('users:update')")
-    public Result update(@Validated({Update.class}) @RequestBody UserForm userForm) {
+    public void update(@Validated({Update.class}) @RequestBody UserForm userForm) {
         User user = new User();
         BeanUtils.copyProperties(userForm, user);
         List<Role> roles = new ArrayList<>();
@@ -150,7 +148,6 @@ public class UserController {
         }
         user.setRoles(roles);
         userService.update(user);
-        return Result.success();
     }
 
     /**
@@ -159,9 +156,8 @@ public class UserController {
      */
     @PostMapping("enable")
     @PreAuthorize("hasAuthority('users:enable')")
-    public Result enable(@Validated @RequestBody IdForm idDTO) {
+    public void enable(@Validated @RequestBody IdForm idDTO) {
         userService.enableById(idDTO.getId());
-        return Result.success();
     }
 
     /**
@@ -170,9 +166,8 @@ public class UserController {
      */
     @PostMapping("disable")
     @PreAuthorize("hasAuthority('users:disable')")
-    public Result disable(@Validated @RequestBody IdForm idDTO) {
+    public void disable(@Validated @RequestBody IdForm idDTO) {
         userService.disableById(idDTO.getId());
-        return Result.success();
     }
 
 }

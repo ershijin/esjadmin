@@ -4,7 +4,7 @@ import com.ershijin.esjadmin.constant.ResultCode;
 
 import java.util.ArrayList;
 
-public class Result {
+public class ApiResult {
     private int code;
     private String message = "";
     private Object data = new ArrayList<>();
@@ -13,8 +13,8 @@ public class Result {
      * 处理成功，无业务数据返回
      * @return
      */
-    public static Result success() {
-        return new Result();
+    public static ApiResult success() {
+        return new ApiResult();
     }
 
     /**
@@ -22,8 +22,8 @@ public class Result {
      * @param data
      * @return
      */
-    public static Result success(Object data) {
-        return new Result(data);
+    public static ApiResult success(Object data) {
+        return new ApiResult(data);
     }
 
     /**
@@ -32,8 +32,8 @@ public class Result {
      * @param message
      * @return
      */
-    public static Result error(int code, String message) {
-        return new Result(code, message);
+    public static ApiResult error(int code, String message) {
+        return new ApiResult(code, message);
     }
 
     /**
@@ -41,8 +41,8 @@ public class Result {
      * @param message
      * @return
      */
-    public static Result error(String message) {
-        return new Result(ResultCode.ERROR, message);
+    public static ApiResult error(String message) {
+        return new ApiResult(ResultCode.ERROR, message);
     }
 
 
@@ -50,7 +50,7 @@ public class Result {
     /**
      * 调用成功，不需要返回业务数据
      */
-    public Result() {
+    public ApiResult() {
         this.code = ResultCode.SUCCESS;
         this.message = "ok";
     }
@@ -60,7 +60,7 @@ public class Result {
      * 调用成功，带返回数据构造器
      * @param data
      */
-    public Result(Object data) {
+    public ApiResult(Object data) {
         this.code = ResultCode.SUCCESS;
         this.data = data;
     }
@@ -68,7 +68,7 @@ public class Result {
     /**
      * 调用失败，返回code和message
      */
-    public Result(int code, String message) {
+    public ApiResult(int code, String message) {
         this.code = code;
         this.message = message;
     }

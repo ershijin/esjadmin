@@ -1,7 +1,7 @@
 package com.ershijin.esjadmin.controller;
 
-import com.ershijin.esjadmin.model.Result;
 import com.ershijin.esjadmin.model.entity.Menu;
+import com.ershijin.esjadmin.model.vo.TreeNodeMenu;
 import com.ershijin.esjadmin.service.MenuService;
 import com.ershijin.esjadmin.validation.groups.Update;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,8 @@ public class MenuController {
     }
 
     @GetMapping("tree")
-    Result menuTree() {
-        return Result.success(menuService.getMenuTree());
+    List<TreeNodeMenu> menuTree() {
+        return menuService.getMenuTree();
     }
 
     @PostMapping("save")

@@ -1,6 +1,6 @@
 package com.ershijin.esjadmin.controller;
 
-import com.ershijin.esjadmin.model.Result;
+import com.ershijin.esjadmin.model.PageResult;
 import com.ershijin.esjadmin.model.form.RoleMenuIdsForm;
 import com.ershijin.esjadmin.service.RoleService;
 import org.apache.commons.lang3.StringUtils;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,12 +26,12 @@ public class RoleController {
      * @return
      */
     @GetMapping("list")
-    Result list(int page, int pageSize, String keyword) {
+    PageResult list(int page, int pageSize, String keyword) {
         Map<String, String> condition = new HashMap<>();
         if (StringUtils.isNotBlank(keyword)) {
             condition.put("keyword", keyword);
         }
-        return Result.success(roleService.list(page, pageSize, condition));
+        return roleService.list(page, pageSize, condition);
     }
 
     /**
@@ -57,11 +56,8 @@ public class RoleController {
      * @return
      */
     @GetMapping("list_menu_ids")
-    Result listMenuIds(Long id) {
-        System.out.println(id);
-        Set<Long> menuIds = new HashSet<>();
-        menuIds = roleService.listMenuIdsById(id);
-        return Result.success(menuIds);
+    Set<Long> listMenuIds(Long id) {
+        return roleService.listMenuIdsById(id);
     }
 
     /**

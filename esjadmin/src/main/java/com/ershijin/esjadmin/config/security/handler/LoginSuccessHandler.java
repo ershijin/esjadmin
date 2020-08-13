@@ -1,7 +1,7 @@
 package com.ershijin.esjadmin.config.security.handler;
 
 import com.ershijin.esjadmin.constant.GlobalConstants;
-import com.ershijin.esjadmin.model.Result;
+import com.ershijin.esjadmin.model.ApiResult;
 import com.ershijin.esjadmin.model.entity.User;
 import com.ershijin.esjadmin.service.UserService;
 import com.ershijin.esjadmin.util.JsonUtils;
@@ -36,7 +36,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Map<String, Object> result = new HashMap<>();
         result.put("token", token);
         Writer writer = response.getWriter();
-        writer.write(JsonUtils.toJsonString(Result.success(result)));
+        writer.write(JsonUtils.toJsonString(ApiResult.success(result)));
         writer.close();
     }
 

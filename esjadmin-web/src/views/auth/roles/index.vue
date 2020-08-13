@@ -43,10 +43,11 @@
 
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleEdit(row)">编辑</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleEdit(row)">编辑</el-button>
           <el-button
             v-if="row.status!='deleted'"
             size="mini"
+            icon="el-icon-delete"
             type="danger"
             @click="handleDelete(row)"
           >删除</el-button>
