@@ -127,6 +127,12 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
         return ApiResult.error(ResultCode.ERROR, e.getMessage());
     }
 
+    /**
+     * return类型不为ApiResult，不带@NoApiResult注解的类或方法自动包装返回结构
+     * @param returnType
+     * @param converterType
+     * @return
+     */
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return returnType.getParameterType() != ApiResult.class
@@ -134,6 +140,16 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
                 && AnnotationUtils.findAnnotation(returnType.getDeclaringClass(), NoApiResult.class) == null;
     }
 
+    /**
+     * 自动包装后端接口返回结果
+     * @param body
+     * @param returnType
+     * @param selectedContentType
+     * @param selectedConverterType
+     * @param request
+     * @param response
+     * @return
+     */
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         return body == null ? ApiResult.success() : ApiResult.success(body);

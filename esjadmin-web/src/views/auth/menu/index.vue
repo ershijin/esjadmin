@@ -154,29 +154,15 @@
           :rules="rules"
           size="small"
         >
-          <el-form-item label="上级" prop="parent_id">
-            <el-select
-              v-for="(arrItem,key) in selectList"
-              :key="key"
-              v-model="selectedArray[key]"
-              filterable
-              placeholder="请选择"
-              clearable
-              value-key="id"
-              style="margin-right: 10px"
-              @change="selected"
-              @focus="position=key"
-              @clear="selectClear(key)"
-            >
-              <el-option v-for="item in arrItem" :key="item.id" :label="item.title" :value="item" />
-            </el-select>
+          <el-form-item label="上级" prop="parentId">
+            <treeselect
+              v-model="temp.parentId"
+              :multiple="false"
+              no-results-text="未匹配到数据"
+              placeholder="输入关键词搜索..."
+              :options="options"
+            />
           </el-form-item>
-
-          <!-- <el-row>
-            parent_id: {{ temp.parent_id }}
-            <br />
-            selectedArray: {{ selectedArray }}
-          </el-row>-->
 
           <el-form-item label="菜单类型" prop="type">
             <el-radio-group v-model="temp.type">
@@ -294,18 +280,38 @@ import {
   disableMenu,
   deleteMenu
 } from '@/api/menu'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import IconSelect from '@/components/IconSelect'
 import elDragDialog from '@/directive/el-drag-dialog'
 import waves from '@/directive/waves' // waves directive
 
+function transformOptions(menus) {
+  const menusMap = []
+  menus.map(v => {
+    const { id, title, children } = v
+    // 重新构建路由对象
+    const item = {
+      id,
+      label: title
+    }
+    if (children.length > 0) {
+      item.children = transformOptions(children)
+    }
+    menusMap.push(item)
+  })
+  return menusMap
+}
+
 export default {
   directives: { waves, elDragDialog },
-  components: { IconSelect },
+  components: { IconSelect, Treeselect },
   data() {
     return {
       tableData: [],
 
       list: [],
+      options: [],
       listLoading: true,
 
       dialogFormVisible: false,
@@ -322,7 +328,7 @@ export default {
         title: '',
         priority: 0,
         remark: '',
-        parent_id: 0,
+        parentId: 0,
         hidden: false,
         enabled: true,
         component: '',
@@ -333,11 +339,8 @@ export default {
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         path: [{ required: true, message: '请输入地址', trigger: 'blur' }]
-      },
+      }
 
-      position: null,
-      selectedArray: [], // 已经选过的select
-      selectList: [] // select的数量
     }
   },
   created() {
@@ -349,20 +352,21 @@ export default {
       getMenuTree().then(response => {
         this.list = response
         this.listLoading = false
+        const options = []
+        options.push({
+          'id': 0,
+          'label': '顶级菜单',
+          'children': transformOptions(response)
+        })
+        this.options = options
       })
     },
     handleCreate(row) {
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
-      if (this.selectList.length < 1) {
-        this.selectList = [this.list]
-      }
-      // this.temp.parent_id = 0
     },
     handleEdit(row) {
-      this.createParentSelect(row)
       this.dialogStatus = 'edit'
-      console.log(row)
       Object.assign(this.temp, row)
       this.dialogFormVisible = true
     },
@@ -435,9 +439,9 @@ export default {
               type: 'success'
             })
             this.fetchData()
-            const tmpParentId = this.temp.parent_id
+            const tmpParentId = this.temp.parentId
             this.$refs.dataForm.resetFields()
-            this.temp.parent_id = tmpParentId
+            this.temp.parentId = tmpParentId
           })
         }
       })
@@ -456,81 +460,6 @@ export default {
           })
         }
       })
-    },
-
-    // 清空当前选择内容
-    selectClear(key) {
-      this.selectList.splice(key + 1, this.selectList.length)
-      this.selectedArray.splice(key + 1, this.selectedArray.length)
-      if (key === 0) {
-        this.temp.parent_id = 0
-      } else {
-        this.temp.parent_id = this.selectedArray[key - 1].id
-      }
-    },
-    // 获取下级菜单
-    selected(item) {
-      // item为当前选中项的对象
-      // 获取下级菜单
-      // 清空选择项的相关处理由 selectClear 做
-      if (item == null) {
-        return
-      }
-      this.temp.parent_id = item.id
-      // 清除当前下拉菜单后面的下拉菜单
-      for (var i = 0; i < this.selectedArray.length; i++) {
-        if (item.parent_id === this.selectedArray[i].id) {
-          this.selectList.splice(i + 2, this.selectList.length - i - 2)
-          break
-        }
-      }
-      if (item.children && item.children.length > 0) {
-        // 加入下级下拉菜单
-        this.selectList.push(item.children)
-      }
-    },
-
-    // 初始化上级下拉菜单
-    createParentSelect(row) {
-      // 清空已选择项目
-      this.selectedArray = []
-      this.selectList = []
-      // 递归出上级菜单
-      var parents = this.getParentsSelect(row, this.list, this.selectedArray)
-      this.selectList = parents
-    },
-    // 获取级别高的菜单
-    getParentsSelect(row, all, selectedArray) {
-      // 顶级菜单直接返回
-      if (row.parent_id === 0) {
-        return [all]
-      }
-      let result = []
-      for (const o in all) {
-        // 命中，返回结果
-        if (all[o].id === row.parent_id) {
-          result.push(all)
-          result.push(all[o].children)
-          selectedArray.unshift(all[o])
-          return result
-        }
-      }
-      for (const o in all) {
-        // 遍历下级
-        if (all[o].children && all[o].children.length > 0) {
-          const result2 = this.getParentsSelect(
-            row,
-            all[o].children,
-            selectedArray
-          )
-          if (result2.length > 0) {
-            result.push(all)
-            result = result.concat(result2)
-            selectedArray.unshift(all[o])
-          }
-        }
-      }
-      return result
     },
 
     // 选中图标
