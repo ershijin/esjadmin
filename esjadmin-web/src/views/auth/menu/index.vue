@@ -352,12 +352,12 @@ export default {
       getMenuTree().then(response => {
         this.list = response
         this.listLoading = false
-        const options = []
+        let options = []
         options.push({
           'id': 0,
-          'label': '顶级菜单',
-          'children': transformOptions(response)
+          'label': '顶级菜单'
         })
+        options = options.concat(transformOptions(response))
         this.options = options
       })
     },
