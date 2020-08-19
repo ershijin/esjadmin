@@ -1,10 +1,13 @@
 package com.ershijin.esjadmin.controller;
 
+import com.ershijin.esjadmin.exception.ApiException;
+import com.ershijin.esjadmin.exception.NotFoundException;
 import com.ershijin.esjadmin.model.PageResult;
 import com.ershijin.esjadmin.model.entity.Menu;
 import com.ershijin.esjadmin.model.entity.Role;
 import com.ershijin.esjadmin.model.entity.User;
 import com.ershijin.esjadmin.model.form.IdForm;
+import com.ershijin.esjadmin.model.form.UserChangePasswordForm;
 import com.ershijin.esjadmin.model.form.UserForm;
 import com.ershijin.esjadmin.model.query.UserQuery;
 import com.ershijin.esjadmin.model.vo.TreeNodeMenu;
@@ -18,9 +21,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -53,6 +58,7 @@ public class UserController {
         });
 
         Map<String, Object> map = new HashMap<>();
+        map.put("username", user.getUsername());
         map.put("name", user.getName());
         map.put("avatar", user.getAvatar());
         map.put("menus", menus);
@@ -170,4 +176,34 @@ public class UserController {
         userService.disableById(idDTO.getId());
     }
 
+    /**
+     * 修改密码
+     * @param userChangePasswordForm
+     * @param request
+     * @return
+     */
+    @PostMapping("update_password")
+    public void updatePassword(@Validated @RequestBody UserChangePasswordForm userChangePasswordForm,
+                               HttpServletRequest request) throws ApiException {
+        String oldPassword = userChangePasswordForm.getOldPassword();
+        String newPassword = userChangePasswordForm.getNewPassword();
+
+        UserDetails currentUser = UserUtils.getCurrentUser();
+        User oldUserInfo = (User) userService.loadUserByUsername(currentUser.getUsername());
+        if (oldUserInfo == null) {
+            throw new NotFoundException("用户信息不存在");
+        }
+
+        User user = new User();
+        // 校验原密码是否正确
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (!encoder.matches(oldPassword, oldUserInfo.getPassword())) {
+            throw new ApiException("原密码不正确！", 10000);
+        }
+        // 更新用户名和密码
+        user.setId(oldUserInfo.getId());
+        user.setPassword(newPassword);
+        user.setEnabled(oldUserInfo.isEnabled());
+        userService.updatePassword(user);
+    }
 }

@@ -182,6 +182,17 @@ public class UserService implements UserDetailsService {
     }
 
     /**
+     * 更新密码
+     * @param user
+     */
+    public void updatePassword(User user) {
+        user.setUpdateTime(new Date());
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        userMapper.updateById(user);
+    }
+
+
+    /**
      * 获取用户信息
      * @param id
      * @return

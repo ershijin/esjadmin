@@ -23,6 +23,14 @@ export function logout() {
   })
 }
 
+export function updatePassword(data) {
+  return request({
+    url: '/users/update_password',
+    method: 'post',
+    data
+  })
+}
+
 export function listRoleIds(params) {
   return request({
     url: '/users/list_role_ids',

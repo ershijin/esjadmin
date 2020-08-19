@@ -206,7 +206,7 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item v-if="temp.type.toString() !== '2'" label="path 路由地址" prop="path">
+              <el-form-item v-if="temp.type.toString() !== '2'" label="路由地址" prop="path">
                 <el-input v-model="temp.path" />
               </el-form-item>
             </el-col>
@@ -221,7 +221,7 @@
             <el-col :span="12">
               <el-form-item
                 v-show="temp.type.toString() === '1'"
-                label="component组件路径"
+                label="组件路径"
                 prop="component"
               >
                 <el-input v-model="temp.component" />

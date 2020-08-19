@@ -2,13 +2,13 @@ package com.ershijin.esjadmin.component;
 
 import com.ershijin.esjadmin.annotation.NoApiResult;
 import com.ershijin.esjadmin.constant.ResultCode;
+import com.ershijin.esjadmin.exception.ApiException;
 import com.ershijin.esjadmin.exception.ArgumentNotValidException;
 import com.ershijin.esjadmin.exception.NotFoundException;
 import com.ershijin.esjadmin.model.ApiResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -16,11 +16,9 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -37,7 +35,6 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(value = AccessDeniedException.class)
     @ResponseBody
-    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ApiResult handleAccessDeniedException(AccessDeniedException e) {
         return ApiResult.error(ResultCode.FORBIDDEN, "没有访问权限");
     }
@@ -49,19 +46,11 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(value = NotFoundException.class)
     @ResponseBody
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiResult handleResourceNotFoundException(NotFoundException e) {
         if (log.isErrorEnabled()) {
             log.error(e.getMessage(), e);
         }
         return ApiResult.error(ResultCode.NOT_FOUND, e.getMessage());
-    }
-
-    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public ApiResult handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-        return ApiResult.error(ResultCode.METHOD_NOT_ALLOWED, "请求方式 " + e.getMethod() + "不允许");
     }
 
     /**
@@ -71,7 +60,6 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseBody
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ApiResult handleResourceArgumentNotValidException(MethodArgumentNotValidException e) {
         BindingResult result = e.getBindingResult();
         StringBuffer sb = new StringBuffer();
@@ -88,7 +76,6 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(value = ConstraintViolationException.class)
     @ResponseBody
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ApiResult handleResourceConstraintViolationException(ConstraintViolationException e) {
         StringBuffer sb = new StringBuffer();
         for (ConstraintViolation violation : e.getConstraintViolations()) {
@@ -104,12 +91,20 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(value = ArgumentNotValidException.class)
     @ResponseBody
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ApiResult handleResourceArgumentNotValidException(ArgumentNotValidException e) {
         if (log.isErrorEnabled()) {
             log.error(e.getMessage(), e);
         }
         return ApiResult.error(ResultCode.ARGUMENT_NOT_VALID, e.getMessage());
+    }
+
+    @ExceptionHandler(value = ApiException.class)
+    @ResponseBody
+    public ApiResult handleApiException(ApiException e) {
+        if (log.isErrorEnabled()) {
+            log.error(e.getMessage(), e);
+        }
+        return ApiResult.error(e.getCode(), e.getMessage());
     }
 
     /**
@@ -119,8 +114,16 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(value = RuntimeException.class)
     @ResponseBody
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResult handleResourceException(RuntimeException e) {
+        if (log.isErrorEnabled()) {
+            log.error(e.getMessage(), e);
+        }
+        return ApiResult.error(ResultCode.ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public ApiResult Exception(Exception e) {
         if (log.isErrorEnabled()) {
             log.error(e.getMessage(), e);
         }
