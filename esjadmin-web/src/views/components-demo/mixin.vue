@@ -102,13 +102,11 @@
 </template>
 
 <script>
-import DropdownMenu from '@/components/Share/DropdownMenu'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 
 export default {
   name: 'ComponentMixinDemo',
   components: {
-    DropdownMenu
   },
   directives: {
     waves
