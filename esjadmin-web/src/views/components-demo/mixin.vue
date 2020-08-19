@@ -47,13 +47,6 @@
             <span>Material Design 的input</span>
           </div>
           <div style="height:100px;">
-            <el-form :model="demo" :rules="demoRules">
-              <el-form-item prop="title">
-                <md-input v-model="demo.title" icon="el-icon-search" name="title" placeholder="输入标题">
-                  标题
-                </md-input>
-              </el-form-item>
-            </el-form>
           </div>
         </el-card>
       </el-col>
@@ -113,7 +106,6 @@
 
 <script>
 import PanThumb from '@/components/PanThumb'
-import MdInput from '@/components/MDinput'
 import Mallki from '@/components/TextHoverEffect/Mallki'
 import DropdownMenu from '@/components/Share/DropdownMenu'
 import waves from '@/directive/waves/index.js' // 水波纹指令
@@ -122,7 +114,6 @@ export default {
   name: 'ComponentMixinDemo',
   components: {
     PanThumb,
-    MdInput,
     Mallki,
     DropdownMenu
   },
