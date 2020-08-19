@@ -57,9 +57,6 @@
             <span>图片hover效果</span>
           </div>
           <div class="component-item">
-            <pan-thumb width="100px" height="100px" image="https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191">
-              vue-element-admin
-            </pan-thumb>
           </div>
         </el-card>
       </el-col>
@@ -105,7 +102,6 @@
 </template>
 
 <script>
-import PanThumb from '@/components/PanThumb'
 import Mallki from '@/components/TextHoverEffect/Mallki'
 import DropdownMenu from '@/components/Share/DropdownMenu'
 import waves from '@/directive/waves/index.js' // 水波纹指令
@@ -113,7 +109,6 @@ import waves from '@/directive/waves/index.js' // 水波纹指令
 export default {
   name: 'ComponentMixinDemo',
   components: {
-    PanThumb,
     Mallki,
     DropdownMenu
   },
