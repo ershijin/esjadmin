@@ -61,7 +61,7 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done() // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     } else {
-      const hasGetUserInfo = store.getters.name
+      const hasGetUserInfo = store.getters.username
       if (hasGetUserInfo) {
         next()
       } else {
