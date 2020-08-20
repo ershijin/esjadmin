@@ -42,7 +42,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
         }
 
         if (e instanceof AccessDeniedException) {
-            return ApiResult.error(ResultCode.FORBIDDEN, "没有访问权限");
+            return ApiResult.error(ResultCode.FORBIDDEN, "您没有执行该操作的权限");
         }
 
         if (e instanceof NotFoundException) {

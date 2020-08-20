@@ -10,6 +10,9 @@ public class ResultCode {
     // 客户端通用错误
     public static final int CLIENT_ERROR = 40000;
 
+    // 凭证验证失败
+    public static final int UNAUTHORIZED = 40001;
+
     // 没有权限访问
     public static final int FORBIDDEN = 40003;
 
