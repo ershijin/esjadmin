@@ -7,16 +7,19 @@ public class ResultCode {
     // 成功
     public static final int SUCCESS = 0;
 
+    // 客户端通用错误
+    public static final int CLIENT_ERROR = 40000;
+
     // 没有权限访问
-    public static final int FORBIDDEN = 403;
+    public static final int FORBIDDEN = 40003;
 
     // 请求的接口没找到
-    public static final int NOT_FOUND = 404;
+    public static final int NOT_FOUND = 40004;
 
     // 参数校验不通过
-    public static final int ARGUMENT_NOT_VALID = 422;
+    public static final int ARGUMENT_NOT_VALID = 40022;
 
     //操作失败,默认状态码
-    public static final int ERROR = 500;
+    public static final int ERROR = 50000;
 
 }
