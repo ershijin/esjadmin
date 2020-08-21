@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 public class ApiErrorController implements ErrorController {
     private ErrorAttributes errorAttributes;
-    private static final String error_path = "/error";
+    private static final String ERROR_PATH = "/error";
 
     @Autowired
     public ApiErrorController(ErrorAttributes errorAttributes) {
@@ -27,9 +27,9 @@ public class ApiErrorController implements ErrorController {
 
     @Override
     public String getErrorPath() {
-        return error_path;
+        return ERROR_PATH;
     }
-    @RequestMapping(error_path)
+    @RequestMapping(ERROR_PATH)
     public ApiResult handlerError(HttpServletResponse response, final WebRequest req) {
         Map<String, Object> attr = this.errorAttributes.getErrorAttributes(req, false);
         if (response.getStatus() >= 400 && response.getStatus() <= 499) {

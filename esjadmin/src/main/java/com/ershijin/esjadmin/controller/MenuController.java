@@ -5,6 +5,7 @@ import com.ershijin.esjadmin.model.vo.TreeNodeMenu;
 import com.ershijin.esjadmin.service.MenuService;
 import com.ershijin.esjadmin.validation.groups.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,21 +18,25 @@ public class MenuController {
     MenuService menuService;
 
     @GetMapping("list")
+    @PreAuthorize("hasAuthority('menus:list')")
     List<Menu> listMenu() {
         return menuService.listAll();
     }
 
     @GetMapping("tree")
+    @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     List<TreeNodeMenu> menuTree() {
         return menuService.getMenuTree();
     }
 
     @PostMapping("save")
+    @PreAuthorize("hasAuthority('menus:save')")
     void save(@RequestBody Menu menu) {
         menuService.save(menu);
     }
 
     @PostMapping("update")
+    @PreAuthorize("hasAuthority('menus:update')")
     void update(@Validated({Update.class}) @RequestBody Menu menu) {
         menuService.update(menu);
     }
@@ -41,6 +46,7 @@ public class MenuController {
      * @param id
      */
     @PostMapping("enable")
+    @PreAuthorize("hasAuthority('menus:enable')")
     void enable(Long id) {
         menuService.enableById(id);
     }
@@ -50,6 +56,7 @@ public class MenuController {
      * @param id
      */
     @PostMapping("disable")
+    @PreAuthorize("hasAuthority('menus:disable')")
     void disable(Long id) {
         menuService.disableById(id);
     }
@@ -59,6 +66,7 @@ public class MenuController {
      * @param id
      */
     @PostMapping("remove")
+    @PreAuthorize("hasAuthority('menus:remove')")
     void remove(Long id) {
         menuService.removeById(id);
     }

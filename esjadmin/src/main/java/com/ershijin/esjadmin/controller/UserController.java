@@ -43,6 +43,7 @@ public class UserController {
      * @todo 根据当前用户生成菜单，重新组装返回结果格式,删除返回内容中的roles
      */
     @GetMapping("info")
+    @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     public Map<String, Object> info() {
         UserDetails userDetails = UserUtils.getCurrentUser();
         User user = (User) userService.loadUserByUsername(userDetails.getUsername());
@@ -84,6 +85,7 @@ public class UserController {
      * @return
      */
     @GetMapping("list_role_ids")
+    @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     public Set<Long> listRoleIds(@RequestParam("user_id") Long userId) {
         List<Role> roles = userService.listRolesById(userId);
         if (roles == null) {
@@ -183,6 +185,7 @@ public class UserController {
      * @return
      */
     @PostMapping("update_password")
+    @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     public void updatePassword(@Validated @RequestBody UserChangePasswordForm userChangePasswordForm,
                                HttpServletRequest request) throws ApiException {
         String oldPassword = userChangePasswordForm.getOldPassword();

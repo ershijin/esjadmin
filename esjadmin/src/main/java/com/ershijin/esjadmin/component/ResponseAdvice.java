@@ -6,7 +6,9 @@ import com.ershijin.esjadmin.exception.ApiException;
 import com.ershijin.esjadmin.exception.ArgumentNotValidException;
 import com.ershijin.esjadmin.exception.NotFoundException;
 import com.ershijin.esjadmin.model.ApiResult;
+import com.ershijin.esjadmin.util.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
@@ -51,6 +53,10 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
 
         if (e instanceof ArgumentNotValidException) {
             return ApiResult.error(ResultCode.ARGUMENT_NOT_VALID, e.getMessage());
+        }
+
+        if (e instanceof TypeMismatchException) {
+            return ApiResult.error(ResultCode.ARGUMENT_NOT_VALID, "参数类型错误");
         }
 
         // 参数校验不通过的异常
@@ -105,6 +111,9 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+        if (body instanceof String) {
+            return JsonUtils.toJsonString(ApiResult.success(body));
+        }
         return body == null ? ApiResult.success() : ApiResult.success(body);
     }
 }

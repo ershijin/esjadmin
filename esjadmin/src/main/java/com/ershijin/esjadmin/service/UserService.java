@@ -3,6 +3,7 @@ package com.ershijin.esjadmin.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ershijin.esjadmin.component.Config;
 import com.ershijin.esjadmin.dao.UserMapper;
 import com.ershijin.esjadmin.dao.UserRoleMapper;
 import com.ershijin.esjadmin.model.PageResult;
@@ -96,6 +97,8 @@ public class UserService implements UserDetailsService {
         authoritieList.forEach(i -> {
             authorities.add(new SimpleGrantedAuthority(i));
         });
+        // 给没一个登录用户添加普通权限
+        authorities.add(new SimpleGrantedAuthority(Config.GENERAL_PERMISSION));
         // 从数据库中取出token生成时用的salt，将salt放到password字段返回
         return org.springframework.security.core.userdetails.User.builder()
                 .username(authentication.getUsername())

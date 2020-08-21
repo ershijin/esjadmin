@@ -1,7 +1,7 @@
 package com.ershijin.esjadmin.config.security.filter;
 
 import com.ershijin.esjadmin.config.security.AuthenticationToken;
-import com.ershijin.esjadmin.constant.GlobalConstants;
+import com.ershijin.esjadmin.component.Config;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -42,7 +42,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private AuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
 
     public AuthenticationFilter() {
-        this.requiresAuthenticationRequestMatcher = new RequestHeaderRequestMatcher(GlobalConstants.AUTHORIZATION_NAME);
+        this.requiresAuthenticationRequestMatcher = new RequestHeaderRequestMatcher(Config.AUTHORIZATION_NAME);
     }
 
     @Override
@@ -58,9 +58,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
      * @return
      */
     protected String getAuthorization(HttpServletRequest request) {
-        String authInfo = request.getHeader(GlobalConstants.AUTHORIZATION_NAME);
+        String authInfo = request.getHeader(Config.AUTHORIZATION_NAME);
         if (authInfo == null) {
-            authInfo = request.getParameter(GlobalConstants.AUTHORIZATION_NAME);
+            authInfo = request.getParameter(Config.AUTHORIZATION_NAME);
         }
         return authInfo;
     }
@@ -133,7 +133,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
      * @return
      */
     protected boolean requiresAuthentication(HttpServletRequest request) {
-        return requiresAuthenticationRequestMatcher.matches(request) || request.getParameter(GlobalConstants.AUTHORIZATION_NAME) != null;
+        return requiresAuthenticationRequestMatcher.matches(request) || request.getParameter(Config.AUTHORIZATION_NAME) != null;
     }
 
     protected boolean permissiveRequest(HttpServletRequest request) {

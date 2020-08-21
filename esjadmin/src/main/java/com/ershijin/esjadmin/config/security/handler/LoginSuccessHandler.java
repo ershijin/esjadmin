@@ -1,6 +1,6 @@
 package com.ershijin.esjadmin.config.security.handler;
 
-import com.ershijin.esjadmin.constant.GlobalConstants;
+import com.ershijin.esjadmin.component.Config;
 import com.ershijin.esjadmin.model.ApiResult;
 import com.ershijin.esjadmin.model.entity.User;
 import com.ershijin.esjadmin.service.UserService;
@@ -31,7 +31,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         String token = userService.saveLoginInfo((User) authentication.getPrincipal());
-        response.setHeader(GlobalConstants.AUTHORIZATION_NAME, token);
+        response.setHeader(Config.AUTHORIZATION_NAME, token);
         response.setContentType("application/json; charset=utf-8");
         Map<String, Object> result = new HashMap<>();
         result.put("token", token);
