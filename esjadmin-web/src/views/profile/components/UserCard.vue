@@ -6,7 +6,7 @@
 
     <div class="user-profile">
       <div class="box-center">
-        <el-avatar :size="100" :src="user.avatar" />
+        <el-avatar :size="100" :src="user.avatar ? user.avatar : defaultAvatar" />
       </div>
     </div>
 
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import defaultAvatar from '@/assets/images/avatar.png'
 export default {
   props: {
     user: {
@@ -42,6 +43,11 @@ export default {
           role: ''
         }
       }
+    }
+  },
+  data() {
+    return {
+      defaultAvatar: defaultAvatar
     }
   }
 }
