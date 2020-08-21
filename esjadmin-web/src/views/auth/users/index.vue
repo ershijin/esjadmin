@@ -56,7 +56,7 @@
       </el-table-column>
       <el-table-column label="头像" width="80" align="center">
         <template slot-scope="scope">
-          <el-image style="width: 32px; height: 32px; " :src="scope.row.avatar" fit="scale-down" lazy />
+          <el-image style="width: 32px; height: 32px; " :src="scope.row.avatar ? scope.row.avatar : defaultAvatar" fit="scale-down" lazy />
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="160" />
@@ -202,6 +202,7 @@ import { list as listRoles } from '@/api/roles'
 import elDragDialog from '@/directive/el-drag-dialog'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import defaultAvatar from '@/assets/images/avatar.png'
 
 const defaultData = {
   id: null,
@@ -219,6 +220,7 @@ export default {
 
   data() {
     return {
+      defaultAvatar: defaultAvatar,
       list: [],
       total: 0,
       listLoading: true,
