@@ -14,7 +14,7 @@
         <el-option v-for="item in roles" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
 
-      <el-select v-model="listQuery.enabled" placeholder="激活" clearable class="filter-item" style="width:80px">
+      <el-select v-model="listQuery.enabled" placeholder="启用" clearable class="filter-item" style="width:80px">
         <el-option label="是" :value="true" />
         <el-option label="否" :value="false" />
       </el-select>
