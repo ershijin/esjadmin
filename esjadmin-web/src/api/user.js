@@ -25,7 +25,7 @@ export function logout() {
 
 export function updatePassword(data) {
   return request({
-    url: '/users/update_password',
+    url: '/users/updatePassword',
     method: 'post',
     data
   })

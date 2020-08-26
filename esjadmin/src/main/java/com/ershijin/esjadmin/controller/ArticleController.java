@@ -13,7 +13,8 @@ public class ArticleController {
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
+//    @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
+    @PreAuthorize("hasAuthority(@config.get('GENERAL_PERMISSION'))")
     public void create() {
 
     }

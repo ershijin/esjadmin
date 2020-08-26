@@ -42,10 +42,18 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
+import { getConfigs } from '@/api/config'
 
-new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App)
+getConfigs().then(data => {
+  Vue.prototype.SYSCONFIG = data
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    render: h => h(App),
+    created: function() {
+      console.log(this.SYSCONFIG)
+    }
+  })
+  
 })

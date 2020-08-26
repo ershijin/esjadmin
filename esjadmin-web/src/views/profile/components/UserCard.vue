@@ -6,7 +6,23 @@
 
     <div class="user-profile">
       <div class="box-center">
-        <el-avatar :size="100" :src="user.avatar ? user.avatar : defaultAvatar" />
+        <el-avatar
+          style="cursor: pointer"
+          alt="点击上传头像"
+          title="点击上传头像"
+          :size="100"
+          :src="avatar ? SYSCONFIG.UPLOAD_BASE_URL + avatar : defaultAvatar"
+          @click.native="imagecropperShow=true"
+        />
+        <image-cropper
+          v-show="imagecropperShow"
+          :key="imagecropperKey"
+          :width="300"
+          :height="300"
+          :url="SYSCONFIG.AVATAR_UPLOAD_API"
+          @close="close"
+          @crop-upload-success="cropSuccess"
+        />
       </div>
     </div>
 
@@ -14,24 +30,26 @@
       <li>
         <div style="height: 100%">
           <svg-icon icon-class="user" />登录账号
-          <div class="user-right">{{ user.username }}</div>
+          <div class="user-right">{{ userinfo.username }}</div>
         </div>
       </li>
       <li>
         <svg-icon icon-class="people" />用户姓名
-        <div class="user-right">{{ user.name }}</div>
+        <div class="user-right">{{ userinfo.name }}</div>
       </li>
       <li>
         <svg-icon icon-class="phone" />手机号码
-        <div class="user-right">{{ user.phone }}</div>
+        <div class="user-right">{{ userinfo.phone }}</div>
       </li>
     </ul>
   </el-card>
 </template>
 
 <script>
+import ImageCropper from '@/components/ImageCropper'
 import defaultAvatar from '@/assets/images/avatar.png'
 export default {
+  components: { ImageCropper },
   props: {
     user: {
       type: Object,
@@ -47,10 +65,26 @@ export default {
   },
   data() {
     return {
-      defaultAvatar: defaultAvatar
+      imagecropperShow: false,
+      imagecropperKey: 0,
+      defaultAvatar: defaultAvatar,
+      avatar: this.user.avatar,
+      userinfo: this.user
+    }
+  },
+  methods: {
+    cropSuccess(resData) {
+      console.log(resData)
+      this.imagecropperShow = false
+      this.imagecropperKey = this.imagecropperKey + 1
+      this.avatar = resData.avatar
+    },
+    close() {
+      this.imagecropperShow = false
     }
   }
 }
+
 </script>
 
 <style lang="scss" scoped>

@@ -22,11 +22,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.ResourceUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RequestMapping("/users")
@@ -39,6 +44,7 @@ public class UserController {
 
     /**
      * 获取当前用户信息
+     *
      * @return
      * @todo 根据当前用户生成菜单，重新组装返回结果格式,删除返回内容中的roles
      */
@@ -70,6 +76,7 @@ public class UserController {
 
     /**
      * 查询单个用户
+     *
      * @param id
      * @return
      * @throws Exception
@@ -81,6 +88,7 @@ public class UserController {
 
     /**
      * 根据用户id查询用户角色id列表
+     *
      * @param userId
      * @return
      */
@@ -106,6 +114,7 @@ public class UserController {
 
     /**
      * 删除用户
+     *
      * @param idDTO
      * @throws Exception
      */
@@ -117,6 +126,7 @@ public class UserController {
 
     /**
      * 添加用户
+     *
      * @param userForm
      * @return void
      */
@@ -139,6 +149,7 @@ public class UserController {
 
     /**
      * 修改用户
+     *
      * @param userForm
      */
     @PostMapping("update")
@@ -160,6 +171,7 @@ public class UserController {
 
     /**
      * 启用用户
+     *
      * @param idDTO
      */
     @PostMapping("enable")
@@ -170,6 +182,7 @@ public class UserController {
 
     /**
      * 禁用用户
+     *
      * @param idDTO
      */
     @PostMapping("disable")
@@ -180,11 +193,12 @@ public class UserController {
 
     /**
      * 修改密码
+     *
      * @param userChangePasswordForm
      * @param request
      * @return
      */
-    @PostMapping("update_password")
+    @PostMapping("updatePassword")
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     public void updatePassword(@Validated @RequestBody UserChangePasswordForm userChangePasswordForm,
                                HttpServletRequest request) throws ApiException {
@@ -208,5 +222,40 @@ public class UserController {
         user.setPassword(newPassword);
         user.setEnabled(oldUserInfo.isEnabled());
         userService.updatePassword(user);
+    }
+
+    @PostMapping("updateAvatar")
+    @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
+    public Map updateAvatar(MultipartFile avatar) throws ApiException,
+            IOException {
+        Map<String, Object> map = new HashMap<>();
+        if (avatar.isEmpty()) {
+            throw new ApiException("文件内容为空");
+        }
+
+        String fileName = avatar.getOriginalFilename();
+        int rannum = (int) (new Random().nextDouble() * (99999 - 10000 + 1)) + 10000; // 获取随机数
+        String nowTimeStr = new SimpleDateFormat(
+                "HHmmss").format(new Date()); // 当前时间
+        String destFileName = nowTimeStr + rannum + fileName.substring(fileName.lastIndexOf("."));
+
+        String filePath = ResourceUtils.getURL("classpath:").getPath() + "upload/";
+        String subDir = new SimpleDateFormat("yyyy/MM/dd/").format(new Date());
+        filePath += subDir;
+        File path = new File(filePath);
+        File dest = new File(filePath + destFileName);
+        synchronized (path) {
+            if (!path.exists()) {
+                if (!path.mkdirs()) {
+                    throw new ApiException("目录创建失败:" + path.getParent());
+                }
+            }
+        }
+        avatar.transferTo(dest);
+
+        map.put("avatar", subDir + destFileName);
+
+        return map;
+
     }
 }
