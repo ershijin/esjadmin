@@ -13,6 +13,7 @@ import java.util.Map;
 
 /**
  * 系统配置服务
+ * @todo 启动加载配置调整为使用加载，使用缓存
  */
 @Service
 public class ConfigService {

@@ -12,7 +12,5 @@ public interface UserMapper extends BaseMapper<User> {
     List<Role> listRolesById(Long id);
     int insert(User user);
 
-    void update(User user);
-
     int deleteById(Long id);
 }

@@ -19,6 +19,8 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
+import { getConfigs } from '@/api/config'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -42,18 +44,14 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
-import { getConfigs } from '@/api/config'
 
+// 获取全局配置
 getConfigs().then(data => {
-  Vue.prototype.SYSCONFIG = data
+  Vue.prototype.CONFIG = data
   new Vue({
     el: '#app',
     router,
     store,
-    render: h => h(App),
-    created: function() {
-      console.log(this.SYSCONFIG)
-    }
+    render: h => h(App)
   })
-  
 })

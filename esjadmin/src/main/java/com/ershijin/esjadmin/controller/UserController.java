@@ -22,16 +22,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.ResourceUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RequestMapping("/users")
@@ -226,36 +223,20 @@ public class UserController {
 
     @PostMapping("updateAvatar")
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
-    public Map updateAvatar(MultipartFile avatar) throws ApiException,
-            IOException {
+    public Map updateAvatar(MultipartFile avatar) throws ApiException, IOException {
+        UserDetails currentUser = UserUtils.getCurrentUser();
+        User oldUserInfo = (User) userService.loadUserByUsername(currentUser.getUsername());
+        if (oldUserInfo == null) {
+            throw new NotFoundException("用户信息不存在");
+        }
+
         Map<String, Object> map = new HashMap<>();
         if (avatar.isEmpty()) {
             throw new ApiException("文件内容为空");
         }
 
-        String fileName = avatar.getOriginalFilename();
-        int rannum = (int) (new Random().nextDouble() * (99999 - 10000 + 1)) + 10000; // 获取随机数
-        String nowTimeStr = new SimpleDateFormat(
-                "HHmmss").format(new Date()); // 当前时间
-        String destFileName = nowTimeStr + rannum + fileName.substring(fileName.lastIndexOf("."));
-
-        String filePath = ResourceUtils.getURL("classpath:").getPath() + "upload/";
-        String subDir = new SimpleDateFormat("yyyy/MM/dd/").format(new Date());
-        filePath += subDir;
-        File path = new File(filePath);
-        File dest = new File(filePath + destFileName);
-        synchronized (path) {
-            if (!path.exists()) {
-                if (!path.mkdirs()) {
-                    throw new ApiException("目录创建失败:" + path.getParent());
-                }
-            }
-        }
-        avatar.transferTo(dest);
-
-        map.put("avatar", subDir + destFileName);
+        map.put("avatar", userService.saveAvatar(avatar, oldUserInfo));
 
         return map;
-
     }
 }

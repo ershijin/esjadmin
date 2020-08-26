@@ -44,14 +44,6 @@
         VALUE (#{username}, #{password}, #{name}, #{avatar}, #{enabled}, #{remark}, #{createTime})
     </insert>
 
-    <update id="update" parameterType="User">
-        UPDATE user SET name=#{name},avatar=#{avatar},is_enabled=#{enabled},remark=#{remark},update_time=#{updateTime}
-        <if test="password != null and password">
-            ,password=#{password}
-        </if>
-        WHERE id=#{id}
-    </update>
-
 
     <delete id="deleteById" parameterType="Long">
         DELETE FROM user WHERE id=#{0}

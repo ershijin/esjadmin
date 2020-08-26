@@ -797,7 +797,6 @@ export default {
         data: fmData
       })
         .then(resData => {
-          console.log(resData)
           this.loading = 2
           this.$emit('crop-upload-success', resData)
         })

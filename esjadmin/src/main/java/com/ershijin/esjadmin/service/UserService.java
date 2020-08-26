@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.esjadmin.component.Config;
 import com.ershijin.esjadmin.dao.UserMapper;
 import com.ershijin.esjadmin.dao.UserRoleMapper;
+import com.ershijin.esjadmin.exception.ApiException;
 import com.ershijin.esjadmin.model.PageResult;
 import com.ershijin.esjadmin.model.entity.Authentication;
 import com.ershijin.esjadmin.model.entity.Role;
@@ -26,7 +27,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -42,6 +48,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * 从数据库或者缓存中取出用户信息，详见接口注释
+     *
      * @param username
      * @return
      * @throws UsernameNotFoundException
@@ -84,6 +91,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * 获取用户登录信息
+     *
      * @param authentication 凭证信息，保存在数据库中的
      * @return
      */
@@ -109,6 +117,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * 清除数据库或者缓存中登录salt
+     *
      * @param token
      */
     public void deleteLoginInfo(String token) {
@@ -119,7 +128,7 @@ public class UserService implements UserDetailsService {
         Page<User> page = new Page<>(pageNum, pageSize);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(query.getKeyword())) {
-            queryWrapper.and(i->i.like("username", query.getKeyword()).or().like("name", query.getKeyword()));
+            queryWrapper.and(i -> i.like("username", query.getKeyword()).or().like("name", query.getKeyword()));
         }
         if (query.getEnabled() != null) {
             queryWrapper.eq("is_enabled", query.getEnabled());
@@ -157,6 +166,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * 更新用户信息
+     *
      * @param user
      */
     @Transactional
@@ -167,7 +177,7 @@ public class UserService implements UserDetailsService {
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         }
         // 保存user信息
-        userMapper.update(user);
+        userMapper.updateById(user);
         // 删除 user_role 信息
         userRoleMapper.deleteByUserId(user.getId());
         // 保存新 user_role 信息
@@ -186,6 +196,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * 更新密码
+     *
      * @param user
      */
     public void updatePassword(User user) {
@@ -197,6 +208,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * 获取用户信息
+     *
      * @param id
      * @return
      */
@@ -207,6 +219,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * 通过用户id查询用户的角色列表
+     *
      * @param id
      * @return
      */
@@ -222,6 +235,7 @@ public class UserService implements UserDetailsService {
 //        userMapper.enable(user);
         userMapper.updateById(user);
     }
+
     public void disableById(Long id) {
         User user = new User();
         user.setId(id);
@@ -236,5 +250,51 @@ public class UserService implements UserDetailsService {
         userRoleMapper.deleteByUserId(id);
         // 删除用户记录
         userMapper.deleteById(id);
+    }
+
+    /**
+     * 保存头像
+     *
+     * @param avatar
+     * @return
+     * @throws IOException
+     * @throws ApiException
+     */
+    public String saveAvatar(MultipartFile avatar, User oldUserInfo) throws IOException, ApiException {
+        String fileName = avatar.getOriginalFilename();
+        int rannum = (int) (new Random().nextDouble() * (99999 - 10000 + 1)) + 10000; // 获取随机数
+        String nowTimeStr = new SimpleDateFormat(
+                "HHmmss").format(new Date()); // 当前时间
+        String destFileName = nowTimeStr + rannum + fileName.substring(fileName.lastIndexOf("."));
+
+        String uploadPath = ResourceUtils.getURL("classpath:").getPath() + "upload/";
+        String subDir = "avatar/" + new SimpleDateFormat("yyyy/MM/dd/").format(new Date());
+        String filePath = uploadPath + subDir;
+        File path = new File(filePath);
+        File dest = new File(filePath + destFileName);
+        synchronized (path) {
+            if (!path.exists()) {
+                if (!path.mkdirs()) {
+                    throw new ApiException("目录创建失败:" + path.getParent());
+                }
+            }
+        }
+        avatar.transferTo(dest);
+
+        String avatarFile = subDir + destFileName;
+
+
+        User user = new User();
+        // 存入数据库
+        user.setId(oldUserInfo.getId());
+        user.setEnabled(oldUserInfo.isEnabled());
+        user.setUpdateTime(new Date());
+        user.setAvatar(avatarFile);
+        userMapper.updateById(user);
+
+        // 删除老头像
+        new File(uploadPath + oldUserInfo.getAvatar()).delete();
+
+        return avatarFile;
     }
 }

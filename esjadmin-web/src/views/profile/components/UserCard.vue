@@ -11,7 +11,7 @@
           alt="点击上传头像"
           title="点击上传头像"
           :size="100"
-          :src="avatar ? SYSCONFIG.UPLOAD_BASE_URL + avatar : defaultAvatar"
+          :src="avatar ? CONFIG.UPLOAD_BASE_URL + avatar : defaultAvatar"
           @click.native="imagecropperShow=true"
         />
         <image-cropper
@@ -19,7 +19,7 @@
           :key="imagecropperKey"
           :width="300"
           :height="300"
-          :url="SYSCONFIG.AVATAR_UPLOAD_API"
+          :url="CONFIG.AVATAR_UPLOAD_API"
           @close="close"
           @crop-upload-success="cropSuccess"
         />
@@ -48,6 +48,7 @@
 <script>
 import ImageCropper from '@/components/ImageCropper'
 import defaultAvatar from '@/assets/images/avatar.png'
+import store from '@/store'
 export default {
   components: { ImageCropper },
   props: {
@@ -68,16 +69,16 @@ export default {
       imagecropperShow: false,
       imagecropperKey: 0,
       defaultAvatar: defaultAvatar,
-      avatar: this.user.avatar,
-      userinfo: this.user
+      userinfo: this.user,
+      avatar: this.user.avatar
     }
   },
   methods: {
     cropSuccess(resData) {
-      console.log(resData)
       this.imagecropperShow = false
       this.imagecropperKey = this.imagecropperKey + 1
       this.avatar = resData.avatar
+      store.dispatch('user/getInfo')
     },
     close() {
       this.imagecropperShow = false
