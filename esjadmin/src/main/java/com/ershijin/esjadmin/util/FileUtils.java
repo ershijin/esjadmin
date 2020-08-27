@@ -46,4 +46,7 @@ public class FileUtils {
         file.transferTo(dest);
         return subDir + destFileName;
     }
+    public static boolean del(String pathName) {
+        return new File(pathName).delete();
+    }
 }

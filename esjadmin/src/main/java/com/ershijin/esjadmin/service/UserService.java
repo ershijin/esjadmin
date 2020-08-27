@@ -14,9 +14,9 @@ import com.ershijin.esjadmin.model.entity.User;
 import com.ershijin.esjadmin.model.entity.UserRole;
 import com.ershijin.esjadmin.model.query.UserQuery;
 import com.ershijin.esjadmin.model.vo.UserVO;
+import com.ershijin.esjadmin.util.FileUtils;
 import com.ershijin.esjadmin.util.JsonUtils;
 import com.ershijin.esjadmin.util.MyBeanUtils;
-import com.ershijin.esjadmin.util.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -273,11 +272,11 @@ public class UserService implements UserDetailsService {
             userMapper.updateById(user);
 
             // 删除老头像
-            new File(uploadPath + oldUserInfo.getAvatar()).delete();
+            FileUtils.del(uploadPath + oldUserInfo.getAvatar());
 
             return avatarFile;
         } catch (IOException e) {
-            throw new ApiException("目录创建失败:" + e.getMessage());
+            throw new ApiException(e.getMessage());
         }
     }
 }
