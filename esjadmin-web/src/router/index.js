@@ -6,8 +6,6 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
-/* Router Modules */
-import componentsRouter from './modules/components'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -92,9 +90,7 @@ export const constantRoutes = [
         meta: { title: '个人信息', icon: 'user', noCache: true }
       }
     ]
-  },
-  /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter
+  }
 ]
 
 // 404路由 必须放到最后
