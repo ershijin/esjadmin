@@ -47,11 +47,13 @@ Vue.config.productionTip = false
 
 // 获取全局配置
 getConfigs().then(data => {
-  Vue.prototype.CONFIG = data
-  new Vue({
-    el: '#app',
-    router,
-    store,
-    render: h => h(App)
-  })
+  Vue.prototype.$config = data
 })
+
+new Vue({
+  el: '#app',
+  router,
+  store,
+  render: h => h(App)
+})
+

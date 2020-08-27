@@ -20,7 +20,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar ? CONFIG.UPLOAD_BASE_URL + avatar : defaultAvatar" class="user-avatar">
+          <img :src="avatar ? $config.upload_base_url + avatar : defaultAvatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">

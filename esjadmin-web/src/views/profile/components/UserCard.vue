@@ -11,15 +11,15 @@
           alt="点击上传头像"
           title="点击上传头像"
           :size="100"
-          :src="avatar ? CONFIG.UPLOAD_BASE_URL + avatar : defaultAvatar"
+          :src="avatar ? $config.upload_base_url + avatar : defaultAvatar"
           @click.native="imagecropperShow=true"
         />
         <image-cropper
           v-show="imagecropperShow"
           :key="imagecropperKey"
-          :width="300"
-          :height="300"
-          :url="CONFIG.AVATAR_UPLOAD_API"
+          :width="200"
+          :height="200"
+          :url="$config.avatar_upload_api"
           @close="close"
           @crop-upload-success="cropSuccess"
         />
