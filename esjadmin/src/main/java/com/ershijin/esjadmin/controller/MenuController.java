@@ -1,5 +1,6 @@
 package com.ershijin.esjadmin.controller;
 
+import com.ershijin.esjadmin.annotation.Log;
 import com.ershijin.esjadmin.model.entity.Menu;
 import com.ershijin.esjadmin.model.vo.TreeNodeMenu;
 import com.ershijin.esjadmin.service.MenuService;
@@ -31,12 +32,14 @@ public class MenuController {
 
     @PostMapping("save")
     @PreAuthorize("hasAuthority('menus:save')")
+    @Log("创建菜单")
     void save(@RequestBody Menu menu) {
         menuService.save(menu);
     }
 
     @PostMapping("update")
     @PreAuthorize("hasAuthority('menus:update')")
+    @Log("更新菜单")
     void update(@Validated({Update.class}) @RequestBody Menu menu) {
         menuService.update(menu);
     }
@@ -47,6 +50,7 @@ public class MenuController {
      */
     @PostMapping("enable")
     @PreAuthorize("hasAuthority('menus:enable')")
+    @Log("启用菜单")
     void enable(Long id) {
         menuService.enableById(id);
     }
@@ -57,6 +61,7 @@ public class MenuController {
      */
     @PostMapping("disable")
     @PreAuthorize("hasAuthority('menus:disable')")
+    @Log("禁用菜单")
     void disable(Long id) {
         menuService.disableById(id);
     }
@@ -67,6 +72,7 @@ public class MenuController {
      */
     @PostMapping("remove")
     @PreAuthorize("hasAuthority('menus:remove')")
+    @Log("删除菜单")
     void remove(Long id) {
         menuService.removeById(id);
     }
