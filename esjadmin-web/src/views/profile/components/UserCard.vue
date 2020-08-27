@@ -11,7 +11,7 @@
           alt="点击上传头像"
           title="点击上传头像"
           :size="100"
-          :src="avatar ? $config.upload_base_url + avatar : defaultAvatar"
+          :src="avatar ? $config.avatar_base_url + avatar : defaultAvatar"
           @click.native="imagecropperShow=true"
         />
         <image-cropper

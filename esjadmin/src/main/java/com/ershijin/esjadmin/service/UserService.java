@@ -16,6 +16,7 @@ import com.ershijin.esjadmin.model.query.UserQuery;
 import com.ershijin.esjadmin.model.vo.UserVO;
 import com.ershijin.esjadmin.util.JsonUtils;
 import com.ershijin.esjadmin.util.MyBeanUtils;
+import com.ershijin.esjadmin.util.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -232,7 +232,6 @@ public class UserService implements UserDetailsService {
         user.setId(id);
         user.setUpdateTime(new Date());
         user.setEnabled(true);
-//        userMapper.enable(user);
         userMapper.updateById(user);
     }
 
@@ -261,40 +260,24 @@ public class UserService implements UserDetailsService {
      * @throws ApiException
      */
     public String saveAvatar(MultipartFile avatar, User oldUserInfo) throws IOException, ApiException {
-        String fileName = avatar.getOriginalFilename();
-        int rannum = (int) (new Random().nextDouble() * (99999 - 10000 + 1)) + 10000; // 获取随机数
-        String nowTimeStr = new SimpleDateFormat(
-                "HHmmss").format(new Date()); // 当前时间
-        String destFileName = nowTimeStr + rannum + fileName.substring(fileName.lastIndexOf("."));
+        String uploadPath = ResourceUtils.getURL("classpath:").getPath() + "upload/avatar/";
+        try {
+            String avatarFile = FileUtils.upload(avatar, uploadPath);
 
-        String uploadPath = ResourceUtils.getURL("classpath:").getPath() + "upload/";
-        String subDir = "avatar/" + new SimpleDateFormat("yyyy/MM/dd/").format(new Date());
-        String filePath = uploadPath + subDir;
-        File path = new File(filePath);
-        File dest = new File(filePath + destFileName);
-        synchronized (path) {
-            if (!path.exists()) {
-                if (!path.mkdirs()) {
-                    throw new ApiException("目录创建失败:" + path.getParent());
-                }
-            }
+            User user = new User();
+            // 存入数据库
+            user.setId(oldUserInfo.getId());
+            user.setEnabled(oldUserInfo.isEnabled());
+            user.setUpdateTime(new Date());
+            user.setAvatar(avatarFile);
+            userMapper.updateById(user);
+
+            // 删除老头像
+            new File(uploadPath + oldUserInfo.getAvatar()).delete();
+
+            return avatarFile;
+        } catch (IOException e) {
+            throw new ApiException("目录创建失败:" + e.getMessage());
         }
-        avatar.transferTo(dest);
-
-        String avatarFile = subDir + destFileName;
-
-
-        User user = new User();
-        // 存入数据库
-        user.setId(oldUserInfo.getId());
-        user.setEnabled(oldUserInfo.isEnabled());
-        user.setUpdateTime(new Date());
-        user.setAvatar(avatarFile);
-        userMapper.updateById(user);
-
-        // 删除老头像
-        new File(uploadPath + oldUserInfo.getAvatar()).delete();
-
-        return avatarFile;
     }
 }
