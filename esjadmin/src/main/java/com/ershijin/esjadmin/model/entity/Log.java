@@ -40,7 +40,7 @@ public class Log implements Serializable {
     private Long time;
 
     /** 异常详细  */
-    private byte[] exceptionDetail;
+    private String exceptionDetail;
 
     /** 创建日期 */
     private Timestamp createTime;

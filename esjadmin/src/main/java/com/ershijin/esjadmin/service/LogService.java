@@ -1,10 +1,15 @@
 package com.ershijin.esjadmin.service;
 
 import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.esjadmin.dao.LogMapper;
+import com.ershijin.esjadmin.model.PageResult;
 import com.ershijin.esjadmin.model.entity.Log;
 import com.ershijin.esjadmin.util.RequestUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +65,23 @@ public class LogService {
         log.setParams(params.toString() + "}");
 
         logMapper.insert(log);
+    }
+
+    public PageResult list(String type, int pageNum, int pageSize, String startTime, String endTime) {
+        Page<Log> page = new Page<>(pageNum, pageSize);
+        QueryWrapper<Log> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(!StringUtils.isEmpty(type), "type", type);
+        queryWrapper.ge(!StringUtils.isEmpty(startTime), "create_time", startTime);
+        queryWrapper.le(!StringUtils.isEmpty(endTime), "create_time", endTime);
+
+        queryWrapper.select(Log.class, i -> !i.getColumn().equals("exception_detail"));
+        queryWrapper.orderByDesc("id");
+
+        IPage<Log> result = logMapper.selectPage(page, queryWrapper);
+        return new PageResult(result.getTotal(), result.getRecords());
+    }
+
+    public Log get(long id) {
+        return logMapper.selectById(id);
     }
 }

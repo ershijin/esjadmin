@@ -88,7 +88,7 @@ public class LogAspect {
         log.setType("ERROR");
         log.setTime(System.currentTimeMillis() - currentTime.get());
         currentTime.remove();
-        log.setExceptionDetail(ThrowableUtils.getStackTrace(e).getBytes());
+        log.setExceptionDetail(ThrowableUtils.getStackTrace(e));
         log.setUsername(getUsername());
         HttpServletRequest request = ObjectUtils.getHttpServletRequest();
         log.setBrowser(RequestUtils.getBrowser(request));
