@@ -2,6 +2,7 @@ package com.ershijin.esjadmin.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.env.Environment;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Component
 @Slf4j
-public class SpringUtils implements ApplicationContextAware {
+public class SpringUtils implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext;
     private static final List<CallBack> CALL_BACKS = new ArrayList<>();
@@ -40,9 +41,17 @@ public class SpringUtils implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if(SpringUtils.applicationContext == null) {
-            SpringUtils.applicationContext = applicationContext;
+        if(SpringUtils.applicationContext != null) {
+            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + SpringUtils.applicationContext);
         }
+        SpringUtils.applicationContext = applicationContext;
+        if (addCallback) {
+            for (CallBack callBack : SpringUtils.CALL_BACKS) {
+                callBack.executor();
+            }
+            CALL_BACKS.clear();
+        }
+        SpringUtils.addCallback = false;
     }
 
     /**
@@ -119,4 +128,10 @@ public class SpringUtils implements ApplicationContextAware {
         return getProperties(property, null, requiredType);
     }
 
+    @Override
+    public void destroy() throws Exception {
+        log.debug("清除ApplicationContext:"
+                + applicationContext);
+        applicationContext = null;
+    }
 }

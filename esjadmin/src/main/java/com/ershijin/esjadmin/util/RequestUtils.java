@@ -22,7 +22,7 @@ import java.net.UnknownHostException;
 public class RequestUtils {
     private static final Logger log = LoggerFactory.getLogger(RequestMapping.class);
 
-    private static boolean ipLocal = false;
+    private static boolean ipLocal = true;
     private static DbConfig config;
     private static File file = null;
 
@@ -30,7 +30,7 @@ public class RequestUtils {
 
     static {
         SpringUtils.addCallBacks(() -> {
-            RequestUtils.ipLocal = SpringUtils.getProperties("ip.local-parsing", false, Boolean.class);
+            RequestUtils.ipLocal = SpringUtils.getProperties("ip.local-parsing", true, Boolean.class);
             if (ipLocal) {
                 /*
                  * 此文件为独享 ，不必关闭

@@ -56,3 +56,7 @@ logging:
   level:
 #    root: debug
     com.ershijin.esjadmin: debug
+
+# 是否本地解析IP地区
+ip:
+  local-parsing: true
