@@ -13,7 +13,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     List<Menu> listByParentId(Integer parentId);
 
-    void save(Menu menu);
+//    void save(Menu menu);
 
     /**
      * 获取所有的树节点形式菜单

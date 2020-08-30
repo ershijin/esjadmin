@@ -221,6 +221,16 @@
             <el-col :span="12">
               <el-form-item
                 v-show="temp.type.toString() === '1'"
+                label="组件名称"
+                prop="component"
+              >
+                <el-input v-model="temp.name" />
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item
+                v-show="temp.type.toString() === '1'"
                 label="组件路径"
                 prop="component"
               >
@@ -230,6 +240,14 @@
           </el-row>
 
           <el-row>
+            <el-col :span="12">
+              <el-form-item v-show="temp.type.toString() !== '2'" label="菜单缓存" prop="hidden">
+                <el-radio-group v-model="temp.noCache">
+                  <el-radio :label="false">是</el-radio>
+                  <el-radio :label="true">否</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
             <el-col :span="12">
               <el-form-item v-show="temp.type.toString() !== '2'" label="是否隐藏" prop="hidden">
                 <el-radio-group v-model="temp.hidden">
@@ -304,6 +322,7 @@ function transformOptions(menus) {
 }
 
 export default {
+  name: 'Menu',
   directives: { waves, elDragDialog },
   components: { IconSelect, Treeselect },
   data() {
@@ -331,6 +350,8 @@ export default {
         parentId: 0,
         hidden: false,
         enabled: true,
+        name: '',
+        noCache: false,
         component: '',
         icon: '',
         permission: ''
@@ -463,8 +484,8 @@ export default {
     },
 
     // 选中图标
-    selectedIcon(name) {
-      this.temp.icon = name
+    selectedIcon(icon) {
+      this.temp.icon = icon
     }
   }
 }

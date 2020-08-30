@@ -11,4 +11,6 @@ public class MenuMeta implements Serializable {
 
     private String icon;
 
+    private boolean noCache;
+
 }

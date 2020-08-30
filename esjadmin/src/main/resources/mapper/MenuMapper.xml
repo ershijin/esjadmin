@@ -38,7 +38,9 @@
         <id column="id" property="id" />
         <result property="path" column="path" />
         <result property="redirect" column="redirect" />
+        <result property="name" column="name" />
         <result property="component" column="component" />
+        <result property="noCache" column="is_no_cache"/>
         <result property="title" column="title" />
         <result property="icon" column="icon" />
         <result property="parentId" column="parent_id" />
@@ -51,6 +53,7 @@
         <association property="meta" javaType="MenuMeta">
             <result property="title" column="title"/>
             <result property="icon" column="icon"/>
+            <result property="noCache" column="is_no_cache"/>
         </association>
     </resultMap>
 
@@ -84,13 +87,13 @@
         ORDER BY priority DESC
     </select>
 
-    <insert id="save" parameterType="Menu" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO menu (parent_id, path, redirect, component, title, icon, priority, remark, is_hidden,
-        is_enabled, create_time)
-        VALUES (#{parentId}, #{path}, #{redirect}, #{component}, #{title}, #{icon},
-        #{priority},#{remark},
-        #{hidden}, #{enabled}, #{createTime} )
-    </insert>
+<!--    <insert id="save" parameterType="Menu" useGeneratedKeys="true" keyProperty="id">-->
+<!--        INSERT INTO menu (parent_id, path, redirect, component, title, icon, priority, remark, is_hidden,-->
+<!--        is_enabled, create_time)-->
+<!--        VALUES (#{parentId}, #{path}, #{redirect}, #{component}, #{title}, #{icon},-->
+<!--        #{priority},#{remark},-->
+<!--        #{hidden}, #{enabled}, #{createTime} )-->
+<!--    </insert>-->
 
     <update id="enable" parameterType="Menu">
         UPDATE menu SET

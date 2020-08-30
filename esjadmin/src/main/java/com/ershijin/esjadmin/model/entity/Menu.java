@@ -36,7 +36,12 @@ public class Menu implements Serializable {
 
     private String redirect;
 
+    private String name;
+
     private String component;
+
+    @TableField("is_no_cache")
+    private boolean noCache;
 
     private String title;
 

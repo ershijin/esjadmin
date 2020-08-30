@@ -28,7 +28,8 @@ public class MenuService {
      */
     public void save(Menu menu) {
         menu.setCreateTime(new Date());
-        menuMapper.save(menu);
+//        menuMapper.save(menu);
+        menuMapper.insert(menu);
     }
 
     /**

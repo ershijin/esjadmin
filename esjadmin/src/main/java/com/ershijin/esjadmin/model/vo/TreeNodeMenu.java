@@ -1,7 +1,6 @@
 package com.ershijin.esjadmin.model.vo;
 
 import com.ershijin.esjadmin.model.entity.MenuMeta;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
 
@@ -20,7 +19,11 @@ public class TreeNodeMenu implements Serializable {
 
     private String redirect;
 
+    private String name;
+
     private String component;
+
+    private boolean noCache;
 
     private String title;
 

@@ -64,11 +64,6 @@
         <template slot-scope="{row}">{{ row.time }}ms</template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" />
-      <el-table-column label="异常详情" width="100px">
-        <template slot-scope="scope">
-          <el-button type="text" @click="info(scope.row.id)">查看详情</el-button>
-        </template>
-      </el-table-column>
     </el-table>
 
     <pagination
@@ -78,29 +73,23 @@
       :limit.sync="listQuery.pageSize"
       @pagination="getList"
     />
-
-    <el-dialog :visible.sync="dialogVisible" title="异常详情" append-to-body top="30px" width="85%">
-      <pre>{{ errorInfo }}</pre>
-    </el-dialog>
   </div>
-
 </template>
 
 <script>
 import {
-  errorList as listLogs, getErrorDetail
+  list as listLogs
 } from '@/api/logs'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
+  name: 'Log',
   components: { Pagination },
   directives: { waves },
 
   data() {
     return {
-      dialogVisible: false,
-      errorInfo: null,
       list: [],
       total: 0,
       listLoading: true,
@@ -167,14 +156,6 @@ export default {
         this.listQuery.startTime = this.time[0]
         this.listQuery.endTime = this.time[1]
       }
-    },
-
-    info(id) {
-      this.dialogVisible = true
-      getErrorDetail(id).then(res => {
-        console.log(res)
-        this.errorInfo = res.exceptionDetail
-      })
     }
 
   }
