@@ -9,7 +9,7 @@ public class UserQuery {
     private String keyword;
 
     // 角色id
-    private Long role_id;
+    private Long roleId;
 
     // 激活状态
     private Boolean enabled;

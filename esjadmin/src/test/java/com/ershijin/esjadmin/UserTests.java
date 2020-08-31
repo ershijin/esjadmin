@@ -1,5 +1,6 @@
 package com.ershijin.esjadmin;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.esjadmin.dao.UserMapper;
 import com.ershijin.esjadmin.model.entity.User;
 import com.ershijin.esjadmin.model.query.UserQuery;
@@ -25,7 +26,10 @@ public class UserTests {
     }
     @Test
     public void testUserServiceList() {
-        userService.list(1, 10, new UserQuery());
+        Page<User> page = new Page<>(2, 3);
+        UserQuery userQuery = new UserQuery();
+        userQuery.setKeyword("a");
+        userService.list(userQuery, page);
     }
 
 }

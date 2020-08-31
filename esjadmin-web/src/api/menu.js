@@ -3,7 +3,7 @@ import request from '@/utils/request'
 
 export function getList(params) {
   return request({
-    url: '/menus/list',
+    url: '/menus',
     method: 'get',
     params
   })
@@ -15,7 +15,7 @@ export function getList(params) {
  */
 export function insertMenu(data) {
   return request({
-    url: '/menus/save',
+    url: '/menus',
     method: 'post',
     data
   })
@@ -27,8 +27,8 @@ export function insertMenu(data) {
  */
 export function updateMenu(data) {
   return request({
-    url: '/menus/update',
-    method: 'post',
+    url: '/menus',
+    method: 'put',
     data
   })
 }
@@ -39,7 +39,7 @@ export function updateMenu(data) {
  */
 export function enableMenu(id) {
   return request({
-    url: '/menus/enable?id=' + id,
+    url: '/menus/' + id + '/enable',
     method: 'post'
   })
 }
@@ -50,7 +50,7 @@ export function enableMenu(id) {
  */
 export function disableMenu(id) {
   return request({
-    url: '/menus/disable?id=' + id,
+    url: '/menus/' + id + '/disable',
     method: 'post'
   })
 }
@@ -61,8 +61,8 @@ export function disableMenu(id) {
  */
 export function deleteMenu(id) {
   return request({
-    url: '/menus/remove?id=' + id,
-    method: 'post'
+    url: '/menus/' + id,
+    method: 'delete'
   })
 }
 

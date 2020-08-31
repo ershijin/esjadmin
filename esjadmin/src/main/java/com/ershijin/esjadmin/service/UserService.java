@@ -123,17 +123,14 @@ public class UserService implements UserDetailsService {
         authenticationService.deleteByToken(token);
     }
 
-    public PageResult list(int pageNum, int pageSize, UserQuery query) {
-        Page<User> page = new Page<>(pageNum, pageSize);
+    public PageResult list(UserQuery userQuery, Page<User> page) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(query.getKeyword())) {
-            queryWrapper.and(i -> i.like("username", query.getKeyword()).or().like("name", query.getKeyword()));
+        if (!StringUtils.isEmpty(userQuery.getKeyword())) {
+            queryWrapper.and(i -> i.like("username", userQuery.getKeyword()).or().like("name", userQuery.getKeyword()));
         }
-        if (query.getEnabled() != null) {
-            queryWrapper.eq("is_enabled", query.getEnabled());
-        }
-        if (query.getRole_id() != null) {
-            queryWrapper.apply("id IN (SELECT user_id FROM user_role WHERE role_id={0})", query.getRole_id());
+        queryWrapper.eq(userQuery.getEnabled() != null, "is_enabled", userQuery.getEnabled());
+        if (userQuery.getRoleId() != null) {
+            queryWrapper.apply("id IN (SELECT user_id FROM user_role WHERE role_id={0})", userQuery.getRoleId());
         }
         queryWrapper.select(User.class, i -> !i.getColumn().equals("password"));
         IPage<User> result = userMapper.selectPage(page, queryWrapper);

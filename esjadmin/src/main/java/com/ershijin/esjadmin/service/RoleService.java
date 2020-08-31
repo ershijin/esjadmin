@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -26,12 +25,9 @@ public class RoleService {
     @Autowired
     private RoleMenuMapper roleMenuMapper;
 
-    public PageResult list(int pageNum, int pageSize, Map condition) {
-        Page<Role> page = new Page<>(pageNum, pageSize);
+    public PageResult list(String keyword, Page<Role> page) {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty((String) condition.get("keyword"))) {
-            queryWrapper.like("name", condition.get("keyword"));
-        }
+        queryWrapper.like(!StringUtils.isEmpty(keyword), "name", keyword);
         IPage<Role> result = roleMapper.selectPage(page, queryWrapper);
         return new PageResult(result.getTotal(), result.getRecords());
     }

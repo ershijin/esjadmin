@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.esjadmin.dao.LogMapper;
 import com.ershijin.esjadmin.model.PageResult;
 import com.ershijin.esjadmin.model.entity.Log;
+import com.ershijin.esjadmin.model.query.LogQuery;
 import com.ershijin.esjadmin.util.RequestUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -67,12 +68,11 @@ public class LogService {
         logMapper.insert(log);
     }
 
-    public PageResult list(String type, int pageNum, int pageSize, String startTime, String endTime) {
-        Page<Log> page = new Page<>(pageNum, pageSize);
+    public PageResult list(String type, LogQuery logQuery, Page<Log> page) {
         QueryWrapper<Log> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(!StringUtils.isEmpty(type), "type", type);
-        queryWrapper.ge(!StringUtils.isEmpty(startTime), "create_time", startTime);
-        queryWrapper.le(!StringUtils.isEmpty(endTime), "create_time", endTime);
+        queryWrapper.ge(!StringUtils.isEmpty(logQuery.getStartTime()), "create_time", logQuery.getStartTime());
+        queryWrapper.le(!StringUtils.isEmpty(logQuery.getEndTime()), "create_time", logQuery.getEndTime());
 
         queryWrapper.select(Log.class, i -> !i.getColumn().equals("exception_detail"));
         queryWrapper.orderByDesc("id");

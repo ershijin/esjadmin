@@ -18,26 +18,26 @@ public class MenuController {
     @Autowired
     MenuService menuService;
 
-    @GetMapping("list")
+    @GetMapping
     @PreAuthorize("hasAuthority('menus:list')")
     List<Menu> listMenu() {
         return menuService.listAll();
     }
 
-    @GetMapping("tree")
+    @GetMapping("/tree")
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     List<TreeNodeMenu> menuTree() {
         return menuService.getMenuTree();
     }
 
-    @PostMapping("save")
+    @PostMapping
     @PreAuthorize("hasAuthority('menus:save')")
     @Log("创建菜单")
     void save(@RequestBody Menu menu) {
         menuService.save(menu);
     }
 
-    @PostMapping("update")
+    @PutMapping
     @PreAuthorize("hasAuthority('menus:update')")
     @Log("更新菜单")
     void update(@Validated({Update.class}) @RequestBody Menu menu) {
@@ -48,10 +48,10 @@ public class MenuController {
      * 启用菜单
      * @param id
      */
-    @PostMapping("enable")
+    @PostMapping("/{id}/enable")
     @PreAuthorize("hasAuthority('menus:enable')")
     @Log("启用菜单")
-    void enable(Long id) {
+    void enable(@PathVariable Long id) {
         menuService.enableById(id);
     }
 
@@ -59,10 +59,10 @@ public class MenuController {
      * 禁用菜单
      * @param id
      */
-    @PostMapping("disable")
+    @PostMapping("/{id}/disable")
     @PreAuthorize("hasAuthority('menus:disable')")
     @Log("禁用菜单")
-    void disable(Long id) {
+    void disable(@PathVariable Long id) {
         menuService.disableById(id);
     }
 
@@ -70,10 +70,10 @@ public class MenuController {
      * 删除菜单
      * @param id
      */
-    @PostMapping("remove")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('menus:remove')")
     @Log("删除菜单")
-    void remove(Long id) {
+    void remove(@PathVariable Long id) {
         menuService.removeById(id);
     }
 }

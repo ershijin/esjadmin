@@ -58,8 +58,8 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.pageSize"
+      :page.sync="listQuery.current"
+      :limit.sync="listQuery.size"
       @pagination="getList"
     />
 
@@ -136,8 +136,8 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        page: 1,
-        pageSize: 10,
+        current: 1,
+        size: 10,
         keyword: undefined
       },
       temp: deepClone(defaultRoleMenuIds),
@@ -165,7 +165,7 @@ export default {
     },
 
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
     },
 
@@ -259,7 +259,7 @@ export default {
     // 获取角色对应的权限菜单
     fetchRoleMenus(row) {
       this.listLoading = true
-      listMenuIds({ id: row.id }).then(response => {
+      listMenuIds(row.id).then(response => {
         this.checkStrictly = true
         this.listLoading = false
         this.$nextTick(() => {

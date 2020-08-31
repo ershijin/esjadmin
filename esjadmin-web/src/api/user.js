@@ -33,14 +33,13 @@ export function updatePassword(data) {
 
 export function listRoleIds(params) {
   return request({
-    url: '/users/list_role_ids',
-    method: 'get',
-    params
+    url: '/users/' + params.user_id + '/roleIds',
+    method: 'get'
   })
 }
 export function list(params) {
   return request({
-    url: '/users/list',
+    url: '/users',
     method: 'get',
     params
   })
@@ -48,7 +47,7 @@ export function list(params) {
 
 export function save(data) {
   return request({
-    url: '/users/save',
+    url: '/users',
     method: 'post',
     data
   })
@@ -56,30 +55,27 @@ export function save(data) {
 
 export function update(data) {
   return request({
-    url: '/users/update',
-    method: 'post',
+    url: '/users',
+    method: 'put',
     data
   })
 }
 
 export function enable(data) {
   return request({
-    url: '/users/enable',
-    method: 'post',
-    data
+    url: '/users/' + data.id + '/enable',
+    method: 'post'
   })
 }
 export function disable(data) {
   return request({
-    url: '/users/disable',
-    method: 'post',
-    data
+    url: '/users/' + data.id + '/disable',
+    method: 'post'
   })
 }
 export function remove(data) {
   return request({
-    url: '/users/remove',
-    method: 'post',
-    data
+    url: '/users/' + data.id,
+    method: 'delete'
   })
 }

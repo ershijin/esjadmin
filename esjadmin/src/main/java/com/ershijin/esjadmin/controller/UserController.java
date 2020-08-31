@@ -1,12 +1,12 @@
 package com.ershijin.esjadmin.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.esjadmin.exception.ApiException;
 import com.ershijin.esjadmin.exception.NotFoundException;
 import com.ershijin.esjadmin.model.PageResult;
 import com.ershijin.esjadmin.model.entity.Menu;
 import com.ershijin.esjadmin.model.entity.Role;
 import com.ershijin.esjadmin.model.entity.User;
-import com.ershijin.esjadmin.model.form.IdForm;
 import com.ershijin.esjadmin.model.form.UserChangePasswordForm;
 import com.ershijin.esjadmin.model.form.UserForm;
 import com.ershijin.esjadmin.model.query.UserQuery;
@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.*;
 
@@ -45,7 +44,7 @@ public class UserController {
      * @return
      * @todo 根据当前用户生成菜单，重新组装返回结果格式,删除返回内容中的roles
      */
-    @GetMapping("info")
+    @GetMapping("/info")
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     public Map<String, Object> info() {
         UserDetails userDetails = UserUtils.getCurrentUser();
@@ -72,26 +71,14 @@ public class UserController {
     }
 
     /**
-     * 查询单个用户
-     *
-     * @param id
-     * @return
-     * @throws Exception
-     */
-    @GetMapping("get")
-    public void get(@Validated @NotNull Long id) {
-        userService.get(id);
-    }
-
-    /**
      * 根据用户id查询用户角色id列表
      *
      * @param userId
      * @return
      */
-    @GetMapping("list_role_ids")
+    @GetMapping("/{userId}/roleIds")
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
-    public Set<Long> listRoleIds(@RequestParam("user_id") Long userId) {
+    public Set<Long> listRoleIds(@PathVariable Long userId) {
         List<Role> roles = userService.listRolesById(userId);
         if (roles == null) {
             return null;
@@ -103,22 +90,19 @@ public class UserController {
         return roleIds;
     }
 
-    @GetMapping("list")
+    @GetMapping
     @PreAuthorize("hasAuthority('users:list')")
-    public PageResult list(int page, int pageSize, UserQuery query) {
-        return userService.list(page, pageSize, query);
+    public PageResult list(UserQuery query, Page page) {
+        return userService.list(query, page);
     }
 
     /**
      * 删除用户
-     *
-     * @param idDTO
-     * @throws Exception
      */
-    @PostMapping("remove")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('users:remove')")
-    public void remove(@Validated @RequestBody IdForm idDTO) {
-        userService.removeById(idDTO.getId());
+    public void remove(@PathVariable Long id) {
+        userService.removeById(id);
     }
 
     /**
@@ -127,7 +111,7 @@ public class UserController {
      * @param userForm
      * @return void
      */
-    @PostMapping("save")
+    @PostMapping
     @PreAuthorize("hasAuthority('users:save')")
     public void save(@Validated({Save.class}) @RequestBody UserForm userForm) {
         User user = new User();
@@ -149,7 +133,7 @@ public class UserController {
      *
      * @param userForm
      */
-    @PostMapping("update")
+    @PutMapping
     @PreAuthorize("hasAuthority('users:update')")
     public void update(@Validated({Update.class}) @RequestBody UserForm userForm) {
         User user = new User();
@@ -168,24 +152,20 @@ public class UserController {
 
     /**
      * 启用用户
-     *
-     * @param idDTO
      */
-    @PostMapping("enable")
+    @PostMapping("/{id}/enable")
     @PreAuthorize("hasAuthority('users:enable')")
-    public void enable(@Validated @RequestBody IdForm idDTO) {
-        userService.enableById(idDTO.getId());
+    public void enable(@Validated @PathVariable Long id) {
+        userService.enableById(id);
     }
 
     /**
      * 禁用用户
-     *
-     * @param idDTO
      */
-    @PostMapping("disable")
+    @PostMapping("/{id}/disable")
     @PreAuthorize("hasAuthority('users:disable')")
-    public void disable(@Validated @RequestBody IdForm idDTO) {
-        userService.disableById(idDTO.getId());
+    public void disable(@Validated @PathVariable Long id) {
+        userService.disableById(id);
     }
 
     /**

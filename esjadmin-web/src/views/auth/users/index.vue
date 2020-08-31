@@ -10,7 +10,7 @@
         @keyup.enter.native="handleFilter"
       />
 
-      <el-select v-model="listQuery.role_id" placeholder="角色" clearable class="filter-item" style="width:160px">
+      <el-select v-model="listQuery.roleId" placeholder="角色" clearable class="filter-item" style="width:160px">
         <el-option v-for="item in roles" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
 
@@ -106,8 +106,8 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.pageSize"
+      :page.sync="listQuery.current"
+      :limit.sync="listQuery.size"
       @pagination="getList"
     />
 
@@ -225,10 +225,10 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        page: 1,
-        pageSize: 10,
+        current: 1,
+        size: 10,
         keyword: undefined,
-        role_id: undefined,
+        roleId: undefined,
         enabled: undefined
       },
       dialogFormVisible: false,
@@ -239,7 +239,7 @@ export default {
   },
   created() {
     this.getList()
-    listRoles({ page: 0, pageSize: 9999 }).then(response => {
+    listRoles({ current: 0, size: 9999 }).then(response => {
       this.roles = response.rows
     })
   },
@@ -254,7 +254,7 @@ export default {
     },
 
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
     },
 

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function list(params) {
   return request({
-    url: '/roles/list',
+    url: '/roles',
     method: 'get',
     params
   })
@@ -14,7 +14,7 @@ export function list(params) {
  */
 export function insert(data) {
   return request({
-    url: '/roles/save',
+    url: '/roles',
     method: 'post',
     data
   })
@@ -23,11 +23,10 @@ export function insert(data) {
 /**
  * 获取角色权限菜单的id合集
  */
-export function listMenuIds(params) {
+export function listMenuIds(id) {
   return request({
-    url: '/roles/list_menu_ids',
-    method: 'get',
-    params
+    url: '/roles/' + id + '/menuIds',
+    method: 'get'
   })
 }
 
@@ -37,8 +36,8 @@ export function listMenuIds(params) {
  */
 export function update(data) {
   return request({
-    url: '/roles/update',
-    method: 'post',
+    url: '/roles',
+    method: 'put',
     data
   })
 }
@@ -48,8 +47,8 @@ export function update(data) {
  */
 export function remove(params) {
   return request({
-    url: '/roles/remove',
-    method: 'post',
+    url: '/roles',
+    method: 'delete',
     params
   })
 }
