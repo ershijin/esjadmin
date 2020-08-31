@@ -127,6 +127,7 @@ const defaultRoleMenuIds = {
   menuIds: []
 }
 export default {
+  name: 'Role',
   components: { Pagination },
   directives: { waves, elDragDialog },
 

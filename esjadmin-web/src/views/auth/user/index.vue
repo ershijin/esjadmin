@@ -215,6 +215,7 @@ const defaultData = {
   remark: ''
 }
 export default {
+  name: 'User',
   components: { Pagination },
   directives: { waves, elDragDialog },
 
