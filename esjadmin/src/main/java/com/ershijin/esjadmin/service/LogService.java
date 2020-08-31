@@ -29,6 +29,7 @@ public class LogService {
 
     /**
      * 保存日志
+     *
      * @param log
      * @param joinPoint
      */
@@ -73,6 +74,12 @@ public class LogService {
         queryWrapper.eq(!StringUtils.isEmpty(type), "type", type);
         queryWrapper.ge(!StringUtils.isEmpty(logQuery.getStartTime()), "create_time", logQuery.getStartTime());
         queryWrapper.le(!StringUtils.isEmpty(logQuery.getEndTime()), "create_time", logQuery.getEndTime());
+        queryWrapper.and(!StringUtils.isEmpty(logQuery.getKeyword()), i -> {
+            i.eq("username", logQuery.getKeyword())
+                    .or().eq("description", logQuery.getKeyword())
+                    .or().like("method", logQuery.getKeyword())
+                    .or().like("address", logQuery.getKeyword());
+        });
 
         queryWrapper.select(Log.class, i -> !i.getColumn().equals("exception_detail"));
         queryWrapper.orderByDesc("id");

@@ -2,6 +2,7 @@ package com.ershijin.esjadmin.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.esjadmin.component.Config;
 import com.ershijin.esjadmin.dao.UserMapper;
@@ -129,10 +130,12 @@ public class UserService implements UserDetailsService {
             queryWrapper.and(i -> i.like("username", userQuery.getKeyword()).or().like("name", userQuery.getKeyword()));
         }
         queryWrapper.eq(userQuery.getEnabled() != null, "is_enabled", userQuery.getEnabled());
-        if (userQuery.getRoleId() != null) {
-            queryWrapper.apply("id IN (SELECT user_id FROM user_role WHERE role_id={0})", userQuery.getRoleId());
-        }
+        queryWrapper.apply(userQuery.getRoleId() != null, "id IN (SELECT user_id FROM user_role WHERE " +
+                "role_id={0})", userQuery.getRoleId());
         queryWrapper.select(User.class, i -> !i.getColumn().equals("password"));
+
+        page.setOrders(OrderItem.descs("id"));
+
         IPage<User> result = userMapper.selectPage(page, queryWrapper);
         result.setRecords(MyBeanUtils.convert(result.getRecords(), UserVO.class));
         return new PageResult(result.getTotal(), result.getRecords());

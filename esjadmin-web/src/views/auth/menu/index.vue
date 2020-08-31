@@ -203,37 +203,26 @@
                 </el-popover>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
+
             <el-col :span="12">
               <el-form-item v-if="temp.type.toString() !== '2'" label="路由地址" prop="path">
                 <el-input v-model="temp.path" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item v-show="temp.type.toString() !== '2'" label="redirect" prop="redirect">
-                <el-input v-model="temp.redirect" />
+              <el-form-item v-show="temp.type.toString() !== '0'" label="权限标志" prop="permission">
+                <el-input v-model="temp.permission" />
               </el-form-item>
             </el-col>
-          </el-row>
 
-          <el-row>
             <el-col :span="12">
-              <el-form-item
-                v-show="temp.type.toString() === '1'"
-                label="组件名称"
-                prop="component"
-              >
+              <el-form-item v-if="temp.type.toString() === '1'" label="组件名称" prop="component">
                 <el-input v-model="temp.name" />
               </el-form-item>
             </el-col>
 
             <el-col :span="12">
-              <el-form-item
-                v-show="temp.type.toString() === '1'"
-                label="组件路径"
-                prop="component"
-              >
+              <el-form-item v-show="temp.type.toString() === '1'" label="组件路径" prop="component">
                 <el-input v-model="temp.component" />
               </el-form-item>
             </el-col>
@@ -241,7 +230,7 @@
 
           <el-row>
             <el-col :span="12">
-              <el-form-item v-show="temp.type.toString() !== '2'" label="菜单缓存" prop="hidden">
+              <el-form-item v-show="temp.type.toString() === '1'" label="菜单缓存" prop="hidden">
                 <el-radio-group v-model="temp.noCache">
                   <el-radio :label="false">是</el-radio>
                   <el-radio :label="true">否</el-radio>
@@ -266,9 +255,6 @@
             </el-col>
           </el-row>
 
-          <el-form-item v-show="temp.type.toString() !== '0'" label="权限标志" prop="permission">
-            <el-input v-model="temp.permission" />
-          </el-form-item>
           <el-form-item label="权重" prop="priority">
             <el-input-number v-model="temp.priority" />(权重越大越靠前)
           </el-form-item>
@@ -343,7 +329,6 @@ export default {
         id: null,
         type: 1,
         path: '',
-        redirect: '',
         title: '',
         priority: 0,
         remark: '',

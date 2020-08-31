@@ -15,7 +15,7 @@ const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 function transformMenu(menus) {
   const menusMap = []
   menus.map(v => {
-    const { type, path, redirect, name, component, children, meta, hidden } = v
+    const { type, path, name, component, children, meta, hidden } = v
     // 重新构建路由对象
     const item = {
       path,
@@ -27,11 +27,10 @@ function transformMenu(menus) {
       children: transformMenu(children)
     }
 
-    // item.meta.noCache = false
+    // if (children.length > 0) {
+    //   item.redirect = 'noRedirect'
+    // }
 
-    if (children.length > 0) {
-      item.redirect = redirect || 'noRedirect'
-    }
     if (type.toString() === '0') {
       item.component = Layout
     } else if (component) {
