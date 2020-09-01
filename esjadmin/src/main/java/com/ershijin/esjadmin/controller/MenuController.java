@@ -19,6 +19,7 @@ public class MenuController {
     MenuService menuService;
 
     @GetMapping
+    @Log("菜单列表")
     @PreAuthorize("hasAuthority('menus:list')")
     List<Menu> listMenu() {
         return menuService.listAll();

@@ -32,6 +32,9 @@ function transformMenu(menus) {
     // }
 
     if (type.toString() === '0') {
+      if (children.length < 1) {
+        return
+      }
       item.component = Layout
     } else if (component) {
       if (component === 'Layout') {

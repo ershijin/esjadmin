@@ -1,6 +1,7 @@
 package com.ershijin.esjadmin.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ershijin.esjadmin.annotation.Log;
 import com.ershijin.esjadmin.model.PageResult;
 import com.ershijin.esjadmin.model.form.RoleMenuIdsForm;
 import com.ershijin.esjadmin.service.RoleService;
@@ -25,6 +26,7 @@ public class RoleController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('roles:list')")
+    @Log("角色列表")
     PageResult list(String keyword, Page page) {
         return roleService.list(keyword, page);
     }
@@ -34,6 +36,7 @@ public class RoleController {
      */
     @PostMapping
     @PreAuthorize("hasAuthority('roles:save')")
+    @Log("新增角色")
     void save(@Valid @RequestBody RoleMenuIdsForm roleMenuIds) {
         roleService.save(roleMenuIds);
     }
@@ -43,6 +46,7 @@ public class RoleController {
      */
     @PutMapping
     @PreAuthorize("hasAuthority('roles:update')")
+    @Log("更新角色")
     void updateRole(@RequestBody RoleMenuIdsForm roleMenuIds) {
         roleService.update(roleMenuIds);
     }
@@ -64,6 +68,7 @@ public class RoleController {
      */
     @DeleteMapping
     @PreAuthorize("hasAuthority('roles:remove')")
+    @Log("删除角色")
     void remove(Long id) {
         roleService.deleteById(id);
     }

@@ -24,12 +24,14 @@ public class LogController {
     PageResult list(LogQuery logQuery, Page page) {
         return logService.list("INFO", logQuery, page);
     }
+
     @GetMapping("/error")
     @Log("异常日志列表")
     @PreAuthorize("hasAuthority('logs:error')")
     PageResult errorList(LogQuery logQuery, Page page) {
         return logService.list("ERROR", logQuery, page);
     }
+
     @GetMapping("/error/{id}")
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     com.ershijin.esjadmin.model.entity.Log getError(@PathVariable long id) {

@@ -1,6 +1,7 @@
 package com.ershijin.esjadmin.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ershijin.esjadmin.annotation.Log;
 import com.ershijin.esjadmin.exception.ApiException;
 import com.ershijin.esjadmin.exception.NotFoundException;
 import com.ershijin.esjadmin.model.PageResult;
@@ -92,6 +93,7 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:list')")
+    @Log("用户列表")
     public PageResult list(UserQuery query, Page page) {
         return userService.list(query, page);
     }
@@ -101,6 +103,7 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('users:remove')")
+    @Log("删除用户")
     public void remove(@PathVariable Long id) {
         userService.removeById(id);
     }
@@ -113,6 +116,7 @@ public class UserController {
      */
     @PostMapping
     @PreAuthorize("hasAuthority('users:save')")
+    @Log("添加用户")
     public void save(@Validated({Save.class}) @RequestBody UserForm userForm) {
         User user = new User();
         BeanUtils.copyProperties(userForm, user);
@@ -135,6 +139,7 @@ public class UserController {
      */
     @PutMapping
     @PreAuthorize("hasAuthority('users:update')")
+    @Log("修改用户")
     public void update(@Validated({Update.class}) @RequestBody UserForm userForm) {
         User user = new User();
         BeanUtils.copyProperties(userForm, user);
@@ -155,6 +160,7 @@ public class UserController {
      */
     @PostMapping("/{id}/enable")
     @PreAuthorize("hasAuthority('users:enable')")
+    @Log("启用用户")
     public void enable(@Validated @PathVariable Long id) {
         userService.enableById(id);
     }
@@ -164,6 +170,7 @@ public class UserController {
      */
     @PostMapping("/{id}/disable")
     @PreAuthorize("hasAuthority('users:disable')")
+    @Log("禁用用户")
     public void disable(@Validated @PathVariable Long id) {
         userService.disableById(id);
     }
@@ -177,6 +184,7 @@ public class UserController {
      */
     @PostMapping("updatePassword")
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
+    @Log("修改密码")
     public void updatePassword(@Validated @RequestBody UserChangePasswordForm userChangePasswordForm,
                                HttpServletRequest request) throws ApiException {
         String oldPassword = userChangePasswordForm.getOldPassword();
@@ -203,6 +211,7 @@ public class UserController {
 
     @PostMapping("updateAvatar")
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
+    @Log("修改头像")
     public Map updateAvatar(MultipartFile avatar) throws ApiException, IOException {
         UserDetails currentUser = UserUtils.getCurrentUser();
         User oldUserInfo = (User) userService.loadUserByUsername(currentUser.getUsername());
