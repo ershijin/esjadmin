@@ -29,12 +29,6 @@ public interface MenuMapper extends BaseMapper<Menu> {
     List<TreeNodeMenu> listTreeNodeMenuByRoles(List<Role> roles);
 
     /**
-     * 更新菜单
-     * @param menu
-     */
-//    void update(Menu menu);
-
-    /**
      * 启用菜单
      * @param menu
      */

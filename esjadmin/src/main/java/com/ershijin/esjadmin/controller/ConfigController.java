@@ -10,11 +10,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/configs")
-public class ConfigCongroller {
+public class ConfigController {
     @Autowired
     private ConfigService configService;
 
-    @GetMapping("")
+    @GetMapping
     public Map<String, String> list() {
         return configService.get();
     }

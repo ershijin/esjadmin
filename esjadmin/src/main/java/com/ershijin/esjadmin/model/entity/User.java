@@ -53,7 +53,7 @@ public class User implements UserDetails, Serializable {
 //        }
         if (menus != null) {
             menus.forEach(menu -> {
-                if (!StringUtils.isEmpty(menu.getPermission())) {
+                if (!StringUtils.isEmpty(menu.getPermission()) && menu.isEnabled()) {
                     authorities.add(new SimpleGrantedAuthority(menu.getPermission()));
                 }
             });

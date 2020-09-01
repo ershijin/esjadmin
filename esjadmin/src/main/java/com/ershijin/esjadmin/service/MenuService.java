@@ -28,7 +28,6 @@ public class MenuService {
      */
     public void save(Menu menu) {
         menu.setCreateTime(new Date());
-//        menuMapper.save(menu);
         menuMapper.insert(menu);
     }
 
@@ -90,12 +89,15 @@ public class MenuService {
         List<TreeNodeMenu> menuTree = new ArrayList<>();
         // 获取所有菜单
         List<TreeNodeMenu> menus;
-        if (roles == null) {
-            menus = menuMapper.listTreeNodeMenu();
-        } else {
-            if (roles.isEmpty()) return null;
-            menus= menuMapper.listTreeNodeMenuByRoles(roles);
-        }
+//        if (roles == null) {
+//            menus = menuMapper.listTreeNodeMenu();
+//        } else {
+//            if (roles.isEmpty()) return null;
+//            menus= menuMapper.listTreeNodeMenuByRoles(roles);
+//        }
+        if (roles.isEmpty()) return null;
+        menus= menuMapper.listTreeNodeMenuByRoles(roles);
+
         // 顶级菜单
         for (Iterator<TreeNodeMenu> iterator = menus.iterator(); iterator.hasNext();) {
             TreeNodeMenu menu = iterator.next();

@@ -8,7 +8,6 @@
         <result property="component" column="component" />
         <result property="title" column="title" />
         <result property="icon" column="icon" />
-<!--        <result property="keepAlive" column="keep_alive" />-->
         <result property="parentId" column="parent_id" />
         <!--        <association property="meta" javaType="MenuMeta">-->
         <!--            <result column="keep_alive" property="keepAlive"/>-->
@@ -37,7 +36,6 @@
     <resultMap id="TreeNodeResultMap" type="TreeNodeMenu">
         <id column="id" property="id" />
         <result property="path" column="path" />
-        <result property="redirect" column="redirect" />
         <result property="name" column="name" />
         <result property="component" column="component" />
         <result property="noCache" column="is_no_cache"/>
@@ -80,20 +78,12 @@
     </select>
 
     <select id="listTreeNodeMenuByRoles" resultMap="TreeNodeResultMap" parameterType="List">
-        SELECT m.* FROM menu m JOIN role_menu rm ON m.id=rm.menu_id WHERE role_id IN
+        SELECT m.* FROM menu m JOIN role_menu rm ON m.id=rm.menu_id WHERE m.is_enabled=1 AND role_id IN
         <foreach collection="collection" item="item" separator="," open="(" close=")">
             #{item.id}
         </foreach>
         ORDER BY priority DESC
     </select>
-
-<!--    <insert id="save" parameterType="Menu" useGeneratedKeys="true" keyProperty="id">-->
-<!--        INSERT INTO menu (parent_id, path, redirect, component, title, icon, priority, remark, is_hidden,-->
-<!--        is_enabled, create_time)-->
-<!--        VALUES (#{parentId}, #{path}, #{redirect}, #{component}, #{title}, #{icon},-->
-<!--        #{priority},#{remark},-->
-<!--        #{hidden}, #{enabled}, #{createTime} )-->
-<!--    </insert>-->
 
     <update id="enable" parameterType="Menu">
         UPDATE menu SET

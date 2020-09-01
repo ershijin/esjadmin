@@ -20,11 +20,13 @@ public class LogController {
 
     @GetMapping("")
     @Log("操作日志列表")
+    @PreAuthorize("hasAuthority('logs:list')")
     PageResult list(LogQuery logQuery, Page page) {
         return logService.list("INFO", logQuery, page);
     }
     @GetMapping("/error")
     @Log("异常日志列表")
+    @PreAuthorize("hasAuthority('logs:error')")
     PageResult errorList(LogQuery logQuery, Page page) {
         return logService.list("ERROR", logQuery, page);
     }
