@@ -15,9 +15,9 @@ import java.util.List;
  * 实现ApplicationContextAware接口，并加入Component注解，让spring扫描到该bean
  * 该类用于在普通Java类中注入bean,普通Java类中用@Autowired是无法注入bean的
  */
-@Component
 @Slf4j
-public class SpringUtils implements ApplicationContextAware, DisposableBean {
+@Component
+public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext;
     private static final List<CallBack> CALL_BACKS = new ArrayList<>();
@@ -31,7 +31,7 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
      */
     public synchronized static void addCallBacks(CallBack callBack) {
         if (addCallback) {
-            SpringUtils.CALL_BACKS.add(callBack);
+            SpringContextHolder.CALL_BACKS.add(callBack);
         } else {
             log.warn("CallBack：{} 已无法添加！立即执行", callBack.getCallBackName());
             callBack.executor();
@@ -41,17 +41,17 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if(SpringUtils.applicationContext != null) {
-            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + SpringUtils.applicationContext);
+        if(SpringContextHolder.applicationContext != null) {
+            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + SpringContextHolder.applicationContext);
         }
-        SpringUtils.applicationContext = applicationContext;
+        SpringContextHolder.applicationContext = applicationContext;
         if (addCallback) {
-            for (CallBack callBack : SpringUtils.CALL_BACKS) {
+            for (CallBack callBack : SpringContextHolder.CALL_BACKS) {
                 callBack.executor();
             }
             CALL_BACKS.clear();
         }
-        SpringUtils.addCallback = false;
+        SpringContextHolder.addCallback = false;
     }
 
     /**
@@ -66,8 +66,9 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
      * @param name
      * @return
      */
-    public static Object getBean(String name){
-        return getApplicationContext().getBean(name);
+    public static <T> T getBean(String name){
+        assertContextInjected();
+        return (T) getApplicationContext().getBean(name);
     }
 
     /**
@@ -77,6 +78,7 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
      * @return
      */
     public static <T> T getBean(Class<T> clazz){
+        assertContextInjected();
         return getApplicationContext().getBean(clazz);
     }
 
@@ -88,6 +90,7 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
      * @return
      */
     public static <T> T getBean(String name,Class<T> clazz){
+        assertContextInjected();
         return getApplicationContext().getBean(name, clazz);
     }
 
@@ -134,4 +137,15 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
                 + applicationContext);
         applicationContext = null;
     }
+
+    /**
+     * 检查ApplicationContext不为空.
+     */
+    private static void assertContextInjected() {
+        if (applicationContext == null) {
+            throw new IllegalStateException("applicaitonContext属性未注入, 请在applicationContext" +
+                    ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
+        }
+    }
+
 }

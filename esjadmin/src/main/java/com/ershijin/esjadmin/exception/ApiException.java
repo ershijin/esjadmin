@@ -2,7 +2,7 @@ package com.ershijin.esjadmin.exception;
 
 import com.ershijin.esjadmin.constant.ResultCode;
 
-public class ApiException extends Exception {
+public class ApiException extends RuntimeException {
     private int code = ResultCode.ERROR;
 
     public ApiException(String message) {

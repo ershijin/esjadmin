@@ -29,8 +29,8 @@ public class RequestUtils {
     private static final String UNKNOWN = "unknown";
 
     static {
-        SpringUtils.addCallBacks(() -> {
-            RequestUtils.ipLocal = SpringUtils.getProperties("ip.local-parsing", true, Boolean.class);
+        SpringContextHolder.addCallBacks(() -> {
+            RequestUtils.ipLocal = SpringContextHolder.getProperties("ip.local-parsing", true, Boolean.class);
             if (ipLocal) {
                 /*
                  * 此文件为独享 ，不必关闭

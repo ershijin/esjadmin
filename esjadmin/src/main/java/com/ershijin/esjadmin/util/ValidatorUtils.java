@@ -31,7 +31,7 @@ public class ValidatorUtils {
      * @return
      */
     public static boolean isNotDuplicate(String value, String table, String column) {
-        CommonMapper commonDao = SpringUtils.getBean(CommonMapper.class);
+        CommonMapper commonDao = SpringContextHolder.getBean(CommonMapper.class);
         int count = commonDao.count(value, table, column);
         if (count <= 0) {
             return true;

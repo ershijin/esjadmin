@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.ershijin.esjadmin.dao")
+@MapperScan({"com.ershijin.esjadmin.dao", "com.ershijin.esjadmin.*.dao"})
 public class EsjAdminApplication {
 
     public static void main(String[] args) {
