@@ -57,10 +57,9 @@ public class ExecutionJob extends QuartzJobBean {
             log.setIsSuccess(false);
             log.setExceptionDetail(ThrowableUtils.getStackTrace(e));
             // 任务如果失败了则暂停
-            if(taskJob.getPauseAfterFailure() != null && taskJob.getPauseAfterFailure()){
-                taskJob.setIsPause(false);
+            if(taskJob.isPauseAfterFailure()){
                 //更新状态
-                taskJobService.updateIsPause(taskJob);
+                taskJobService.disable(taskJob.getId());
             }
         } finally {
             taskLogMapper.insert(log);

@@ -41,7 +41,7 @@ public class TaskManage {
             scheduler.scheduleJob(jobDetail,cronTrigger);
 
             // 暂停任务
-            if (taskJob.getIsPause()) {
+            if (taskJob.isPause()) {
                 pauseJob(taskJob);
             }
         } catch (ObjectAlreadyExistsException e) {
@@ -74,7 +74,7 @@ public class TaskManage {
 
             scheduler.rescheduleJob(triggerKey, trigger);
             // 暂停任务
-            if (taskJob.getIsPause()) {
+            if (taskJob.isPause()) {
                 pauseJob(taskJob);
             }
         } catch (Exception e){

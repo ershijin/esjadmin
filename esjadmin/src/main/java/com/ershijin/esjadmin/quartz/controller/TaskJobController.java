@@ -3,6 +3,7 @@ package com.ershijin.esjadmin.quartz.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.esjadmin.annotation.Log;
 import com.ershijin.esjadmin.exception.ApiException;
+import com.ershijin.esjadmin.model.PageResult;
 import com.ershijin.esjadmin.quartz.model.JobQuery;
 import com.ershijin.esjadmin.quartz.model.TaskJob;
 import com.ershijin.esjadmin.quartz.service.TaskJobService;
@@ -20,65 +21,66 @@ import java.util.Set;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/jobs")
+@RequestMapping("/taskJobs")
 public class TaskJobController {
 
-    private static final String ENTITY_NAME = "quartzJob";
-    private final TaskJobService quartzJobService;
+    private final TaskJobService taskJobService;
 
     @Log("查询定时任务")
     @GetMapping
-    @PreAuthorize("@el.check('timing:list')")
-    public ResponseEntity<Object> query(JobQuery jobQuery, Page page){
-        return new ResponseEntity<>(quartzJobService.list(jobQuery,page), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/logs")
-    @PreAuthorize("@el.check('timing:list')")
-    public ResponseEntity<Object> queryJobLog(JobQuery jobQuery, Page page){
-        return new ResponseEntity<>(quartzJobService.listLog(jobQuery,page), HttpStatus.OK);
+    @PreAuthorize("hasAuthority('taskJobs:list')")
+    public PageResult list(JobQuery jobQuery, Page page){
+        return taskJobService.list(jobQuery,page);
     }
 
     @Log("新增定时任务")
     @PostMapping
-    @PreAuthorize("@el.check('timing:add')")
-    public ResponseEntity<Object> create(@Validated @RequestBody TaskJob resources){
-        if (resources.getId() != null) {
-            throw new ApiException("A new "+ ENTITY_NAME +" cannot already have an ID");
+    @PreAuthorize("hasAuthority('taskJobs:save')")
+    public void create(@Validated @RequestBody TaskJob taskJob){
+        if (taskJob.getId() != null) {
+            throw new ApiException("新的定时任务不能有 ID");
         }
-        quartzJobService.create(resources);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        taskJobService.save(taskJob);
     }
 
     @Log("修改定时任务")
     @PutMapping
-    @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> update(@Validated(Update.class) @RequestBody TaskJob resources){
-        quartzJobService.update(resources);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PreAuthorize("hasAuthority('taskJobs:update')")
+    public void update(@Validated(Update.class) @RequestBody TaskJob taskJob){
+        taskJobService.update(taskJob);
     }
 
-    @Log("更改定时任务状态")
-    @PutMapping(value = "/{id}")
-    @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> update(@PathVariable Long id){
-        quartzJobService.updateIsPause(quartzJobService.getById(id));
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @Log("启用定时任务")
+    @PostMapping("/{id}/enable")
+    @PreAuthorize("hasAuthority('taskJobs:enable')")
+    public void enable(@PathVariable Long id){
+        taskJobService.enable(id);
+    }
+
+    @Log("通用定时任务")
+    @PostMapping("/{id}/disable")
+    @PreAuthorize("hasAuthority('taskJobs:disable')")
+    public void disable(@PathVariable Long id){
+        taskJobService.disable(id);
     }
 
     @Log("执行定时任务")
-    @PutMapping(value = "/exec/{id}")
-    @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> execution(@PathVariable Long id){
-        quartzJobService.execution(quartzJobService.getById(id));
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PostMapping("/{id}/execute")
+    @PreAuthorize("hasAnyAuthority('taskJobs:save','taskJobs:update','taskJobs:execute')")
+    public void execute(@PathVariable Long id){
+        taskJobService.execute(taskJobService.getById(id));
     }
 
     @Log("删除定时任务")
     @DeleteMapping
-    @PreAuthorize("@el.check('timing:del')")
-    public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
-        quartzJobService.delete(ids);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PreAuthorize("hasAuthority('taskJobs:remove')")
+    public void remove(@RequestBody Set<Long> ids){
+        taskJobService.remove(ids);
+    }
+
+    @GetMapping(value = "/logs")
+    @PreAuthorize("hasAuthority('taskJobs:list')")
+    public ResponseEntity<Object> listJobLog(JobQuery jobQuery, Page page){
+        return new ResponseEntity<>(taskJobService.listLog(jobQuery,page), HttpStatus.OK);
     }
 }

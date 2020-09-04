@@ -13,6 +13,7 @@ import com.ershijin.esjadmin.quartz.model.TaskJob;
 import com.ershijin.esjadmin.quartz.model.TaskLog;
 import com.ershijin.esjadmin.quartz.utils.TaskManage;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.quartz.CronExpression;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,17 +25,27 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TaskJobService {
 
-    private final TaskJobMapper quartzJobMapper;
-    private final TaskLogMapper quartzLogMapper;
-    private final TaskManage quartzManage;
+    private final TaskJobMapper taskJobMapper;
+    private final TaskLogMapper taskLogMapper;
+    private final TaskManage taskManage;
 
-    public PageResult list(JobQuery jobQuery, Page page){
+    public PageResult list(JobQuery query, Page page){
         QueryWrapper<TaskJob> queryWrapper = new QueryWrapper<>();
+
+        queryWrapper.ge(!StringUtils.isEmpty(query.getStartTime()), "create_time", query.getStartTime());
+        queryWrapper.le(!StringUtils.isEmpty(query.getEndTime()), "create_time", query.getEndTime());
+        queryWrapper.and(!StringUtils.isEmpty(query.getKeyword()), i -> {
+            i.like("bean_name", query.getKeyword())
+                    .or().like("description", query.getKeyword())
+                    .or().like("method_name", query.getKeyword())
+                    .or().like("job_name", query.getKeyword());
+        });
+
 
         queryWrapper.select();
         queryWrapper.orderByDesc("id");
 
-        IPage<Log> result = quartzJobMapper.selectPage(page, queryWrapper);
+        IPage<Log> result = taskJobMapper.selectPage(page, queryWrapper);
         return new PageResult(result.getTotal(), result.getRecords());
     }
 
@@ -43,7 +54,7 @@ public class TaskJobService {
 
         queryWrapper.select();
         queryWrapper.orderByDesc("id");
-        return quartzJobMapper.selectList(queryWrapper);
+        return taskJobMapper.selectList(queryWrapper);
     }
 
     public PageResult listLog(JobQuery jobQuery, Page page){
@@ -52,63 +63,66 @@ public class TaskJobService {
         queryWrapper.select();
         queryWrapper.orderByDesc("id");
 
-        IPage<Log> result = quartzLogMapper.selectPage(page, queryWrapper);
+        IPage<Log> result = taskLogMapper.selectPage(page, queryWrapper);
         return new PageResult(result.getTotal(), result.getRecords());
     }
 
     public List<TaskLog> listLog(JobQuery jobQuery) {
         QueryWrapper<TaskLog> queryWrapper = new QueryWrapper<>();
 
-        return quartzLogMapper.selectList(queryWrapper);
+        return taskLogMapper.selectList(queryWrapper);
     }
 
     public TaskJob getById(Long id) {
-        TaskJob quartzJob = quartzJobMapper.selectById(id);
-        if (quartzJob == null || quartzJob.getId() == null) {
-            throw new ApiException("QuartzJob 不存在: id is "+ id);
+        TaskJob taskJob = taskJobMapper.selectById(id);
+        if (taskJob == null || taskJob.getId() == null) {
+            throw new ApiException("taskJob 不存在: id is "+ id);
         }
-        return quartzJob;
+        return taskJob;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void create(TaskJob quartzJob) {
-        if (!CronExpression.isValidExpression(quartzJob.getCronExpression())){
+    public void save(TaskJob taskJob) {
+        if (!CronExpression.isValidExpression(taskJob.getCronExpression())){
             throw new ApiException("cron表达式格式错误");
         }
-        quartzJobMapper.insert(quartzJob);
-        quartzManage.addJob(quartzJob);
+        taskJobMapper.insert(taskJob);
+        taskManage.addJob(taskJob);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void update(TaskJob quartzJob) {
-        if (!CronExpression.isValidExpression(quartzJob.getCronExpression())){
+    public void update(TaskJob taskJob) {
+        if (!CronExpression.isValidExpression(taskJob.getCronExpression())){
             throw new ApiException("cron表达式格式错误");
         }
-        quartzJobMapper.updateById(quartzJob);
-        quartzManage.updateJobCron(quartzJob);
+        taskJobMapper.updateById(taskJob);
+        taskManage.updateJobCron(taskJob);
     }
 
-    public void updateIsPause(TaskJob quartzJob) {
-        if (quartzJob.getIsPause()) {
-            quartzManage.resumeJob(quartzJob);
-            quartzJob.setIsPause(false);
-        } else {
-            quartzManage.pauseJob(quartzJob);
-            quartzJob.setIsPause(true);
-        }
-        quartzJobMapper.updateById(quartzJob);
+    public void enable(Long id) {
+        TaskJob taskJob = getById(id);
+        taskManage.resumeJob(taskJob);
+        taskJob.setPause(false);
+        taskJobMapper.updateById(taskJob);
     }
 
-    public void execution(TaskJob quartzJob) {
-        quartzManage.runJobNow(quartzJob);
+    public void disable(Long id) {
+        TaskJob taskJob = getById(id);
+        taskManage.pauseJob(taskJob);
+        taskJob.setPause(true);
+        taskJobMapper.updateById(taskJob);
+    }
+
+    public void execute(TaskJob taskJob) {
+        taskManage.runJobNow(taskJob);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Set<Long> ids) {
+    public void remove(Set<Long> ids) {
         for (Long id : ids) {
-            TaskJob quartzJob = getById(id);
-            quartzManage.deleteJob(quartzJob);
-            quartzJobMapper.deleteById(quartzJob);
+            TaskJob taskJob = getById(id);
+            taskManage.deleteJob(taskJob);
+            taskJobMapper.deleteById(taskJob);
         }
     }
 

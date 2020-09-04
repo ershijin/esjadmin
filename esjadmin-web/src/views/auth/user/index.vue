@@ -31,7 +31,7 @@
         class="filter-item"
         style="margin-left: 0px;"
         type="primary"
-        icon="el-icon-edit"
+        icon="el-icon-plus"
         @click="handleCreate"
       >添加</el-button>
     </div>

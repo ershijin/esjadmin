@@ -13,11 +13,11 @@ import java.util.Date;
 public class TestTask {
 
     public void run1(){
-        TestTask.log.info("run2 执行成功" + new Date());
+        TestTask.log.info("run1 执行成功" + new Date());
     }
 
     public void run2(String str){
-        log.info("run1 执行成功，参数为： {} - {}", str, new Date());
+        log.info("run2 执行成功，参数为： {} - {}", str, new Date());
     }
 
 }

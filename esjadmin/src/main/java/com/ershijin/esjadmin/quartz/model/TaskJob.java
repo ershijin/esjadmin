@@ -1,18 +1,30 @@
 package com.ershijin.esjadmin.quartz.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.ershijin.esjadmin.validation.groups.Update;
 import lombok.Data;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 public class TaskJob implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public static final String JOB_KEY = "JOB_KEY";
 
     @NotNull(groups = {Update.class})
     private Long id;
+
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    @TableField(fill = FieldFill.UPDATE)
+    private LocalDateTime updateTime;
 
     // 定时器名称
     private String jobName;
@@ -32,16 +44,12 @@ public class TaskJob implements Serializable {
     private String cronExpression;
 
     // 状态，暂时或启动
-    private Boolean isPause = false;
-
-    // 负责人
-    private String personInCharge;
-
-    // 报警邮箱
-    private String email;
+    @TableField("is_pause")
+    private boolean pause = false;
 
     // 失败后暂停
-    private Boolean pauseAfterFailure;
+    @TableField("is_pause_after_failure")
+    private boolean pauseAfterFailure;
 
     @NotBlank
     // 备注
