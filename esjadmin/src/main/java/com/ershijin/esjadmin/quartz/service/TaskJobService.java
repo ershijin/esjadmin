@@ -57,8 +57,16 @@ public class TaskJobService {
         return taskJobMapper.selectList(queryWrapper);
     }
 
-    public PageResult listLog(JobQuery jobQuery, Page page){
+    public PageResult listLog(JobQuery query, Page page){
         QueryWrapper<TaskLog> queryWrapper = new QueryWrapper<>();
+
+        queryWrapper.ge(!StringUtils.isEmpty(query.getStartTime()), "create_time", query.getStartTime());
+        queryWrapper.le(!StringUtils.isEmpty(query.getEndTime()), "create_time", query.getEndTime());
+        queryWrapper.and(!StringUtils.isEmpty(query.getKeyword()), i -> {
+            i.like("bean_name", query.getKeyword())
+                    .or().like("method_name", query.getKeyword())
+                    .or().like("job_name", query.getKeyword());
+        });
 
         queryWrapper.select();
         queryWrapper.orderByDesc("id");

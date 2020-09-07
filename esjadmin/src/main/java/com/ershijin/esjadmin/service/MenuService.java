@@ -24,7 +24,7 @@ public class MenuService {
 
     /**
      * 新增菜单
-     * @param menu
+     * @param menu 菜单实体
      */
     public void save(Menu menu) {
         menu.setCreateTime(new Date());

@@ -51,4 +51,12 @@ export function disable(id) {
   })
 }
 
-export default { list, execute, save, update, remove, enable, disable }
+export function listLog(params) {
+  return request({
+    url: '/taskJobs/logs',
+    method: 'get',
+    params
+  })
+}
+
+export default { list, execute, save, update, remove, enable, disable, listLog }

@@ -1,9 +1,11 @@
 package com.ershijin.esjadmin.quartz.model;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class TaskLog implements Serializable {
@@ -35,5 +37,6 @@ public class TaskLog implements Serializable {
     private Long time;
 
     // 创建时间
-    private Date createTime;
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
 }

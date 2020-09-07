@@ -38,6 +38,17 @@
         icon="el-icon-plus"
         @click="handleCreate"
       >添加</el-button>
+
+      <el-button
+        class="filter-item"
+        style="margin-left: 0px;"
+        type="info"
+        icon="el-icon-tickets"
+        @click="handleLog"
+      >日志</el-button>
+
+      <Log ref="log" />
+
     </div>
 
     <el-table
@@ -190,6 +201,8 @@ import taskJob from '@/api/task'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import elDragDialog from '@/directive/el-drag-dialog'
+import Log from './log'
+import { deepClone } from '@/utils'
 
 const defaultData = {
   id: null,
@@ -205,7 +218,7 @@ const defaultData = {
 
 export default {
   name: 'Task',
-  components: { Pagination },
+  components: { Pagination, Log },
   directives: { waves, elDragDialog },
 
   data() {
@@ -307,7 +320,11 @@ export default {
     // 修改
     handleEdit(row) {
       this.dialogType = 'edit'
-      this.temp = Object.assign({}, row)
+      this.temp = deepClone(defaultData)
+      for (const key in this.temp) {
+        this.temp[key] = row[key]
+      }
+
       this.dialogFormVisible = true
     },
     // 启用
@@ -393,6 +410,11 @@ export default {
           }
         }
       })
+    },
+    // 显示日志
+    handleLog() {
+      this.$refs.log.dialogVisible = true
+      this.$refs.log.getList()
     }
   }
 }
