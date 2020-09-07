@@ -1,34 +1,18 @@
 package com.ershijin.esjadmin.quartz.model;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.ershijin.esjadmin.validation.groups.Update;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ershijin.esjadmin.model.BaseEntity;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
-public class TaskJob implements Serializable {
+public class TaskJob extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     public static final String JOB_KEY = "JOB_KEY";
-
-    @NotNull(groups = {Update.class})
-    private Long id;
-
-    @TableField(fill = FieldFill.INSERT, updateStrategy = FieldStrategy.NEVER)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
-
-    @TableField(fill = FieldFill.UPDATE)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateTime;
 
     // 定时器名称
     private String jobName;

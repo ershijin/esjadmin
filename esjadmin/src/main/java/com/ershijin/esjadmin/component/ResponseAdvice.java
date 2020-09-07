@@ -7,12 +7,14 @@ import com.ershijin.esjadmin.exception.ArgumentNotValidException;
 import com.ershijin.esjadmin.exception.NotFoundException;
 import com.ershijin.esjadmin.model.ApiResult;
 import com.ershijin.esjadmin.util.JsonUtils;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.security.access.AccessDeniedException;
@@ -55,7 +57,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
             return ApiResult.error(ResultCode.ARGUMENT_NOT_VALID, e.getMessage());
         }
 
-        if (e instanceof TypeMismatchException) {
+        if (e instanceof TypeMismatchException || e instanceof HttpMessageNotReadableException || e instanceof InvalidFormatException) {
             return ApiResult.error(ResultCode.ARGUMENT_NOT_VALID, "参数类型错误");
         }
 
