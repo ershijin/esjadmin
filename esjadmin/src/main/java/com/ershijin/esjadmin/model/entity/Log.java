@@ -1,9 +1,10 @@
 package com.ershijin.esjadmin.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 public class Log implements Serializable {
@@ -43,6 +44,7 @@ public class Log implements Serializable {
     private String exceptionDetail;
 
     /** 创建日期 */
-    private Timestamp createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
 
 }

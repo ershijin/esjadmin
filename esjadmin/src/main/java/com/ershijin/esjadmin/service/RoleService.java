@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +33,6 @@ public class RoleService {
 
     @Transactional
     public void save(RoleMenuIdsForm roleMenuIds) {
-        roleMenuIds.getRole().setCreateTime(new Date());
         // 保存角色
         roleMapper.insert(roleMenuIds.getRole());
         // 保存角色对应的菜单权限
@@ -53,7 +51,6 @@ public class RoleService {
                 RoleMenu roleMenu = new RoleMenu();
                 roleMenu.setRoleId(roleId);
                 roleMenu.setMenuId(menuId);
-                roleMenu.setCreateTime(new Date());
                 roleMenus.add(roleMenu);
             }
             roleMenuMapper.batchInsert(roleMenus);
@@ -65,7 +62,6 @@ public class RoleService {
     }
 
     public void update(RoleMenuIdsForm roleMenuIds) {
-        roleMenuIds.getRole().setUpdateTime(new Date());
         // 保存角色
         roleMapper.updateById(roleMenuIds.getRole());
         // 删除旧的关系

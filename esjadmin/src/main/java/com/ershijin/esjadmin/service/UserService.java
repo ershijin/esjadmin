@@ -33,6 +33,7 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -74,8 +75,9 @@ public class UserService implements UserDetailsService {
         Authentication authentication = new Authentication();
         authentication.setUsername(user.getUsername());
         authentication.setToken(token);
-        authentication.setCreateTime(new Date());
-        authentication.setExpireTime(new Date(System.currentTimeMillis() + 3600 * 1000 * 24 * 7));
+        LocalDateTime now = LocalDateTime.now();
+        authentication.setCreateTime(now);
+        authentication.setExpireTime(now.plusSeconds(3600 * 24 * 7));
         // 随机生成10位字符串作为salt,构造UserDetails的password用
         authentication.setSalt(RandomStringUtils.randomGraph(10));
 
@@ -144,17 +146,17 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void save(User user) {
         // 判断账号是否重复
-        user.setCreateTime(new Date());
         // 加密password
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         // 保存user信息
         userMapper.insert(user);
         // 保存 user_role 信息
         if (!user.getRoles().isEmpty()) {
+            LocalDateTime now = LocalDateTime.now();
             Set<UserRole> userRoles = new HashSet<>();
             user.getRoles().forEach(role -> {
                 UserRole userRole = new UserRole();
-                userRole.setCreateTime(new Date());
+                userRole.setCreateTime(now);
                 userRole.setUserId(user.getId());
                 userRole.setRoleId(role.getId());
                 userRoles.add(userRole);
@@ -170,7 +172,6 @@ public class UserService implements UserDetailsService {
      */
     @Transactional
     public void update(User user) {
-        user.setUpdateTime(new Date());
         if (!StringUtils.isEmpty(user.getPassword())) {
             // 加密password
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
@@ -182,9 +183,10 @@ public class UserService implements UserDetailsService {
         // 保存新 user_role 信息
         if (!user.getRoles().isEmpty()) {
             Set<UserRole> userRoles = new HashSet<>();
+            LocalDateTime now = LocalDateTime.now();
             user.getRoles().forEach(role -> {
                 UserRole userRole = new UserRole();
-                userRole.setCreateTime(new Date());
+                userRole.setCreateTime(now);
                 userRole.setUserId(user.getId());
                 userRole.setRoleId(role.getId());
                 userRoles.add(userRole);
@@ -199,7 +201,6 @@ public class UserService implements UserDetailsService {
      * @param user
      */
     public void updatePassword(User user) {
-        user.setUpdateTime(new Date());
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userMapper.updateById(user);
     }
@@ -229,7 +230,6 @@ public class UserService implements UserDetailsService {
     public void enableById(Long id) {
         User user = new User();
         user.setId(id);
-        user.setUpdateTime(new Date());
         user.setEnabled(true);
         userMapper.updateById(user);
     }
@@ -237,7 +237,6 @@ public class UserService implements UserDetailsService {
     public void disableById(Long id) {
         User user = new User();
         user.setId(id);
-        user.setUpdateTime(new Date());
         user.setEnabled(false);
         userMapper.updateById(user);
     }
@@ -267,7 +266,6 @@ public class UserService implements UserDetailsService {
             // 存入数据库
             user.setId(oldUserInfo.getId());
             user.setEnabled(oldUserInfo.isEnabled());
-            user.setUpdateTime(new Date());
             user.setAvatar(avatarFile);
             userMapper.updateById(user);
 

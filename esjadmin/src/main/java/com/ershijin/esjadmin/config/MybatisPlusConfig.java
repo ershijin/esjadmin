@@ -1,5 +1,6 @@
 package com.ershijin.esjadmin.config;
 
+import com.baomidou.mybatisplus.extension.injector.methods.InsertBatchSomeColumn;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
 import org.springframework.context.annotation.Bean;
@@ -16,5 +17,10 @@ public class MybatisPlusConfig {
 //        paginationInterceptor.setLimit(500);
         paginationInterceptor.setCountSqlParser(new JsqlParserCountOptimize(true));
         return paginationInterceptor;
+    }
+
+    @Bean
+    public InsertBatchSomeColumn insertBatchSomeColumn() {
+        return new InsertBatchSomeColumn();
     }
 }

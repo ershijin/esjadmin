@@ -125,7 +125,6 @@ public class UserController {
             userForm.getRoleIds().forEach(roleId -> {
                 Role role = new Role();
                 role.setId(roleId);
-                role.setCreateTime(new Date());
                 user.getRoles().add(role);
             });
         }

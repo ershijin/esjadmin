@@ -4,7 +4,7 @@ import lombok.Data;
 import org.apache.ibatis.type.Alias;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @todo 与AuthenticationToken合并为一个模型???
@@ -17,9 +17,9 @@ public class Authentication implements Serializable {
 
     private Long id;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
-    private Date expireTime;
+    private LocalDateTime expireTime;
 
     private String username;
 

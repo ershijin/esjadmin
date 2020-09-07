@@ -4,9 +4,9 @@
 <mapper namespace="com.ershijin.esjadmin.dao.RoleMenuMapper">
 
     <insert id="batchInsert">
-        INSERT INTO role_menu (role_id,menu_id,create_time) VALUES
+        INSERT INTO role_menu (role_id,menu_id) VALUES
         <foreach collection="collection" item="item" separator=",">
-            (#{item.roleId}, #{item.menuId}, #{item.createTime})
+            (#{item.roleId}, #{item.menuId})
         </foreach>
 
     </insert>

@@ -9,7 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.www.NonceExpiredException;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 认证的具体实现类，每个provider通过实现一个supports方法来表示自己支持那种Token的认证
@@ -41,7 +41,7 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("无效的token");
         }
         // 判断token是否过期
-        if ((new Date()).getTime() > dbAuthentication.getExpireTime().getTime()) {
+        if (LocalDateTime.now().isAfter(dbAuthentication.getExpireTime())) {
             throw new NonceExpiredException("token已过期");
         }
         // token验证通过，创建凭证

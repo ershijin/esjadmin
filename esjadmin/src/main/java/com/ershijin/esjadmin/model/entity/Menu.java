@@ -1,29 +1,18 @@
 package com.ershijin.esjadmin.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.ershijin.esjadmin.validation.groups.Update;
+import com.ershijin.esjadmin.model.BaseEntity;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 @Data
 @Alias("Menu")
-public class Menu implements Serializable {
+public class Menu extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @NotNull(groups = {Update.class}, message = "id 不能为空")
-    @Min(value = 1, groups = {Update.class}, message = "id参数错误")
-    private Long id;
-
-    private Date createTime;
-
-    private Date updateTime;
 
     private Long parentId;
 

@@ -27,7 +27,6 @@ public class MenuService {
      * @param menu 菜单实体
      */
     public void save(Menu menu) {
-        menu.setCreateTime(new Date());
         menuMapper.insert(menu);
     }
 
@@ -137,21 +136,18 @@ public class MenuService {
     }
 
     public void update(Menu menu) {
-        menu.setUpdateTime(new Date());
         menuMapper.updateById(menu);
     }
 
     public void enableById(Long id) {
         Menu menu = new Menu();
         menu.setId(id);
-        menu.setUpdateTime(new Date());
         menuMapper.enable(menu);
     }
 
     public void disableById(Long id) {
         Menu menu = new Menu();
         menu.setId(id);
-        menu.setUpdateTime(new Date());
         menuMapper.disable(menu);
     }
 

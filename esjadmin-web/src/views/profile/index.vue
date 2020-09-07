@@ -30,7 +30,7 @@
                   <el-table-column label="请求耗时">
                     <template slot-scope="{row}">{{ row.time }}ms</template>
                   </el-table-column>
-                  <el-table-column align="right">
+                  <el-table-column align="right" width="160">
                     <template slot="header">
                       <div style="display:inline-block;float: right;cursor: pointer" @click="getList">创建时间<i class="el-icon-refresh" style="margin-left: 40px" /></div>
                     </template>

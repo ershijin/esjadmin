@@ -1,6 +1,7 @@
 package com.ershijin.esjadmin.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.ershijin.esjadmin.model.BaseEntity;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.Alias;
@@ -9,19 +10,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Alias("User")
 @Data
-public class User implements UserDetails, Serializable {
+public class User extends BaseEntity implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    private Long id;
-
-    private Date createTime;
-
-    private Date updateTime;
 
     private String username;
 
