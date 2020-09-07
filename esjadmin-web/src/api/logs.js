@@ -22,3 +22,11 @@ export function getErrorDetail(id) {
     method: 'get'
   })
 }
+
+export function getUserLogs(params) {
+  return request({
+    url: '/logs/user',
+    method: 'get',
+    params
+  })
+}

@@ -69,16 +69,17 @@ public class LogService {
         logMapper.insert(log);
     }
 
-    public PageResult list(String type, LogQuery logQuery, Page<Log> page) {
+    public PageResult list(String type, LogQuery query, Page<Log> page) {
         QueryWrapper<Log> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(!StringUtils.isEmpty(type), "type", type);
-        queryWrapper.ge(!StringUtils.isEmpty(logQuery.getStartTime()), "create_time", logQuery.getStartTime());
-        queryWrapper.le(!StringUtils.isEmpty(logQuery.getEndTime()), "create_time", logQuery.getEndTime());
-        queryWrapper.and(!StringUtils.isEmpty(logQuery.getKeyword()), i -> {
-            i.eq("username", logQuery.getKeyword())
-                    .or().eq("description", logQuery.getKeyword())
-                    .or().like("method", logQuery.getKeyword())
-                    .or().like("address", logQuery.getKeyword());
+        queryWrapper.eq(!StringUtils.isEmpty(query.getUsername()), "username", query.getUsername());
+        queryWrapper.ge(!StringUtils.isEmpty(query.getStartTime()), "create_time", query.getStartTime());
+        queryWrapper.le(!StringUtils.isEmpty(query.getEndTime()), "create_time", query.getEndTime());
+        queryWrapper.and(!StringUtils.isEmpty(query.getKeyword()), i -> {
+            i.eq("username", query.getKeyword())
+                    .or().eq("description", query.getKeyword())
+                    .or().like("method", query.getKeyword())
+                    .or().like("address", query.getKeyword());
         });
 
         queryWrapper.select(Log.class, i -> !i.getColumn().equals("exception_detail"));

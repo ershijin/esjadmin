@@ -5,8 +5,10 @@ import com.ershijin.esjadmin.annotation.Log;
 import com.ershijin.esjadmin.model.PageResult;
 import com.ershijin.esjadmin.model.query.LogQuery;
 import com.ershijin.esjadmin.service.LogService;
+import com.ershijin.esjadmin.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,14 @@ public class LogController {
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     com.ershijin.esjadmin.model.entity.Log getError(@PathVariable long id) {
         return logService.get(id);
+    }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
+    PageResult userLogs(LogQuery logQuery, Page page) {
+        UserDetails currentUser = UserUtils.getCurrentUser();
+        logQuery.setUsername(currentUser.getUsername());
+        return logService.list("INFO", logQuery, page);
     }
 
 }
