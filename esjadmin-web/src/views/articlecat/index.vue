@@ -111,8 +111,8 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList().then(response => {
-        this.list = response.data
+      getList().then(data => {
+        this.list = data
         this.listLoading = false
       })
     },

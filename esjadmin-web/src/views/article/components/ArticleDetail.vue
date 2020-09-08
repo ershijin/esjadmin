@@ -132,7 +132,7 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
     // 获取分类列表
     fetchCategories().then(response => {
-      this.categories = response.data
+      this.categories = response
     })
   },
   mounted() {

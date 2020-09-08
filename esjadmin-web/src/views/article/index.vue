@@ -99,15 +99,15 @@ export default {
     this.getList()
     // 获取分类列表
     fetchCategories().then(response => {
-      this.categories = response.data
+      this.categories = response
     })
   },
   methods: {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.list
-        this.total = response.data.total
+        this.list = response.list
+        this.total = response.total
         this.listLoading = false
       })
     },
