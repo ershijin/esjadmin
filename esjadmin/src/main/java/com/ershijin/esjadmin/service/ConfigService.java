@@ -3,6 +3,7 @@ package com.ershijin.esjadmin.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ershijin.esjadmin.dao.ConfigMapper;
 import com.ershijin.esjadmin.model.entity.Config;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class ConfigService {
 
     @PostConstruct
     public void init() {
-        QueryWrapper<Config> queryWrapper = new QueryWrapper();
+        QueryWrapper<Config> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("code", "value");
         List<Config> configs = configMapper.selectList(queryWrapper);
         configMap = new HashMap<>();
@@ -42,5 +43,29 @@ public class ConfigService {
 
     public Map<String, String> get() {
         return configMap;
+    }
+
+    public List<Config> listAll(String keyword) {
+        QueryWrapper<Config> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select(Config.class, i -> !i.getColumn().equals("create_time") && !i.getColumn().equals(
+                "update_time"));
+        if (!StringUtils.isEmpty(keyword)) {
+            queryWrapper.like("name", keyword)
+                    .or().like("code", keyword)
+                    .or().like("value", keyword);
+        }
+        return configMapper.selectList(queryWrapper);
+    }
+
+    public void save(Config config) {
+        configMapper.insert(config);
+    }
+
+    public void update(Config config) {
+        configMapper.updateById(config);
+    }
+
+    public void remove(Long id) {
+        configMapper.deleteById(id);
     }
 }
