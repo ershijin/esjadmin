@@ -46,7 +46,13 @@
         </el-form-item>
 
         <el-form-item prop="detail" style="margin-bottom: 30px;" label="详情">
-          <Tinymce ref="editor" v-model="form.detail" :height="400" prop="detail" />
+          <!-- <Tinymce ref="editor" v-model="form.detail" :height="400" prop="detail" /> -->
+          <Tinymce
+            ref="detail"
+            v-model="form.detail"
+            :disabled="false"
+            :images-upload-url="upload_api"
+          />
         </el-form-item>
 
         <el-form-item>
@@ -77,7 +83,7 @@ const defaultForm = {
   //   rela_url: '2019/05/19/22591082672.png'
   // }],
   summary: '',
-  detail: 'asaasasas'
+  detail: '文章默认的内容'
 }
 
 export default {
@@ -91,6 +97,7 @@ export default {
   },
   data() {
     return {
+      upload_api: this.$config.upload_api,
       dialogImageUrl: '',
       dialogVisible: false,
       uploadAction: process.env.VUE_APP_BASE_API + '/upload',

@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@riophae/vue-treeselect": "^0.4.0",
+    "@tinymce/tinymce-vue": "^3.2.2",
+    "tinymce": "^5.4.2",
     "axios": "0.18.1",
     "clipboard": "2.0.4",
     "core-js": "3.6.5",

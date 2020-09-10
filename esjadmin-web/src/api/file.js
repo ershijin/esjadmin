@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
-export function removeFile(data) {
+export function uploadImage(data) {
   return request({
-    url: '/removefile',
-    method: 'delete',
+    url: '/files/images',
+    method: 'post',
     data
   })
 }
