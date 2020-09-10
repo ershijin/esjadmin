@@ -37,13 +37,15 @@
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column label="封面" width="350" align="center">
+      <el-table-column label="封面" width="55" align="center">
         <template slot-scope="scope">
           <el-image
             v-if="scope.row.coverPicture"
-            style="width: 320px; max-height: 152px"
-            :src="UPLOAD_BASE + scope.row.coverPicture"
+            style="width: 30px; height: 30px"
+            :src="scope.row.coverPicture"
+            :preview-src-list="[scope.row.coverPicture]"
             fit="scale-down"
+            :lazy="true"
           />
         </template>
       </el-table-column>
@@ -55,7 +57,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="handleEdit(row)">编辑</el-button>
           <el-button
             v-if="row.status!='deleted'"
             size="mini"
@@ -66,7 +68,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
 
   </div>
 </template>
@@ -78,18 +80,18 @@ import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
+  name: 'Article',
   components: { Pagination },
   directives: { waves },
   data() {
     return {
-      UPLOAD_BASE: process.env.UPLOAD_BASE_URL,
       list: [],
       total: 0,
       listLoading: true,
       categories: null,
       listQuery: {
-        page: 1,
-        pageSize: 10,
+        current: 1,
+        size: 10,
         keyword: undefined,
         categoryId: undefined
       }
@@ -106,13 +108,13 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.list
+        this.list = response.rows
         this.total = response.total
         this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
     },
 
@@ -121,9 +123,9 @@ export default {
         path: 'create'
       })
     },
-    handleUpdate(row) {
+    handleEdit(row) {
       this.$router.push({
-        path: 'edit/' + row.id
+        path: '/article/edit/' + row.id
       })
     },
     handleDelete(row) {

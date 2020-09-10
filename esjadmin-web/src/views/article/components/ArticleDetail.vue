@@ -2,12 +2,12 @@
 <template>
   <div class="createPost-container">
     <div class="createPost-main-container">
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="60px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" />
         </el-form-item>
-        <el-form-item label="分类" prop="category_id">
-          <el-select v-model="form.category_id" placeholder="请选择">
+        <el-form-item label="分类" prop="categoryId">
+          <el-select v-model="form.categoryId" placeholder="请选择">
             <el-option
               v-for="item in categories"
               :key="item.id"
@@ -19,17 +19,14 @@
 
         <el-form-item label="封面">
           <el-upload
-            class="avatar-uploader"
-            :action="uploadAction"
+            class="image-uploader"
+            :action="upload_api"
             :headers="headers"
             :show-file-list="false"
-            :file-list="form.pictures"
-            :on-preview="handlePictureCardPreview"
-            :on-success="handleSuccess"
-            :on-remove="handleRemove"
+            :before-upload="beforeUpload"
           >
-            <img v-if="cover_picture_preview" :src="cover_picture_preview" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon" />
+            <img v-if="coverPicturePreview" :src="coverPicturePreview" class="image">
+            <i v-else class="el-icon-plus image-uploader-icon" />
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt>
@@ -68,16 +65,16 @@
 import Tinymce from '@/components/Tinymce'
 
 import { createArticle, getArticle, updateArticle } from '@/api/article.js'
-import { removeFile } from '@/api/file.js'
 import { getList as fetchCategories } from '@/api/articlecat.js'
 import { getToken } from '@/utils/auth'
+import { uploadImage } from '@/api/file'
 
 const defaultForm = {
   id: undefined,
   title: '',
-  category_id: 1,
+  categoryId: 1,
   link: '',
-  cover_picture: '',
+  coverPicture: '',
   // pictures: [{
   //   url: 'http://localhost:8080/bonusmall/upload/2019/05/19/22591082672.png',
   //   rela_url: '2019/05/19/22591082672.png'
@@ -100,15 +97,15 @@ export default {
       upload_api: this.$config.upload_api,
       dialogImageUrl: '',
       dialogVisible: false,
-      uploadAction: process.env.VUE_APP_BASE_API + '/upload',
-      cover_picture_preview: '',
+      // uploadAction: process.env.VUE_APP_BASE_API + '/upload',
+      coverPicturePreview: '',
       categories: [{ id: 1, name: '11111' }],
       headers: {
         'X-Token': getToken()
       },
       form: {},
       rules: {
-        category_id: [{
+        categoryId: [{
           type: 'number',
           required: true,
           message: '请选择分类',
@@ -126,8 +123,8 @@ export default {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       getArticle(id).then(response => {
-        this.form = response.data
-        this.cover_picture_preview = response.data.coverPicture ? process.env.UPLOAD_BASE_URL + response.data.coverPicture : ''
+        this.form = response
+        this.coverPicturePreview = response.coverPicture
       })
     } else {
       this.form = Object.assign({}, defaultForm)
@@ -167,7 +164,7 @@ export default {
             createArticle(this.form).then(() => {
               this.form = Object.assign({}, defaultForm)
               this.$refs.form.resetFields()
-              this.cover_picture_preview = ''
+              this.coverPicturePreview = ''
               this.$message({
                 title: '成功',
                 message: '添加成功！',
@@ -181,18 +178,15 @@ export default {
     onCancel() {
       this.$router.go(-1) // 返回上一层
     },
-    handleRemove(file, fileList) {
-      removeFile(file.rela_url)
-      this.form.pictures = fileList
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
-    },
-    handleSuccess(response, file, fileList) {
-      console.log(response.data.rela_url)
-      this.form.coverPicture = response.data.rela_url
-      this.cover_picture_preview = process.env.UPLOAD_BASE_URL + response.data.rela_url
+
+    beforeUpload(file) {
+      const formData = new FormData()
+      formData.append('file', file)
+      uploadImage(formData).then((data) => {
+        this.coverPicturePreview = data.location
+        this.form.coverPicture = data.location
+      })
+      return false
     }
   }
 }
@@ -211,7 +205,7 @@ export default {
   position: relative;
 
   .createPost-main-container {
-    padding: 40px 45px 20px 50px;
+    padding: 20px;
 
     .postInfo-container {
       position: relative;
@@ -243,17 +237,17 @@ export default {
 }
 </style>
 <style>
-.avatar-uploader .el-upload {
+.image-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
 }
-.avatar-uploader .el-upload:hover {
+.image-uploader .el-upload:hover {
   border-color: #409eff;
 }
-.avatar-uploader-icon {
+.image-uploader-icon {
   font-size: 28px;
   color: #8c939d;
   width: 178px;
@@ -261,9 +255,9 @@ export default {
   line-height: 178px;
   text-align: center;
 }
-.avatar {
-  width: 320px;
-  max-height: 152px;
+.image {
+  max-width: 200px;
+  max-height: 200px;
   display: block;
 }
 </style>

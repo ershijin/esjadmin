@@ -1,27 +1,53 @@
 package com.ershijin.esjadmin.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.esjadmin.annotation.Log;
-import com.ershijin.esjadmin.exception.ApiException;
+import com.ershijin.esjadmin.model.PageResult;
+import com.ershijin.esjadmin.model.entity.Article;
+import com.ershijin.esjadmin.model.query.ArticleQuery;
+import com.ershijin.esjadmin.service.ArticleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/article")
+@RequestMapping("/articles")
 public class ArticleController {
 
+    @Autowired
+    private ArticleService articleService;
+
+    @GetMapping
+    @Log("文章列表")
+    @PreAuthorize("hasAuthority('articles:list')")
+    public PageResult list(ArticleQuery query, Page page) {
+        return articleService.list(query, page);
+    }
+
     @GetMapping("/{id}")
-    @Log("浏览文章")
-    public String load(@PathVariable Long id) throws ApiException {
-        throw new ApiException("这是一个Api异常信息");
-//        return "This is my first blog";
+    @PreAuthorize("hasAuthority('articles:list')")
+    public Article get(@PathVariable Long id) {
+        return articleService.get(id);
     }
 
-    @PostMapping("/add")
-    @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
+    @PostMapping
     @Log("添加文章")
-//    @PreAuthorize("hasAuthority(@config.get('GENERAL_PERMISSION'))")
-    public void create() {
-
+    @PreAuthorize("hasAuthority('articles:save')")
+    public void save(@RequestBody Article article) {
+        articleService.save(article);
     }
 
+    @PutMapping("/{id}")
+    @Log("更新文章")
+    @PreAuthorize("hasAuthority('articles:update')")
+    public void update(@PathVariable long id, @RequestBody Article article) {
+        articleService.update(article);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('articles:remove')")
+    @Log("删除文章")
+    public void remove(@PathVariable Long id) {
+        articleService.remove(id);
+    }
 }
