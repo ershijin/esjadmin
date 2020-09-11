@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ershijin.dao.MenuMapper">
+    <resultMap id="BaseResultMap" type="Menu">
+        <id property="id" column="id" />
+        <result property="path" column="path" />
+        <result property="component" column="component" />
+        <result property="title" column="title" />
+        <result property="icon" column="icon" />
+        <result property="parentId" column="parent_id" />
+        <!--        <association property="meta" javaType="MenuMeta">-->
+        <!--            <result column="keep_alive" property="keepAlive"/>-->
+        <!--        </association>-->
+        <collection property="roles" ofType="Role">
+            <id property="id" column="rid"/>
+            <result property="name" column="role_name"/>
+        </collection>
+        <collection property="children" ofType="Menu">
+            <id property="id" column="id2"/>
+            <result property="path" column="path2" />
+            <result property="component" column="component2" />
+            <result property="title" column="title2" />
+            <result property="icon" column="icon2" />
+            <!--            <association property="meta" javaType="MenuMeta">-->
+            <!--                <result column="keep_alive2" property="keepAlive"/>-->
+            <!--            </association>-->
+            <collection property="children" ofType="Menu">
+                <id column="id3" property="id"/>
+                <result property="title" column="title3" />
+            </collection>
+        </collection>
+    </resultMap>
+
+
+    <resultMap id="TreeNodeResultMap" type="TreeNodeMenu">
+        <id column="id" property="id" />
+        <result property="path" column="path" />
+        <result property="name" column="name" />
+        <result property="component" column="component" />
+        <result property="noCache" column="is_no_cache"/>
+        <result property="title" column="title" />
+        <result property="icon" column="icon" />
+        <result property="parentId" column="parent_id" />
+        <result property="type" column="type" />
+        <result property="priority" column="priority" />
+        <result property="hidden" column="is_hidden" />
+        <result property="enabled" column="is_enabled" />
+        <result property="permission" column="permission" />
+        <result property="remark" column="remark" />
+        <association property="meta" javaType="MenuMeta">
+            <result property="title" column="title"/>
+            <result property="icon" column="icon"/>
+            <result property="noCache" column="is_no_cache"/>
+        </association>
+    </resultMap>
+
+    <select id="listAll" resultMap="BaseResultMap">
+        select m.*,r.`id` as rid,r.`name` as role_name
+        from menu m
+        left join role_menu mr on m.`id`=mr.`menu_id`
+        left join role r on mr.`role_id`=r.`id`
+        WHERE m.`is_enabled`=true
+        order by m.`id` desc
+    </select>
+
+    <select id="listByParentId" resultMap="BaseResultMap">
+        select m.*,r.`id` as rid,r.`name` as role_name
+        from menu m
+        left join role_menu mr on m.`id`=mr.`menu_id`
+        left join role r on mr.`role_id`=r.`id`
+        WHERE m.`is_enabled`=true and parent_id=#{parentId}
+        order by m.`id` desc
+    </select>
+
+    <select id="listTreeNodeMenu" resultMap="TreeNodeResultMap">
+        SELECT * FROM menu ORDER BY priority DESC
+    </select>
+
+    <select id="listTreeNodeMenuByRoles" resultMap="TreeNodeResultMap" parameterType="List">
+        SELECT m.* FROM menu m JOIN role_menu rm ON m.id=rm.menu_id WHERE m.is_enabled=1 AND role_id IN
+        <foreach collection="collection" item="item" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+        ORDER BY priority DESC
+    </select>
+
+    <update id="enable" parameterType="Menu">
+        UPDATE menu SET
+        is_enabled=1,
+        update_time=#{updateTime}
+        WHERE id=#{id}
+    </update>
+
+    <update id="disable" parameterType="Menu">
+        UPDATE menu SET
+        is_enabled=0,
+        update_time=#{updateTime}
+        WHERE id=#{id}
+    </update>
+
+    <delete id="removeByIds">
+        DELETE FROM menu WHERE id IN
+        <foreach collection="collection" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+
+    </delete>
+</mapper>

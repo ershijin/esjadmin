@@ -1,0 +1,76 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/esjadmin?useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 初始连接数
+    initial-size: 5
+    # 最大连接池数量
+    max-active: 50
+    # 最小连接池数量
+    min-idle: 10
+    # 连接等待超时时间
+    max-wait: 10000
+    # 隔离级别为读写提交
+    default-transaction-isolation: 2
+
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  mvc:
+    #date-format: yyyy-MM-dd HH:mm:ss
+    # 视图配置
+    format:
+      date: yyyy-MM-dd HH:mm:ss
+  #    view:
+#      prefix:
+#      suffix:
+
+
+# devtools配置
+#  devtools:
+#    restart:
+#      poll-interval: 1000ms
+#      quiet-period: 999ms
+
+# mybatis-plus配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.ershijin.model
+  global-config:
+    db-config:
+      id-type: auto #主键策略，数据库自增
+  #      update-strategy: default
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    lazy-loading-enabled: true
+
+# 日志配置
+logging:
+  level:
+#    root: debug
+    com.ershijin: debug
+
+task:
+  pool:
+    # 核心线程池大小
+    core-pool-size: 10
+    # 最大线程数
+    max-pool-size: 30
+    # 活跃时间
+    keep-alive-seconds: 60
+    # 队列容量
+    queue-capacity: 50
+
+
+
+
+# 是否本地解析IP地区
+ip:
+  local-parsing: true
