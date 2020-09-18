@@ -29,6 +29,13 @@ public class MyBeanUtils {
                         targetElementClass));
     }
 
+    @SneakyThrows
+    public static Object convert(Object source, Class targetClass) {
+        Object o = targetClass.newInstance();
+        BeanUtils.copyProperties(source, o);
+        return o;
+    }
+
     /**
      * 复制source bean属性到target bean
      * @param source 原始bean

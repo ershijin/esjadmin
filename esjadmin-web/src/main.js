@@ -21,6 +21,9 @@ import * as filters from './filters' // global filters
 
 import { getConfigs } from '@/api/config'
 
+// 权限指令
+import permission from './directive/permission'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -33,6 +36,8 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
+
+Vue.use(permission)
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'small' // set element-ui default size

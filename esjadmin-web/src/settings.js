@@ -31,5 +31,10 @@ module.exports = {
    * The default is only used in the production env
    * If you want to also use it in dev, you can pass ['production', 'development']
    */
-  errorLog: ['production', 'development']
+  errorLog: ['production', 'development'],
+
+  /**
+   * @description 请求超时时间，毫秒
+   */
+  requestTimeout: 1200000
 }

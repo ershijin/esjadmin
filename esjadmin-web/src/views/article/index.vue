@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
+    <div class="head-container">
       <el-input v-model="listQuery.keyword" clearable placeholder="关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
       <el-select v-model="listQuery.categoryId" clearable placeholder="分类" class="filter-item">

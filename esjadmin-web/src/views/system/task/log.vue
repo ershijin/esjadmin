@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-el-drag-dialog :visible.sync="dialogVisible" append-to-body title="执行日志" top="1vh" width="88%">
     <!-- 搜索 -->
-    <div class="filter-container">
+    <div class="head-container">
       <el-input
         v-model="listQuery.keyword"
         clearable
