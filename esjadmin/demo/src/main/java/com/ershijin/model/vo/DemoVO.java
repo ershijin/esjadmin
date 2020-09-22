@@ -1,13 +1,13 @@
 package com.ershijin.model.vo;
 
 import lombok.Data;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.io.Serializable;
 
 /**
 * @description /
 * @author ershijin
-* @date 2020-09-17
+* @date 2020-09-22
 **/
 @Data
 public class DemoVO implements Serializable {
@@ -26,7 +26,9 @@ public class DemoVO implements Serializable {
     /** 状态：-1,删除；0，待审核；1，正常 */
     private Integer status;
 
-    private Timestamp createTime;
+    private LocalDateTime createTime;
 
-    private Timestamp updateTime;
+    private LocalDateTime updateTime;
+
+    private Integer uni;
 }

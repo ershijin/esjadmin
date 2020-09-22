@@ -1,6 +1,13 @@
-package ${package}.model.vo;
+package ${package}.model.dto;
 
 import lombok.Data;
+<#if hasDateAnnotation>
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+</#if>
 <#if hasTimestamp>
 import java.time.LocalDateTime;
 </#if>
@@ -19,7 +26,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 * @date ${date}
 **/
 @Data
-public class ${className}VO implements Serializable {
+public class ${className}DTO implements Serializable {
 <#if columns??>
     <#list columns as column>
 
@@ -31,6 +38,11 @@ public class ${className}VO implements Serializable {
     /** 防止精度丢失 */
     @JsonSerialize(using= ToStringSerializer.class)
     </#if>
+    </#if>
+    <#if (column.dateAnnotation)??>
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     </#if>
     private ${column.columnType} ${column.changeColumnName};
     </#list>

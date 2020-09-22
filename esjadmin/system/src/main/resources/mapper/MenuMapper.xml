@@ -33,7 +33,7 @@
     </resultMap>
 
 
-    <resultMap id="TreeNodeResultMap" type="TreeNodeMenu">
+    <resultMap id="TreeNodeResultMap" type="TreeNodeMenuDTO">
         <id column="id" property="id" />
         <result property="path" column="path" />
         <result property="name" column="name" />

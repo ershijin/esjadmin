@@ -9,7 +9,7 @@ import com.ershijin.dao.ColumnInfoMapper;
 import com.ershijin.exception.ApiException;
 import com.ershijin.model.entity.ColumnInfo;
 import com.ershijin.model.entity.GenConfig;
-import com.ershijin.model.vo.TableInfo;
+import com.ershijin.model.dto.TableInfo;
 import com.ershijin.util.FileUtils;
 import com.ershijin.util.PageUtil;
 import com.ershijin.utils.GenUtil;

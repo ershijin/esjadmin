@@ -1,4 +1,4 @@
-package com.ershijin.model.vo;
+package com.ershijin.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

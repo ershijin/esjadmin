@@ -9,7 +9,7 @@ import com.ershijin.dao.RoleMenuMapper;
 import com.ershijin.model.PageResult;
 import com.ershijin.model.entity.Role;
 import com.ershijin.model.entity.RoleMenu;
-import com.ershijin.model.form.RoleMenuIdsForm;
+import com.ershijin.model.vo.RoleMenuIdsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,7 @@ public class RoleService {
     }
 
     @Transactional
-    public void save(RoleMenuIdsForm roleMenuIds) {
+    public void save(RoleMenuIdsVO roleMenuIds) {
         // 保存角色
         roleMapper.insert(roleMenuIds.getRole());
         // 保存角色对应的菜单权限
@@ -61,7 +61,7 @@ public class RoleService {
         return roleMenuMapper.listMenuIdsByRoleId(id);
     }
 
-    public void update(RoleMenuIdsForm roleMenuIds) {
+    public void update(RoleMenuIdsVO roleMenuIds) {
         // 保存角色
         roleMapper.updateById(roleMenuIds.getRole());
         // 删除旧的关系

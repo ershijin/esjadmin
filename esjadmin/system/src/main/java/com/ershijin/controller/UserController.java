@@ -8,10 +8,10 @@ import com.ershijin.model.PageResult;
 import com.ershijin.model.entity.Menu;
 import com.ershijin.model.entity.Role;
 import com.ershijin.model.entity.User;
-import com.ershijin.model.form.UserChangePasswordForm;
-import com.ershijin.model.form.UserForm;
+import com.ershijin.model.vo.UserChangePasswordVO;
+import com.ershijin.model.vo.UserVO;
 import com.ershijin.model.query.UserQuery;
-import com.ershijin.model.vo.TreeNodeMenu;
+import com.ershijin.model.dto.TreeNodeMenuDTO;
 import com.ershijin.service.MenuService;
 import com.ershijin.service.UserService;
 import com.ershijin.util.UserUtils;
@@ -51,7 +51,7 @@ public class UserController {
         UserDetails userDetails = UserUtils.getCurrentUser();
         User user = (User) userService.loadUserByUsername(userDetails.getUsername());
         // 获取当前用户拥有的菜单树
-        List<TreeNodeMenu> menus = menuService.getMenuTree(user.getRoles());
+        List<TreeNodeMenuDTO> menus = menuService.getMenuTree(user.getRoles());
         // 获取当前用户拥有的所有权限
         List<Menu> allMenus = user.getMenus();
         Set<String> permissions = new HashSet<>();
@@ -117,7 +117,7 @@ public class UserController {
     @PostMapping
     @PreAuthorize("hasAuthority('users:save')")
     @Log("添加用户")
-    public void save(@Validated({Save.class}) @RequestBody UserForm userForm) {
+    public void save(@Validated({Save.class}) @RequestBody UserVO userForm) {
         User user = new User();
         BeanUtils.copyProperties(userForm, user);
         if (userForm.getRoleIds() != null) {
@@ -139,7 +139,7 @@ public class UserController {
     @PutMapping
     @PreAuthorize("hasAuthority('users:update')")
     @Log("修改用户")
-    public void update(@Validated({Update.class}) @RequestBody UserForm userForm) {
+    public void update(@Validated({Update.class}) @RequestBody UserVO userForm) {
         User user = new User();
         BeanUtils.copyProperties(userForm, user);
         List<Role> roles = new ArrayList<>();
@@ -184,7 +184,7 @@ public class UserController {
     @PostMapping("updatePassword")
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     @Log("修改密码")
-    public void updatePassword(@Validated @RequestBody UserChangePasswordForm userChangePasswordForm,
+    public void updatePassword(@Validated @RequestBody UserChangePasswordVO userChangePasswordForm,
                                HttpServletRequest request) throws ApiException {
         String oldPassword = userChangePasswordForm.getOldPassword();
         String newPassword = userChangePasswordForm.getNewPassword();

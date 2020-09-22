@@ -26,6 +26,7 @@ public class DictDetailService {
 
     public PageResult queryAll(DictDetailQuery query, Page page) {
         QueryWrapper<DictDetail> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(query.getDictName() != null, "name", query.getDictName());
         queryWrapper.eq(query.getDictId() != null, "dict_id", query.getDictId());
         IPage<DictDetail> result = dictDetailMapper.selectPage(page, queryWrapper);
 

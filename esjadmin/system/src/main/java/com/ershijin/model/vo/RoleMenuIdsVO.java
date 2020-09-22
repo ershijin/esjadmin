@@ -1,4 +1,4 @@
-package com.ershijin.model.form;
+package com.ershijin.model.vo;
 
 import com.ershijin.model.entity.Role;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.Valid;
 import java.util.Set;
 @Data
-public class RoleMenuIdsForm {
+public class RoleMenuIdsVO {
     @Valid
     private Role role;
     private Set<Long> menuIds;

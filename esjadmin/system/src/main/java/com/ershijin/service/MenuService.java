@@ -4,7 +4,7 @@ import com.ershijin.constant.MenuType;
 import com.ershijin.dao.MenuMapper;
 import com.ershijin.model.entity.Menu;
 import com.ershijin.model.entity.Role;
-import com.ershijin.model.vo.TreeNodeMenu;
+import com.ershijin.model.dto.TreeNodeMenuDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,22 +34,22 @@ public class MenuService {
      * 获取全部菜单树
      * @return
      */
-    public List<TreeNodeMenu> getMenuTree() {
-        List<TreeNodeMenu> menuTree = new ArrayList<>();
+    public List<TreeNodeMenuDTO> getMenuTree() {
+        List<TreeNodeMenuDTO> menuTree = new ArrayList<>();
         // 获取所有菜单
-        List<TreeNodeMenu> menus = menuMapper.listTreeNodeMenu();
+        List<TreeNodeMenuDTO> menus = menuMapper.listTreeNodeMenu();
 
         // 顶级菜单
-        for (Iterator<TreeNodeMenu> iterator = menus.iterator(); iterator.hasNext();) {
-            TreeNodeMenu menu = iterator.next();
+        for (Iterator<TreeNodeMenuDTO> iterator = menus.iterator(); iterator.hasNext();) {
+            TreeNodeMenuDTO menu = iterator.next();
             if (menu.getParentId() == 0) {
                 menuTree.add(menu);
                 iterator.remove();
             }
         }
         // 获取子菜单
-        for (Iterator<TreeNodeMenu> iterator = menuTree.iterator(); iterator.hasNext();) {
-            TreeNodeMenu menu = iterator.next();
+        for (Iterator<TreeNodeMenuDTO> iterator = menuTree.iterator(); iterator.hasNext();) {
+            TreeNodeMenuDTO menu = iterator.next();
             menu.setChildren(getMenuChildren(menu.getId(), menus, true));
         }
         return menuTree;
@@ -62,18 +62,18 @@ public class MenuService {
      * @param all 是否返回全部可用菜单/按钮
      * @return
      */
-    private List<TreeNodeMenu> getMenuChildren(Long parentId, List<TreeNodeMenu> menus, boolean all) {
-        List<TreeNodeMenu> children = new ArrayList<>();
-        for (Iterator<TreeNodeMenu> iterator = menus.iterator(); iterator.hasNext();) {
-            TreeNodeMenu menu = iterator.next();
+    private List<TreeNodeMenuDTO> getMenuChildren(Long parentId, List<TreeNodeMenuDTO> menus, boolean all) {
+        List<TreeNodeMenuDTO> children = new ArrayList<>();
+        for (Iterator<TreeNodeMenuDTO> iterator = menus.iterator(); iterator.hasNext();) {
+            TreeNodeMenuDTO menu = iterator.next();
             if (menu.getParentId().equals(parentId)) {
                 children.add(menu);
                 iterator.remove();
             }
         }
         // 获取孙菜单
-        for (Iterator<TreeNodeMenu> iterator = children.iterator(); iterator.hasNext();) {
-            TreeNodeMenu menu = iterator.next();
+        for (Iterator<TreeNodeMenuDTO> iterator = children.iterator(); iterator.hasNext();) {
+            TreeNodeMenuDTO menu = iterator.next();
             menu.setChildren(getMenuChildren(menu.getId(), menus, true));
         }
 
@@ -84,10 +84,10 @@ public class MenuService {
      * 获取角色对应菜单树
      * @return
      */
-    public List<TreeNodeMenu> getMenuTree(List<Role> roles) {
-        List<TreeNodeMenu> menuTree = new ArrayList<>();
+    public List<TreeNodeMenuDTO> getMenuTree(List<Role> roles) {
+        List<TreeNodeMenuDTO> menuTree = new ArrayList<>();
         // 获取所有菜单
-        List<TreeNodeMenu> menus;
+        List<TreeNodeMenuDTO> menus;
 //        if (roles == null) {
 //            menus = menuMapper.listTreeNodeMenu();
 //        } else {
@@ -98,8 +98,8 @@ public class MenuService {
         menus= menuMapper.listTreeNodeMenuByRoles(roles);
 
         // 顶级菜单
-        for (Iterator<TreeNodeMenu> iterator = menus.iterator(); iterator.hasNext();) {
-            TreeNodeMenu menu = iterator.next();
+        for (Iterator<TreeNodeMenuDTO> iterator = menus.iterator(); iterator.hasNext();) {
+            TreeNodeMenuDTO menu = iterator.next();
             if (menu.getParentId() == 0) {
                 if (menu.getType() != MenuType.BUTTON) {
                     menuTree.add(menu);
@@ -108,17 +108,17 @@ public class MenuService {
             }
         }
         // 获取子菜单
-        for (Iterator<TreeNodeMenu> iterator = menuTree.iterator(); iterator.hasNext();) {
-            TreeNodeMenu menu = iterator.next();
+        for (Iterator<TreeNodeMenuDTO> iterator = menuTree.iterator(); iterator.hasNext();) {
+            TreeNodeMenuDTO menu = iterator.next();
             menu.setChildren(getMenuChildren(menu.getId(), menus));
         }
         return menuTree;
     }
 
-    private List<TreeNodeMenu> getMenuChildren(Long parentId, List<TreeNodeMenu> menus) {
-        List<TreeNodeMenu> children = new ArrayList<>();
-        for (Iterator<TreeNodeMenu> iterator = menus.iterator(); iterator.hasNext();) {
-            TreeNodeMenu menu = iterator.next();
+    private List<TreeNodeMenuDTO> getMenuChildren(Long parentId, List<TreeNodeMenuDTO> menus) {
+        List<TreeNodeMenuDTO> children = new ArrayList<>();
+        for (Iterator<TreeNodeMenuDTO> iterator = menus.iterator(); iterator.hasNext();) {
+            TreeNodeMenuDTO menu = iterator.next();
             if (menu.getParentId().equals(parentId)) {
                 if (menu.getType() != MenuType.BUTTON) {
                     children.add(menu);
@@ -127,8 +127,8 @@ public class MenuService {
             }
         }
         // 获取孙菜单
-        for (Iterator<TreeNodeMenu> iterator = children.iterator(); iterator.hasNext();) {
-            TreeNodeMenu menu = iterator.next();
+        for (Iterator<TreeNodeMenuDTO> iterator = children.iterator(); iterator.hasNext();) {
+            TreeNodeMenuDTO menu = iterator.next();
             menu.setChildren(getMenuChildren(menu.getId(), menus));
         }
 
@@ -154,7 +154,7 @@ public class MenuService {
     public void removeById(Long id) {
         // 查询出所有的子菜单id
         // 获取所有菜单
-        List<TreeNodeMenu> menus = menuMapper.listTreeNodeMenu();
+        List<TreeNodeMenuDTO> menus = menuMapper.listTreeNodeMenu();
         Set<Long> ids = new HashSet<>();
         ids.add(id);
         ids.addAll(getTreeNodeMenuIds(getMenuChildren(id, menus)));
@@ -164,10 +164,10 @@ public class MenuService {
     /**
      * 获取菜单所有的id
      */
-    private Set<Long> getTreeNodeMenuIds(List<TreeNodeMenu> menus) {
+    private Set<Long> getTreeNodeMenuIds(List<TreeNodeMenuDTO> menus) {
         Set<Long> ids = new HashSet<>();
-        for (Iterator<TreeNodeMenu> iterator = menus.iterator(); iterator.hasNext();) {
-            TreeNodeMenu menu = iterator.next();
+        for (Iterator<TreeNodeMenuDTO> iterator = menus.iterator(); iterator.hasNext();) {
+            TreeNodeMenuDTO menu = iterator.next();
             ids.add(menu.getId());
             if (!menu.getChildren().isEmpty()) {
                 ids.addAll(getTreeNodeMenuIds(menu.getChildren()));

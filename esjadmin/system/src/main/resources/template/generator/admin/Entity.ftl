@@ -1,19 +1,22 @@
 package ${package}.model.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+<#if hasDateAnnotation>
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+</#if>
+
 import lombok.Data;
 import io.swagger.annotations.ApiModelProperty;
 <#if isNotNullColumns??>
 import javax.validation.constraints.*;
 </#if>
 
-<#if hasDateAnnotation>
-import org.hibernate.annotations.*;
-</#if>
 <#if hasTimestamp>
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 </#if>
 <#if hasBigDecimal>
 import java.math.BigDecimal;
@@ -34,20 +37,24 @@ public class ${className} implements Serializable {
     <#if column.columnKey = 'PRI'>
     @TableId
     </#if>
-    @TableField(value = "${column.columnName}"<#if column.columnKey = 'UNI'>,unique = true</#if>)
     <#if column.istNotNull && column.columnKey != 'PRI'>
         <#if column.columnType = 'String'>
-    @NotBlank
+    @NotBlank(message="<#if column.remark?default("")?trim?length gt 1>${column.remark}<#else>${column
+    .changeColumnName}</#if> 不能为空")
         <#else>
-    @NotNull
+    @NotNull(message="<#if column.remark?default("")?trim?length gt 1>${column.remark}<#else>${column
+                          .changeColumnName}</#if> 不能为空")
         </#if>
     </#if>
     <#if (column.dateAnnotation)??>
     <#if column.dateAnnotation = 'CreationTimestamp'>
-    @CreationTimestamp
+    @TableField(fill = FieldFill.INSERT, updateStrategy = FieldStrategy.NEVER)
     <#else>
-    @UpdateTimestamp
+    @TableField(fill = FieldFill.UPDATE)
     </#if>
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     </#if>
     <#if column.remark != ''>
     @ApiModelProperty(value = "${column.remark}")

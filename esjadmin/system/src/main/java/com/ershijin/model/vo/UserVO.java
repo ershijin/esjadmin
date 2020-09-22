@@ -1,25 +1,36 @@
 package com.ershijin.model.vo;
 
-import com.ershijin.model.BaseEntity;
+import com.ershijin.validation.constraints.NotDuplicate;
+import com.ershijin.validation.groups.Save;
+import com.ershijin.validation.groups.Update;
 import lombok.Data;
-import org.apache.ibatis.type.Alias;
+import org.springframework.validation.annotation.Validated;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
-@Alias("UserVO")
+@Validated
 @Data
-public class UserVO extends BaseEntity implements Serializable {
+public class UserVO {
 
-    private static final long serialVersionUID = 1L;
+    @NotNull(groups = {Update.class}, message = "id不能为空")
+    private Long id;
 
-    private String name;
-
-    private boolean enabled;
-
+    @NotBlank(groups = {Save.class, Update.class}, message = "账号不能为空")
+    @NotDuplicate(groups = {Save.class}, table = "user", column = "username", message = "账号已经被使用")
     private String username;
 
-    private String remark;
+    @NotBlank(groups = {Save.class}, message = "密码不能为空")
+    private String password;
+
+    @NotBlank(groups = {Save.class, Update.class}, message = "名字不能为空")
+    private String name;
 
     private String avatar;
+    private boolean enabled;
+    private String remark;
+
+    private List<Long> roleIds;
 
 }

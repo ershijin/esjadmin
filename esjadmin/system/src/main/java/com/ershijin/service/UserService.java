@@ -14,7 +14,7 @@ import com.ershijin.model.entity.Role;
 import com.ershijin.model.entity.User;
 import com.ershijin.model.entity.UserRole;
 import com.ershijin.model.query.UserQuery;
-import com.ershijin.model.vo.UserVO;
+import com.ershijin.model.dto.UserDTO;
 import com.ershijin.util.FileUtils;
 import com.ershijin.util.JsonUtils;
 import com.ershijin.util.MyBeanUtils;
@@ -139,7 +139,7 @@ public class UserService implements UserDetailsService {
         page.setOrders(OrderItem.descs("id"));
 
         IPage<User> result = userMapper.selectPage(page, queryWrapper);
-        result.setRecords(MyBeanUtils.convert(result.getRecords(), UserVO.class));
+        result.setRecords(MyBeanUtils.convert(result.getRecords(), UserDTO.class));
         return new PageResult(result.getTotal(), result.getRecords());
     }
 

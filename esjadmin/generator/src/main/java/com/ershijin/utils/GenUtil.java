@@ -25,7 +25,7 @@ import static com.ershijin.util.FileUtils.SYS_TEM_DIR;
 @SuppressWarnings({"unchecked", "all"})
 public class GenUtil {
 
-    private static final String TIMESTAMP = "Timestamp";
+    private static final String TIMESTAMP = "LocalDateTime";
 
     private static final String BIGDECIMAL = "BigDecimal";
 
@@ -41,11 +41,13 @@ public class GenUtil {
     private static List<String> getAdminTemplateNames() {
         List<String> templateNames = new ArrayList<>();
         templateNames.add("Entity");
+        templateNames.add("DTO");
         templateNames.add("VO");
-        templateNames.add("Mapper");
-        templateNames.add("Controller");
         templateNames.add("Query");
+        templateNames.add("Converter");
+        templateNames.add("Mapper");
         templateNames.add("Service");
+        templateNames.add("Controller");
         return templateNames;
     }
 
@@ -337,12 +339,8 @@ public class GenUtil {
             return packagePath + "model" + File.separator + "entity" + File.separator + className + ".java";
         }
 
-        if ("Controller".equals(templateName)) {
-            return packagePath + "controller" + File.separator + className + "Controller.java";
-        }
-
-        if ("Service".equals(templateName)) {
-            return packagePath + "service" + File.separator + className + "Service.java";
+        if ("DTO".equals(templateName)) {
+            return packagePath + "model" + File.separator + "dto" + File.separator + className + "DTO.java";
         }
 
         if ("VO".equals(templateName)) {
@@ -353,8 +351,20 @@ public class GenUtil {
             return packagePath + "model" + File.separator + "query" + File.separator + className + "Query.java";
         }
 
+        if ("Converter".equals(templateName)) {
+            return packagePath + "converter" + File.separator + className + "Converter.java";
+        }
+
         if ("Mapper".equals(templateName)) {
             return packagePath + "dao" + File.separator + className + "Mapper.java";
+        }
+
+        if ("Service".equals(templateName)) {
+            return packagePath + "service" + File.separator + className + "Service.java";
+        }
+
+        if ("Controller".equals(templateName)) {
+            return packagePath + "controller" + File.separator + className + "Controller.java";
         }
 
         return null;

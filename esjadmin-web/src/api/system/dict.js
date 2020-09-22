@@ -7,7 +7,7 @@ export function getDicts() {
   })
 }
 
-export function add(data) {
+export function save(data) {
   return request({
     url: 'dict',
     method: 'post',
@@ -15,7 +15,7 @@ export function add(data) {
   })
 }
 
-export function del(ids) {
+export function remove(ids) {
   return request({
     url: 'dict/',
     method: 'delete',
@@ -23,7 +23,7 @@ export function del(ids) {
   })
 }
 
-export function edit(data) {
+export function update(data) {
   return request({
     url: 'dict',
     method: 'put',
@@ -31,4 +31,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del }
+export default { save, update, remove }

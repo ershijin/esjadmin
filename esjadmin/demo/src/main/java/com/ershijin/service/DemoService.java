@@ -1,19 +1,24 @@
 package com.ershijin.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ershijin.exception.NotFoundException;
-import com.ershijin.util.MyBeanUtils;
 import com.ershijin.model.PageResult;
 import com.ershijin.util.FileUtils;
 import com.ershijin.model.entity.Demo;
-import com.ershijin.model.vo.DemoVO;
+
+import com.ershijin.exception.ApiException;
+import com.ershijin.constant.ResultCode;
+import com.ershijin.model.dto.DemoDTO;
 import com.ershijin.model.query.DemoQuery;
+import com.ershijin.converter.DemoConverter;
 import com.ershijin.dao.DemoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -24,13 +29,16 @@ import java.util.LinkedHashMap;
 /**
 * @description 服务实现
 * @author ershijin
-* @date 2020-09-17
+* @date 2020-09-22
 **/
 @Service
 public class DemoService {
     
     @Autowired
     private DemoMapper demoMapper;
+
+    @Autowired
+    private DemoConverter demoConverter;
 
     /**
     * 查询数据分页
@@ -39,19 +47,19 @@ public class DemoService {
     * @return Map<String,Object>
     */
     public PageResult list(DemoQuery query, Page<Demo> page){
-        QueryWrapper<Demo> queryWrapper = new QueryWrapper<>();
-        IPage<Demo> result = demoMapper.selectPage(page, queryWrapper);
-        return new PageResult(result.getTotal(), MyBeanUtils.convert(result.getRecords(), DemoVO.class));
+        LambdaQueryWrapper<Demo> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        IPage<Demo> result = demoMapper.selectPage(page, lambdaQueryWrapper);
+        return new PageResult(result.getTotal(), demoConverter.toDto(result.getRecords()));
     }
 
     /**
     * 查询所有数据不分页
     * @param query 条件参数
-    * @return List<DemoVO>
+    * @return List<DemoDTO>
     */
-    public List<DemoVO> list(DemoQuery query){
-        QueryWrapper<Demo> queryWrapper = new QueryWrapper<>();
-        return MyBeanUtils.convert(demoMapper.selectList(queryWrapper), DemoVO.class);
+    public List<DemoDTO> list(DemoQuery query){
+        LambdaQueryWrapper<Demo> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        return demoConverter.toDto(demoMapper.selectList(lambdaQueryWrapper));
     }
 
     /**
@@ -60,24 +68,27 @@ public class DemoService {
        * @return DemoVO
        */
     @Transactional
-    public DemoVO findById(Long id) {
+    public DemoDTO get(Long id) {
         Demo demo = demoMapper.selectById(id);
         if (demo == null) {
             throw new NotFoundException("Demo 不存在");
         }
-        DemoVO demoVO = new DemoVO();
-        return (DemoVO) MyBeanUtils.convert(demo, DemoVO.class);
+        return demoConverter.toDto(demo);
     }
 
     /**
     * 创建
     * @param resources /
-    * @return DemoVO
+    * @return DemoDTO
     */
     @Transactional(rollbackFor = Exception.class)
-    public Demo save(Demo resources) {
+    public DemoDTO save(Demo resources) {
+        if(demoMapper.selectOne(Wrappers.<Demo>lambdaQuery().eq(Demo::getUni, resources.getUni())) !=
+        null){
+            throw new ApiException("Demo 列 uni 值 " + resources.getUni() + " 已经存在", ResultCode.ENTITY_EXISTS);
+        }
         demoMapper.insert(resources);
-        return resources;
+        return demoConverter.toDto(resources);
     }
 
     /**
@@ -105,16 +116,18 @@ public class DemoService {
     * @param response /
     * @throws IOException /
     */
-    public void download(List<DemoVO> all, HttpServletResponse response) throws IOException {
+    public void download(List<DemoDTO> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (DemoVO demo : all) {
+        for (DemoDTO demo : all) {
             Map<String,Object> map = new LinkedHashMap<>();
+            map.put(" id",  demo.getId());
             map.put("名称", demo.getTitle());
             map.put("分类id", demo.getCategoryId());
             map.put("链接地址", demo.getLink());
             map.put("状态：-1,删除；0，待审核；1，正常", demo.getStatus());
             map.put(" createTime",  demo.getCreateTime());
             map.put(" updateTime",  demo.getUpdateTime());
+            map.put(" uni",  demo.getUni());
             list.add(map);
         }
         FileUtils.downloadExcel(list, response);

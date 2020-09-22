@@ -1,4 +1,4 @@
-package com.ershijin.model.vo;
+package com.ershijin.model.dto;
 
 import com.ershijin.model.entity.MenuMeta;
 import lombok.Data;
@@ -7,9 +7,9 @@ import org.apache.ibatis.type.Alias;
 import java.io.Serializable;
 import java.util.List;
 
-@Alias("TreeNodeMenu")
+@Alias("TreeNodeMenuDTO")
 @Data
-public class TreeNodeMenu implements Serializable {
+public class TreeNodeMenuDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,6 +43,6 @@ public class TreeNodeMenu implements Serializable {
 
     private String permission;
 
-    private List<TreeNodeMenu> children;
+    private List<TreeNodeMenuDTO> children;
 
 }

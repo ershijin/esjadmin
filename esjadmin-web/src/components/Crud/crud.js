@@ -1,6 +1,7 @@
 import { initData, download } from '@/api/data'
 import { parseTime, downloadFile } from '@/utils/index'
 import Vue from 'vue'
+import { scrollTo } from '@/utils/scroll-to'
 
 /**
  * CRUD配置
@@ -37,9 +38,9 @@ function CRUD(options) {
     time: 50,
     // CRUD Method
     crudMethod: {
-      add: (form) => {},
-      del: (id) => {},
-      edit: (form) => {},
+      save: (form) => {},
+      remove: (id) => {},
+      update: (form) => {},
       get: (id) => {}
     },
     // 主页操作栏显示哪些按钮
@@ -89,7 +90,7 @@ function CRUD(options) {
     },
     page: {
       // 页码
-      page: 0,
+      current: 1,
       // 每页数据条数
       size: 10,
       // 总数据条数
@@ -120,7 +121,7 @@ function CRUD(options) {
     },
     // 搜索
     toQuery() {
-      crud.page.page = 1
+      crud.page.current = 1
       crud.refresh()
     },
     // 刷新
@@ -144,6 +145,7 @@ function CRUD(options) {
           setTimeout(() => {
             crud.loading = false
             callVmHook(crud, CRUD.HOOK.afterRefresh)
+            // scrollTo(0, 800)
           }, crud.time)
           resolve(data)
         }).catch(err => {
@@ -256,7 +258,7 @@ function CRUD(options) {
         return
       }
       crud.status.add = CRUD.STATUS.PROCESSING
-      crud.crudMethod.add(crud.form).then(() => {
+      crud.crudMethod.save(crud.form).then(() => {
         crud.status.add = CRUD.STATUS.NORMAL
         crud.resetForm()
         crud.addSuccessNotify()
@@ -275,7 +277,7 @@ function CRUD(options) {
         return
       }
       crud.status.edit = CRUD.STATUS.PROCESSING
-      crud.crudMethod.edit(crud.form).then(() => {
+      crud.crudMethod.update(crud.form).then(() => {
         crud.status.edit = CRUD.STATUS.NORMAL
         crud.getDataStatus(crud.getDataId(crud.form)).edit = CRUD.STATUS.NORMAL
         crud.editSuccessNotify()
@@ -310,7 +312,7 @@ function CRUD(options) {
       if (!delAll) {
         dataStatus.delete = CRUD.STATUS.PROCESSING
       }
-      return crud.crudMethod.del(ids).then(() => {
+      return crud.crudMethod.remove(ids).then(() => {
         if (delAll) {
           crud.delAllLoading = false
         } else dataStatus.delete = CRUD.STATUS.PREPARED
@@ -348,7 +350,7 @@ function CRUD(options) {
         if (crud.params[item] === null || crud.params[item] === '') crud.params[item] = undefined
       })
       return {
-        page: crud.page.page - 1,
+        current: crud.page.current,
         size: crud.page.size,
         sort: crud.sort,
         ...crud.query,
@@ -357,19 +359,19 @@ function CRUD(options) {
     },
     // 当前页改变
     pageChangeHandler(e) {
-      crud.page.page = e
+      crud.page.current = e
       crud.refresh()
     },
     // 每页条数改变
     sizeChangeHandler(e) {
       crud.page.size = e
-      crud.page.page = 1
+      crud.page.current = 1
       crud.refresh()
     },
     // 预防删除第二页最后一条数据时，或者多选删除第二页的数据时，页码错误导致请求无数据
     dleChangePage(size) {
-      if (crud.data.length === size && crud.page.page !== 1) {
-        crud.page.page -= 1
+      if (crud.data.length === size && crud.page.current !== 1) {
+        crud.page.current -= 1
       }
     },
     // 选择改变

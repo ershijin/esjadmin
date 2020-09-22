@@ -121,7 +121,6 @@ export default {
     handleCurrentChange(val) {
       if (val) {
         this.$refs.dictDetail.query.dictName = val.name
-        this.$refs.dictDetail.query.dictId = val.id
         this.$refs.dictDetail.dictId = val.id
         this.$refs.dictDetail.crud.toQuery()
       }

@@ -24,6 +24,9 @@ import { getConfigs } from '@/api/config'
 // 权限指令
 import permission from './directive/permission'
 
+// 数据字典
+import dict from './components/Dict'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -38,6 +41,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 Vue.use(permission)
+
+Vue.use(dict)
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'small' // set element-ui default size

@@ -22,6 +22,9 @@ public class ResultCode {
     // 参数校验不通过
     public static final int ARGUMENT_NOT_VALID = 40022;
 
+    // 实体已存在
+    public static final int ENTITY_EXISTS = 40009;
+
     //操作失败,默认状态码
     public static final int ERROR = 50000;
 

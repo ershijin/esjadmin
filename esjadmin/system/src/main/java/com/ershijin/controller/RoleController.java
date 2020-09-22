@@ -3,7 +3,7 @@ package com.ershijin.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.annotation.Log;
 import com.ershijin.model.PageResult;
-import com.ershijin.model.form.RoleMenuIdsForm;
+import com.ershijin.model.vo.RoleMenuIdsVO;
 import com.ershijin.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,7 +37,7 @@ public class RoleController {
     @PostMapping
     @PreAuthorize("hasAuthority('roles:save')")
     @Log("新增角色")
-    void save(@Valid @RequestBody RoleMenuIdsForm roleMenuIds) {
+    void save(@Valid @RequestBody RoleMenuIdsVO roleMenuIds) {
         roleService.save(roleMenuIds);
     }
 
@@ -47,7 +47,7 @@ public class RoleController {
     @PutMapping
     @PreAuthorize("hasAuthority('roles:update')")
     @Log("更新角色")
-    void updateRole(@RequestBody RoleMenuIdsForm roleMenuIds) {
+    void updateRole(@RequestBody RoleMenuIdsVO roleMenuIds) {
         roleService.update(roleMenuIds);
     }
 

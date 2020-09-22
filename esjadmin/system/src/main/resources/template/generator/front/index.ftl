@@ -61,7 +61,7 @@
             未设置字典，请手动设置 Select
               </#if>
             <#else>
-            <el-date-picker v-model="form.${column.changeColumnName}" type="datetime" style="width: 370px;" />
+            <el-date-picker v-model="form.${column.changeColumnName}" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" style="width: 370px;" />
             </#if>
           </el-form-item>
         </#if>

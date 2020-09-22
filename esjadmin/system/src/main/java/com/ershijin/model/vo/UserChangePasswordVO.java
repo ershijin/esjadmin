@@ -1,4 +1,4 @@
-package com.ershijin.model.form;
+package com.ershijin.model.vo;
 
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 @Validated
 @Data
-public class UserChangePasswordForm {
+public class UserChangePasswordVO {
     @NotBlank(message = "原密码不能为空")
     private String oldPassword;
 

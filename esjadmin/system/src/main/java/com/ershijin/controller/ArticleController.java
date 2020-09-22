@@ -3,6 +3,7 @@ package com.ershijin.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.annotation.Log;
 import com.ershijin.model.PageResult;
+import com.ershijin.model.dto.ArticleDTO;
 import com.ershijin.model.entity.Article;
 import com.ershijin.model.query.ArticleQuery;
 import com.ershijin.service.ArticleService;
@@ -26,7 +27,7 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('articles:list')")
-    public Article get(@PathVariable Long id) {
+    public ArticleDTO get(@PathVariable Long id) {
         return articleService.get(id);
     }
 

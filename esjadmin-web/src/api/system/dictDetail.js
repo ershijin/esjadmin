@@ -26,7 +26,7 @@ export function getDictMap(dictName) {
   })
 }
 
-export function add(data) {
+export function save(data) {
   return request({
     url: 'dictDetail',
     method: 'post',
@@ -34,14 +34,14 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+export function remove(id) {
   return request({
     url: 'dictDetail/' + id,
     method: 'delete'
   })
 }
 
-export function edit(data) {
+export function update(data) {
   return request({
     url: 'dictDetail',
     method: 'put',
@@ -49,4 +49,4 @@ export function edit(data) {
   })
 }
 
-export default { add, edit, del }
+export default { save, remove, update }

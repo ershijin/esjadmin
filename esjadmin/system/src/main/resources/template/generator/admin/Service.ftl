@@ -1,35 +1,34 @@
 package ${package}.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ershijin.exception.NotFoundException;
-import com.ershijin.util.MyBeanUtils;
 import com.ershijin.model.PageResult;
 import com.ershijin.util.FileUtils;
 import ${package}.model.entity.${className};
+
 <#if columns??>
+    <#assign uni_imported=false/>
     <#list columns as column>
         <#if column.columnKey = 'UNI'>
-            <#if column_index = 1>
-import me.zhengjie.exception.EntityExistException;
+            <#if !uni_imported>
+import com.ershijin.exception.ApiException;
+import com.ershijin.constant.ResultCode;
+                <#assign uni_imported=true/>
             </#if>
         </#if>
     </#list>
 </#if>
-import ${package}.model.vo.${className}VO;
+import ${package}.model.dto.${className}DTO;
 import ${package}.model.query.${className}Query;
+import ${package}.converter.${className}Converter;
 import ${package}.dao.${className}Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-<#if !auto && pkColumnType = 'Long'>
-import cn.hutool.core.lang.Snowflake;
-import cn.hutool.core.util.IdUtil;
-</#if>
-<#if !auto && pkColumnType = 'String'>
-import cn.hutool.core.util.IdUtil;
-</#if>
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -48,6 +47,9 @@ public class ${className}Service {
     @Autowired
     private ${className}Mapper ${changeClassName}Mapper;
 
+    @Autowired
+    private ${className}Converter ${changeClassName}Converter;
+
     /**
     * 查询数据分页
     * @param query 条件
@@ -55,19 +57,19 @@ public class ${className}Service {
     * @return Map<String,Object>
     */
     public PageResult list(${className}Query query, Page<${className}> page){
-        QueryWrapper<${className}> queryWrapper = new QueryWrapper<>();
-        IPage<${className}> result = ${changeClassName}Mapper.selectPage(page, queryWrapper);
-        return new PageResult(result.getTotal(), MyBeanUtils.convert(result.getRecords(), ${className}VO.class));
+        LambdaQueryWrapper<${className}> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        IPage<${className}> result = ${changeClassName}Mapper.selectPage(page, lambdaQueryWrapper);
+        return new PageResult(result.getTotal(), ${changeClassName}Converter.toDto(result.getRecords()));
     }
 
     /**
     * 查询所有数据不分页
     * @param query 条件参数
-    * @return List<${className}VO>
+    * @return List<${className}DTO>
     */
-    public List<${className}VO> list(${className}Query query){
-        QueryWrapper<${className}> queryWrapper = new QueryWrapper<>();
-        return MyBeanUtils.convert(${changeClassName}Mapper.selectList(queryWrapper), ${className}VO.class);
+    public List<${className}DTO> list(${className}Query query){
+        LambdaQueryWrapper<${className}> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        return ${changeClassName}Converter.toDto(${changeClassName}Mapper.selectList(lambdaQueryWrapper));
     }
 
     /**
@@ -76,39 +78,35 @@ public class ${className}Service {
        * @return ${className}VO
        */
     @Transactional
-    public ${className}VO findById(${pkColumnType} ${pkChangeColName}) {
+    public ${className}DTO get(${pkColumnType} ${pkChangeColName}) {
         ${className} ${changeClassName} = ${changeClassName}Mapper.selectById(${pkChangeColName});
         if (${changeClassName} == null) {
             throw new NotFoundException("${className} 不存在");
         }
-        ${className}VO ${changeClassName}VO = new ${className}VO();
-        return (${className}VO) MyBeanUtils.convert(${changeClassName}, ${className}VO.class);
+        return ${changeClassName}Converter.toDto(${changeClassName});
     }
 
     /**
     * 创建
     * @param resources /
-    * @return ${className}VO
+    * @return ${className}DTO
     */
     @Transactional(rollbackFor = Exception.class)
-    public void save(${className} resources) {
-<#if !auto && pkColumnType = 'Long'>
-        Snowflake snowflake = IdUtil.createSnowflake(1, 1);
-        resources.set${pkCapitalColName}(snowflake.nextId()); 
-</#if>
-<#if !auto && pkColumnType = 'String'>
-        resources.set${pkCapitalColName}(IdUtil.simpleUUID()); 
-</#if>
+    public ${className}DTO save(${className} resources) {
 <#if columns??>
     <#list columns as column>
     <#if column.columnKey = 'UNI'>
-        if(${changeClassName}Repository.findBy${column.capitalColumnName}(resources.get${column.capitalColumnName}()) != null){
-            throw new EntityExistException(${className}.class,"${column.columnName}",resources.get${column.capitalColumnName}());
+        if(${changeClassName}Mapper.selectOne(Wrappers.<${className}>lambdaQuery().eq(${className}::get${column
+        .capitalColumnName}, resources.get${column.capitalColumnName}())) !=
+        null){
+            throw new ApiException("${className} 列 ${column.columnName} 值 " + resources.get${column
+            .capitalColumnName}() + " 已经存在", ResultCode.ENTITY_EXISTS);
         }
     </#if>
     </#list>
 </#if>
         ${changeClassName}Mapper.insert(resources);
+        return ${changeClassName}Converter.toDto(resources);
     }
 
     /**
@@ -136,17 +134,15 @@ public class ${className}Service {
     * @param response /
     * @throws IOException /
     */
-    public void download(List<${className}VO> all, HttpServletResponse response) throws IOException {
+    public void download(List<${className}DTO> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (${className}VO ${changeClassName} : all) {
+        for (${className}DTO ${changeClassName} : all) {
             Map<String,Object> map = new LinkedHashMap<>();
         <#list columns as column>
-            <#if column.columnKey != 'PRI'>
             <#if column.remark != ''>
             map.put("${column.remark}", ${changeClassName}.get${column.capitalColumnName}());
             <#else>
             map.put(" ${column.changeColumnName}",  ${changeClassName}.get${column.capitalColumnName}());
-            </#if>
             </#if>
         </#list>
             list.add(map);

@@ -2,7 +2,7 @@ package com.ershijin.controller;
 
 import com.ershijin.annotation.Log;
 import com.ershijin.model.entity.Menu;
-import com.ershijin.model.vo.TreeNodeMenu;
+import com.ershijin.model.dto.TreeNodeMenuDTO;
 import com.ershijin.service.MenuService;
 import com.ershijin.validation.groups.Update;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class MenuController {
 
     @GetMapping("/tree")
     @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
-    List<TreeNodeMenu> menuTree() {
+    List<TreeNodeMenuDTO> menuTree() {
         return menuService.getMenuTree();
     }
 
