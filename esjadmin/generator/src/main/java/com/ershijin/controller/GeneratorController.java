@@ -35,9 +35,12 @@ public class GeneratorController {
     // 查询数据库数据
     @GetMapping(value = "/tables")
     public Object queryTables(@RequestParam(defaultValue = "") String name,
-                                    @RequestParam(defaultValue = "0")Integer page,
+                                    @RequestParam(defaultValue = "1")Integer page,
                                     @RequestParam(defaultValue = "10")Integer size){
-        int[] startEnd = PageUtil.transToStartEnd(page, size);
+        if (page < 1) {
+            page = 1;
+        }
+        int[] startEnd = {(page - 1) * size, size};
         return generatorService.getTables(name,startEnd);
     }
 

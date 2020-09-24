@@ -1,7 +1,6 @@
 package com.ershijin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ershijin.exception.NotFoundException;
@@ -29,7 +28,7 @@ import java.util.LinkedHashMap;
 /**
 * @description 服务实现
 * @author ershijin
-* @date 2020-09-22
+* @date 2020-09-24
 **/
 @Service
 public class DemoService {
@@ -46,9 +45,10 @@ public class DemoService {
     * @param page 分页参数
     * @return Map<String,Object>
     */
-    public PageResult list(DemoQuery query, Page<Demo> page){
-        LambdaQueryWrapper<Demo> lambdaQueryWrapper = Wrappers.lambdaQuery();
-        IPage<Demo> result = demoMapper.selectPage(page, lambdaQueryWrapper);
+    public PageResult list(DemoQuery query, IPage<Demo> page){
+        LambdaQueryWrapper<Demo> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.orderByDesc(Demo::getId);
+        IPage<Demo> result = demoMapper.selectPage(page, queryWrapper);
         return new PageResult(result.getTotal(), demoConverter.toDto(result.getRecords()));
     }
 
@@ -58,8 +58,8 @@ public class DemoService {
     * @return List<DemoDTO>
     */
     public List<DemoDTO> list(DemoQuery query){
-        LambdaQueryWrapper<Demo> lambdaQueryWrapper = Wrappers.lambdaQuery();
-        return demoConverter.toDto(demoMapper.selectList(lambdaQueryWrapper));
+        LambdaQueryWrapper<Demo> queryWrapper = Wrappers.lambdaQuery();
+        return demoConverter.toDto(demoMapper.selectList(queryWrapper));
     }
 
     /**

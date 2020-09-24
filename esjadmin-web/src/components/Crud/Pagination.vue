@@ -5,7 +5,7 @@
       :background="true"
       :page-size.sync="page.size"
       :total="page.total"
-      :current-page.sync="page.current"
+      :current-page.sync="page.page"
       :page-sizes="[5, 10, 20, 30, 50, 100]"
       style="margin-top: 8px;"
       layout="total, sizes, prev, pager, next, jumper"

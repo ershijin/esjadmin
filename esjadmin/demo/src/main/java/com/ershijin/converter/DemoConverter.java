@@ -8,7 +8,7 @@ import org.mapstruct.ReportingPolicy;
 
 /**
 * @author ershijin
-* @date 2020-09-22
+* @date 2020-09-24
 **/
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DemoConverter extends BaseConverter<DemoDTO, Demo> {

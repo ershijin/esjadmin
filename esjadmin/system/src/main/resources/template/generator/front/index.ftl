@@ -31,8 +31,48 @@
     </#if>
       <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->
       <crudOperation :permission="permission" />
+    </div>
+      <!--表格渲染-->
+      <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" border style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+        <el-table-column type="selection" width="55" />
+        <#if columns??>
+            <#list columns as column>
+            <#if column.columnShow>
+          <#if (column.dictName)?? && (column.dictName)!="">
+        <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>">
+          <template slot-scope="scope">
+            {{ dict.label.${column.dictName}[scope.row.${column.changeColumnName}] }}
+          </template>
+        </el-table-column>
+          <#elseif column.columnType != 'Timestamp'>
+        <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>" />
+                <#else>
+        <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.${column.changeColumnName}) }}</span>
+          </template>
+        </el-table-column>
+                </#if>
+            </#if>
+            </#list>
+        </#if>
+        <el-table-column v-if="checkPermission(['${changeClassName}:update','${changeClassName}:remove'])" label="操作"
+        width="150px"
+        align="center">
+          <template slot-scope="scope">
+            <udOperation
+              :data="scope.row"
+              :permission="permission"
+            />
+          </template>
+        </el-table-column>
+      </el-table>
+      <!--分页组件-->
+      <pagination />
+
       <!--表单组件-->
-      <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
+      <el-dialog v-el-drag-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0"
+      :title="crud.status.title" width="500px">
         <el-form ref="form" :model="form" <#if isNotNullColumns??>:rules="rules"</#if> size="small" label-width="80px">
     <#if columns??>
       <#list columns as column>
@@ -69,74 +109,42 @@
     </#if>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="text" @click="crud.cancelCU">取消</el-button>
+          <el-button @click="crud.cancelCU">取消</el-button>
           <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
         </div>
       </el-dialog>
-      <!--表格渲染-->
-      <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
-        <el-table-column type="selection" width="55" />
-        <#if columns??>
-            <#list columns as column>
-            <#if column.columnShow>
-          <#if (column.dictName)?? && (column.dictName)!="">
-        <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>">
-          <template slot-scope="scope">
-            {{ dict.label.${column.dictName}[scope.row.${column.changeColumnName}] }}
-          </template>
-        </el-table-column>
-          <#elseif column.columnType != 'Timestamp'>
-        <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>" />
-                <#else>
-        <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.${column.changeColumnName}) }}</span>
-          </template>
-        </el-table-column>
-                </#if>
-            </#if>
-            </#list>
-        </#if>
-        <el-table-column v-permission="['admin','${changeClassName}:edit','${changeClassName}:del']" label="操作" width="150px" align="center">
-          <template slot-scope="scope">
-            <udOperation
-              :data="scope.row"
-              :permission="permission"
-            />
-          </template>
-        </el-table-column>
-      </el-table>
-      <!--分页组件-->
-      <pagination />
-    </div>
+
   </div>
 </template>
 
 <script>
+import elDragDialog from '@/directive/el-drag-dialog'
 import crud${className} from '@/api/${changeClassName}'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
+import checkPermission from '@/utils/permission'
 
 const defaultForm = { <#if columns??><#list columns as column>${column.changeColumnName}: null<#if column_has_next>, </#if></#list></#if> }
 export default {
   name: '${className}',
   components: { pagination, crudOperation, rrOperation, udOperation },
+  directives: { elDragDialog },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   <#if hasDict>
   dicts: [<#if hasDict??><#list dicts as dict>'${dict}'<#if dict_has_next>, </#if></#list></#if>],
   </#if>
   cruds() {
-    return CRUD({ title: '${apiAlias}', url: '${changeClassName}', sort: '${pkChangeColName},desc', crudMethod: { ...crud${className} }})
+    return CRUD({ title: '${apiAlias}', url: '${changeClassName}', sort: '', crudMethod: { ...crud${className} }})
   },
   data() {
     return {
       permission: {
-        add: ['admin', '${changeClassName}:add'],
-        edit: ['admin', '${changeClassName}:edit'],
-        del: ['admin', '${changeClassName}:del']
+        add: ['${changeClassName}:save'],
+        edit: ['${changeClassName}:update'],
+        del: ['${changeClassName}:remove']
       },
       rules: {
         <#if isNotNullColumns??>
@@ -165,7 +173,8 @@ export default {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据
     [CRUD.HOOK.beforeRefresh]() {
       return true
-    }
+    },
+    checkPermission
   }
 }
 </script>

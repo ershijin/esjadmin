@@ -33,7 +33,7 @@ function CRUD(options) {
     // 重置表单
     defaultForm: () => {},
     // 排序规则，默认 id 降序， 支持多字段排序 ['id,desc', 'createTime,asc']
-    sort: ['id,desc'],
+    sort: null,
     // 等待时间
     time: 50,
     // CRUD Method
@@ -90,7 +90,7 @@ function CRUD(options) {
     },
     page: {
       // 页码
-      current: 1,
+      page: 1,
       // 每页数据条数
       size: 10,
       // 总数据条数
@@ -121,7 +121,7 @@ function CRUD(options) {
     },
     // 搜索
     toQuery() {
-      crud.page.current = 1
+      crud.page.page = 1
       crud.refresh()
     },
     // 刷新
@@ -349,29 +349,32 @@ function CRUD(options) {
       Object.keys(crud.params).length !== 0 && Object.keys(crud.params).forEach(item => {
         if (crud.params[item] === null || crud.params[item] === '') crud.params[item] = undefined
       })
-      return {
-        current: crud.page.current,
+      const params = {
+        page: crud.page.page,
         size: crud.page.size,
-        sort: crud.sort,
         ...crud.query,
         ...crud.params
       }
+      if (typeof crud.sort !== 'undefined' && crud.sort !== null && crud.sort.length > 0) {
+        params.sort = crud.sort
+      }
+      return params
     },
     // 当前页改变
     pageChangeHandler(e) {
-      crud.page.current = e
+      crud.page.page = e
       crud.refresh()
     },
     // 每页条数改变
     sizeChangeHandler(e) {
       crud.page.size = e
-      crud.page.current = 1
+      crud.page.page = 1
       crud.refresh()
     },
     // 预防删除第二页最后一条数据时，或者多选删除第二页的数据时，页码错误导致请求无数据
     dleChangePage(size) {
-      if (crud.data.length === size && crud.page.current !== 1) {
-        crud.page.current -= 1
+      if (crud.data.length === size && crud.page.page !== 1) {
+        crud.page.page -= 1
       }
     },
     // 选择改变

@@ -1,6 +1,6 @@
 package com.ershijin.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ershijin.model.Page;
 import com.ershijin.annotation.Log;
 import com.ershijin.exception.ApiException;
 import com.ershijin.exception.NotFoundException;

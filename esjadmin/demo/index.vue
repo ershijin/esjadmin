@@ -14,8 +14,38 @@
       </div>
       <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->
       <crudOperation :permission="permission" />
+    </div>
+      <!--表格渲染-->
+      <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" border style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+        <el-table-column type="selection" width="55" />
+        <el-table-column prop="id" label="id" />
+        <el-table-column prop="title" label="名称" />
+        <el-table-column prop="categoryId" label="分类id" />
+        <el-table-column prop="link" label="链接地址" />
+        <el-table-column prop="status" label="状态：-1,删除；0，待审核；1，正常">
+          <template slot-scope="scope">
+            {{ dict.label.GeneralStatus[scope.row.status] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="createTime" />
+        <el-table-column prop="uni" label="uni" />
+        <el-table-column v-if="checkPermission(['demo:update','demo:remove'])" label="操作"
+        width="150px"
+        align="center">
+          <template slot-scope="scope">
+            <udOperation
+              :data="scope.row"
+              :permission="permission"
+            />
+          </template>
+        </el-table-column>
+      </el-table>
+      <!--分页组件-->
+      <pagination />
+
       <!--表单组件-->
-      <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
+      <el-dialog v-el-drag-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0"
+      :title="crud.status.title" width="500px">
         <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
           <el-form-item label="名称" prop="title">
             <el-input v-model="form.title" style="width: 370px;" />
@@ -40,62 +70,40 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="text" @click="crud.cancelCU">取消</el-button>
+          <el-button @click="crud.cancelCU">取消</el-button>
           <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
         </div>
       </el-dialog>
-      <!--表格渲染-->
-      <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
-        <el-table-column type="selection" width="55" />
-        <el-table-column prop="id" label="id" />
-        <el-table-column prop="title" label="名称" />
-        <el-table-column prop="categoryId" label="分类id" />
-        <el-table-column prop="link" label="链接地址" />
-        <el-table-column prop="status" label="状态：-1,删除；0，待审核；1，正常">
-          <template slot-scope="scope">
-            {{ dict.label.GeneralStatus[scope.row.status] }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="createTime" />
-        <el-table-column prop="uni" label="uni" />
-        <el-table-column v-permission="['admin','demo:edit','demo:del']" label="操作" width="150px" align="center">
-          <template slot-scope="scope">
-            <udOperation
-              :data="scope.row"
-              :permission="permission"
-            />
-          </template>
-        </el-table-column>
-      </el-table>
-      <!--分页组件-->
-      <pagination />
-    </div>
+
   </div>
 </template>
 
 <script>
+import elDragDialog from '@/directive/el-drag-dialog'
 import crudDemo from '@/api/demo'
 import CRUD, { presenter, header, form, crud } from '@crud/crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
+import checkPermission from '@/utils/permission'
 
 const defaultForm = { id: null, title: null, categoryId: null, link: null, status: null, createTime: null, updateTime: null, uni: null }
 export default {
   name: 'Demo',
   components: { pagination, crudOperation, rrOperation, udOperation },
+  directives: { elDragDialog },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   dicts: ['GeneralStatus'],
   cruds() {
-    return CRUD({ title: 'demo', url: 'demo', sort: 'id,desc', crudMethod: { ...crudDemo }})
+    return CRUD({ title: 'demo', url: 'demo', sort: '', crudMethod: { ...crudDemo }})
   },
   data() {
     return {
       permission: {
-        add: ['admin', 'demo:add'],
-        edit: ['admin', 'demo:edit'],
-        del: ['admin', 'demo:del']
+        add: ['demo:save'],
+        edit: ['demo:update'],
+        del: ['demo:remove']
       },
       rules: {
         title: [
@@ -116,7 +124,8 @@ export default {
     // 钩子：在获取表格数据之前执行，false 则代表不获取数据
     [CRUD.HOOK.beforeRefresh]() {
       return true
-    }
+    },
+    checkPermission
   }
 }
 </script>

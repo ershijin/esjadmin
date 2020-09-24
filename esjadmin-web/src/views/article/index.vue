@@ -68,7 +68,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.size" @pagination="getList" />
 
   </div>
 </template>
@@ -90,7 +90,7 @@ export default {
       listLoading: true,
       categories: null,
       listQuery: {
-        current: 1,
+        page: 1,
         size: 10,
         keyword: undefined,
         categoryId: undefined
@@ -114,7 +114,7 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.current = 1
+      this.listQuery.page = 1
       this.getList()
     },
 

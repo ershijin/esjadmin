@@ -49,8 +49,6 @@ public class GeneratorServiceImpl extends ServiceImpl<ColumnInfoMapper,ColumnInf
                 "where table_schema = (select database()) " +
                 "order by create_time desc";
         return jdbcTemplate.queryForList(sql);
-//        Query query = em.createNativeQuery(sql);
-//        return query.getResultList();
     }
 
     public Object getTables(String name, int[] startEnd) {

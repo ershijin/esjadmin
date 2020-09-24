@@ -58,7 +58,7 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="listQuery.current"
+      :page.sync="listQuery.page"
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
@@ -137,7 +137,7 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        current: 1,
+        page: 1,
         size: 10,
         keyword: undefined
       },
@@ -166,7 +166,7 @@ export default {
     },
 
     handleFilter() {
-      this.listQuery.current = 1
+      this.listQuery.page = 1
       this.getList()
     },
 

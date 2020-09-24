@@ -1,7 +1,6 @@
 package ${package}.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ershijin.exception.NotFoundException;
@@ -56,9 +55,10 @@ public class ${className}Service {
     * @param page 分页参数
     * @return Map<String,Object>
     */
-    public PageResult list(${className}Query query, Page<${className}> page){
-        LambdaQueryWrapper<${className}> lambdaQueryWrapper = Wrappers.lambdaQuery();
-        IPage<${className}> result = ${changeClassName}Mapper.selectPage(page, lambdaQueryWrapper);
+    public PageResult list(${className}Query query, IPage<${className}> page){
+        LambdaQueryWrapper<${className}> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.orderByDesc(${className}::get${pkCapitalColName});
+        IPage<${className}> result = ${changeClassName}Mapper.selectPage(page, queryWrapper);
         return new PageResult(result.getTotal(), ${changeClassName}Converter.toDto(result.getRecords()));
     }
 
@@ -68,8 +68,8 @@ public class ${className}Service {
     * @return List<${className}DTO>
     */
     public List<${className}DTO> list(${className}Query query){
-        LambdaQueryWrapper<${className}> lambdaQueryWrapper = Wrappers.lambdaQuery();
-        return ${changeClassName}Converter.toDto(${changeClassName}Mapper.selectList(lambdaQueryWrapper));
+        LambdaQueryWrapper<${className}> queryWrapper = Wrappers.lambdaQuery();
+        return ${changeClassName}Converter.toDto(${changeClassName}Mapper.selectList(queryWrapper));
     }
 
     /**

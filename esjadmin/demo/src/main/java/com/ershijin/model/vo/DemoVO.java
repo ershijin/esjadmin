@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
 * @description /
 * @author ershijin
-* @date 2020-09-22
+* @date 2020-09-24
 **/
 @Data
 public class DemoVO implements Serializable {
