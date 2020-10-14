@@ -1,6 +1,8 @@
 package com.ershijin.model.entity;
 
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ershijin.utils.GenUtil;
 import lombok.Data;
@@ -54,6 +56,7 @@ public class ColumnInfo implements Serializable {
     private String dictName;
 
     // 日期注解
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private String dateAnnotation;
 
     public ColumnInfo(String tableName, String columnName, Boolean notNull, String columnType, String remark, String keyType, String extra) {

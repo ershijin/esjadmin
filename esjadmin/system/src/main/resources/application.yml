@@ -23,11 +23,11 @@ spring:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
   mvc:
-    #date-format: yyyy-MM-dd HH:mm:ss
-    # 视图配置
+    date-format: yyyy-MM-dd HH:mm:ss
     format:
       date: yyyy-MM-dd HH:mm:ss
-  #    view:
+# 视图配置
+#    view:
 #      prefix:
 #      suffix:
 

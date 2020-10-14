@@ -19,9 +19,10 @@
       <#if column.queryType = 'BetWeen'>
         <date-range-picker
           v-model="query.${column.changeColumnName}"
-          start-placeholder="${column.changeColumnName}Start"
-          end-placeholder="${column.changeColumnName}Start"
-          class="date-item"
+          start-placeholder="${column.changeColumnName}开始"
+          end-placeholder="${column.changeColumnName}结束"
+          type="datetimerange"
+          class="filter-item datetime-item"
         />
       </#if>
     </#list>
@@ -126,11 +127,14 @@ import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import checkPermission from '@/utils/permission'
+<#if betweens??>
+import DateRangePicker from '@/components/DateRangePicker'
+</#if>
 
 const defaultForm = { <#if columns??><#list columns as column>${column.changeColumnName}: null<#if column_has_next>, </#if></#list></#if> }
 export default {
   name: '${className}',
-  components: { pagination, crudOperation, rrOperation, udOperation },
+  components: { pagination, crudOperation, rrOperation, udOperation<#if betweens??>, DateRangePicker</#if> },
   directives: { elDragDialog },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   <#if hasDict>

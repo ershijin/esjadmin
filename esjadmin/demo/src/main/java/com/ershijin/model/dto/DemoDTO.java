@@ -12,7 +12,7 @@ import java.io.Serializable;
 /**
 * @description /
 * @author ershijin
-* @date 2020-09-24
+* @date 2020-10-15
 **/
 @Data
 public class DemoDTO implements Serializable {

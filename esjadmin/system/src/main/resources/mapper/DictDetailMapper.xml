@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.ershijin.dao.DictDetailMapper">
-
     <select id="selectPage" resultType="DictDetail">
         SELECT dd.* FROM sys_dict_detail dd JOIN sys_dict d ON dd.dict_id=d.id ${ew.customSqlSegment}
     </select>

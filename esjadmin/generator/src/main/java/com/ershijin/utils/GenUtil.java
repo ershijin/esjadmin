@@ -242,6 +242,8 @@ public class GenUtil {
                 genMap.put("pkChangeColName", changeColumnName);
                 // 存储大写开头的字段名
                 genMap.put("pkCapitalColName", capitalColumnName);
+                // 主键字段名
+                genMap.put("pkColName", column.getColumnName());
             }
             // 是否存在 Timestamp 类型的字段
             if (TIMESTAMP.equals(colType)) {

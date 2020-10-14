@@ -10,6 +10,13 @@
         <el-input v-model="query.categoryId" clearable placeholder="分类id" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <label class="el-form-item-label">链接地址</label>
         <el-input v-model="query.link" clearable placeholder="链接地址" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <date-range-picker
+          v-model="query.createTime"
+          start-placeholder="createTime开始"
+          end-placeholder="createTime结束"
+          type="datetimerange"
+          class="filter-item datetime-item"
+        />
         <rrOperation :crud="crud" />
       </div>
       <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->
@@ -87,11 +94,12 @@ import crudOperation from '@crud/CRUD.operation'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import checkPermission from '@/utils/permission'
+import DateRangePicker from '@/components/DateRangePicker'
 
 const defaultForm = { id: null, title: null, categoryId: null, link: null, status: null, createTime: null, updateTime: null, uni: null }
 export default {
   name: 'Demo',
-  components: { pagination, crudOperation, rrOperation, udOperation },
+  components: { pagination, crudOperation, rrOperation, udOperation, DateRangePicker },
   directives: { elDragDialog },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   dicts: ['GeneralStatus'],

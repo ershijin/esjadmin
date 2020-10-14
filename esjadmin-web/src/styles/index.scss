@@ -200,11 +200,14 @@ aside {
     line-height: 30.5px;
   }
   .date-item {
-    display: inline-block;
-    vertical-align: middle;
-    margin-bottom: 10px;
-    height: 30.5px !important;
+    //display: inline-block;
+    //vertical-align: middle;
+    //margin-bottom: 10px;
+    //height: 30.5px !important;
     width: 230px !important;
+  }
+  .datetime-item {
+    width: 356px !important;
   }
 }
 

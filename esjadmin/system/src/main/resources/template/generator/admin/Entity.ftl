@@ -49,7 +49,7 @@ public class ${className} implements Serializable {
     <#if (column.dateAnnotation)??>
     <#if column.dateAnnotation = 'CreationTimestamp'>
     @TableField(fill = FieldFill.INSERT, updateStrategy = FieldStrategy.NEVER)
-    <#else>
+    <#elseif column.dateAnnotation = 'UpdateTimestamp'>
     @TableField(fill = FieldFill.UPDATE)
     </#if>
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

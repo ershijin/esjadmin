@@ -17,7 +17,7 @@ import java.io.Serializable;
 /**
 * @description /
 * @author ershijin
-* @date 2020-09-24
+* @date 2020-10-15
 **/
 @Data
 @TableName("demo")
@@ -48,7 +48,6 @@ public class Demo implements Serializable {
     @ApiModelProperty(value = "createTime")
     private LocalDateTime createTime;
 
-    @TableField(fill = FieldFill.UPDATE)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

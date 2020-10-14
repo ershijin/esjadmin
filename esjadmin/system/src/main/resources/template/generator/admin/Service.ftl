@@ -1,11 +1,12 @@
 package ${package}.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ershijin.exception.NotFoundException;
 import com.ershijin.model.PageResult;
 import com.ershijin.util.FileUtils;
+import com.ershijin.util.QueryHelp;
 import ${package}.model.entity.${className};
 
 <#if columns??>
@@ -56,9 +57,9 @@ public class ${className}Service {
     * @return Map<String,Object>
     */
     public PageResult list(${className}Query query, IPage<${className}> page){
-        LambdaQueryWrapper<${className}> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.orderByDesc(${className}::get${pkCapitalColName});
-        IPage<${className}> result = ${changeClassName}Mapper.selectPage(page, queryWrapper);
+        QueryWrapper<${className}> queryWrapper = QueryHelp.buildQueryWrapper(query);
+        queryWrapper.orderByDesc("${pkColName}");
+        IPage<${className}> result = ${changeClassName}Mapper.selectPage(page,  queryWrapper);
         return new PageResult(result.getTotal(), ${changeClassName}Converter.toDto(result.getRecords()));
     }
 
@@ -68,7 +69,8 @@ public class ${className}Service {
     * @return List<${className}DTO>
     */
     public List<${className}DTO> list(${className}Query query){
-        LambdaQueryWrapper<${className}> queryWrapper = Wrappers.lambdaQuery();
+        QueryWrapper<${className}> queryWrapper = QueryHelp.buildQueryWrapper(query);
+        queryWrapper.orderByDesc("${pkColName}");
         return ${changeClassName}Converter.toDto(${changeClassName}Mapper.selectList(queryWrapper));
     }
 
