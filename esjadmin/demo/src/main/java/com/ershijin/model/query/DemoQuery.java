@@ -21,7 +21,7 @@ public class DemoQuery{
     private Integer categoryId;
 
     /** 模糊 */
-    @Query(type = Query.Type.LIKE, tableField = "link")
+    @Query(blurry = "link,title")
     private String link;
 
     /** BETWEEN */
