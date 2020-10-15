@@ -9,15 +9,16 @@ import com.ershijin.dao.UserMapper;
 import com.ershijin.dao.UserRoleMapper;
 import com.ershijin.exception.ApiException;
 import com.ershijin.model.PageResult;
+import com.ershijin.model.dto.UserDTO;
 import com.ershijin.model.entity.Authentication;
 import com.ershijin.model.entity.Role;
 import com.ershijin.model.entity.User;
 import com.ershijin.model.entity.UserRole;
 import com.ershijin.model.query.UserQuery;
-import com.ershijin.model.dto.UserDTO;
 import com.ershijin.util.FileUtils;
 import com.ershijin.util.JsonUtils;
 import com.ershijin.util.MyBeanUtils;
+import com.ershijin.util.TokenUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -71,7 +75,7 @@ public class UserService implements UserDetailsService {
      */
     public String saveLoginInfo(User user) {
 
-        String token = UUID.randomUUID().toString();
+        String token = TokenUtils.generateTokenCode();
         Authentication authentication = new Authentication();
         authentication.setUsername(user.getUsername());
         authentication.setToken(token);
