@@ -68,6 +68,7 @@
 import { validUsername } from '@/utils/validate'
 import { getCodeImg } from '@/api/user'
 import Cookies from 'js-cookie'
+import Config from '@/settings'
 
 export default {
   name: 'Login',
@@ -188,6 +189,15 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          if (this.loginForm.rememberMe) {
+            Cookies.set('username', this.loginForm.username, { expires: Config.passCookieExpires })
+            Cookies.set('password', this.loginForm.password, { expires: Config.passCookieExpires })
+            Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: Config.passCookieExpires })
+          } else {
+            Cookies.remove('username')
+            Cookies.remove('password')
+            Cookies.remove('rememberMe')
+          }
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })

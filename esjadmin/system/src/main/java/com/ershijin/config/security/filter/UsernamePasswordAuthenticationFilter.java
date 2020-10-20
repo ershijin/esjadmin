@@ -1,7 +1,6 @@
 package com.ershijin.config.security.filter;
 
 import com.ershijin.constant.ResultCode;
-import com.ershijin.exception.ApiException;
 import com.ershijin.model.ApiResult;
 import com.ershijin.model.entity.AuthCode;
 import com.ershijin.service.AuthCodeService;
@@ -26,8 +25,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 登录认证类，从json body中取出username，password交给AuthenticationManager
@@ -80,13 +77,11 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
      */
     private boolean checkAuthCode(HttpServletResponse response, String body) throws AuthenticationException, IOException {
         String uuid = null, code = null;
-        boolean rememberMe = false;
         if(StringUtils.isNotBlank(body)) {
             JsonNode jsonNode = new ObjectMapper().readTree(body);
 
             uuid = jsonNode.get("uuid").asText();
             code = jsonNode.get("code").asText();
-            rememberMe = jsonNode.get("rememberMe").asBoolean();
 
         }
         if (StringUtils.isEmpty(code)) {
