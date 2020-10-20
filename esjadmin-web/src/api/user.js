@@ -8,6 +8,13 @@ export function login(data) {
   })
 }
 
+export function getCodeImg() {
+  return request({
+    url: 'auth/code',
+    method: 'get'
+  })
+}
+
 export function getInfo(token) {
   return request({
     url: '/users/info',

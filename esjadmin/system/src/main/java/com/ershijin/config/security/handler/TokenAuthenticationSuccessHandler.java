@@ -23,7 +23,7 @@ public class TokenAuthenticationSuccessHandler implements AuthenticationSuccessH
 
     private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationSuccessHandler.class);
 
-    private static final int tokenRefreshInterval = 30;  //刷新间隔5分钟
+    private static final int tokenRefreshInterval = 300;  //刷新间隔5分钟
 
     private UserService userService;
 
@@ -40,7 +40,7 @@ public class TokenAuthenticationSuccessHandler implements AuthenticationSuccessH
 //        DecodedJWT jwt = ((JwtAuthenticationToken) authentication).getToken();
 //        boolean shouldRefresh = shouldTokenRefresh(jwt.getIssuedAt());
 //        if(shouldRefresh) {
-//            String newToken = userService.saveUserLoginInfo((UserDetails)authentication.getPrincipal());
+//            String newToken = userService.saveUserLoginInfo((UserDetails) authentication.getPrincipal());
 //            response.setHeader("Authorization", newToken);
 //            System.out.println("-------- 刷新 token -------");
 //            System.out.println("新token= " + newToken);

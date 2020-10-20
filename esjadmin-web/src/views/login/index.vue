@@ -45,7 +45,19 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-form-item prop="code">
+        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
+        </el-input>
+        <div class="login-code">
+          <img :src="codeUrl" @click="getCode">
+        </div>
+      </el-form-item>
+      <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;">
+        记住我
+      </el-checkbox>
+
+      <el-button :loading="loading" size="medium" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
     </el-form>
 
@@ -54,6 +66,8 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { getCodeImg } from '@/api/user'
+import Cookies from 'js-cookie'
 
 export default {
   name: 'Login',
@@ -75,7 +89,10 @@ export default {
     return {
       loginForm: {
         username: '',
-        password: ''
+        password: '',
+        rememberMe: false,
+        code: '',
+        uuid: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -85,7 +102,8 @@ export default {
       capsTooltip: false,
       loading: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      codeUrl: ''
     }
   },
   watch: {
@@ -102,6 +120,12 @@ export default {
   },
   created() {
     // window.addEventListener('storage', this.afterQRScan)
+    // 获取验证码
+    this.getCode()
+    // 获取用户名密码等Cookie
+    this.getCookie()
+    // token 过期提示
+    this.point()
   },
   mounted() {
     if (this.loginForm.username === '') {
@@ -114,6 +138,38 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    getCode() {
+      getCodeImg().then(res => {
+        this.codeUrl = res.img
+        this.loginForm.uuid = res.uuid
+      })
+    },
+    getCookie() {
+      const username = Cookies.get('username')
+      let password = Cookies.get('password')
+      const rememberMe = Cookies.get('rememberMe')
+      // 保存cookie里面的加密后的密码
+      this.cookiePass = password === undefined ? '' : password
+      password = password === undefined ? this.loginForm.password : password
+      this.loginForm = {
+        username: username === undefined ? this.loginForm.username : username,
+        password: password,
+        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
+        code: ''
+      }
+    },
+    point() {
+      const point = Cookies.get('point') !== undefined
+      if (point) {
+        this.$notify({
+          title: '提示',
+          message: '当前登录状态已过期，请重新登录！',
+          type: 'warning',
+          duration: 5000
+        })
+        Cookies.remove('point')
+      }
+    },
     checkCapslock(e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
@@ -289,6 +345,17 @@ $light_gray:#eee;
     position: absolute;
     right: 0;
     bottom: 6px;
+  }
+
+  .login-code {
+    width: 33%;
+    display: inline-block;
+    height: 38px;
+    float: right;
+    img{
+      cursor: pointer;
+      vertical-align:middle
+    }
   }
 
   @media only screen and (max-width: 470px) {
