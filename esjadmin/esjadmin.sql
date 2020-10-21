@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2020-10-21 08:50:54
+-- Generation Time: 2020-10-21 18:34:39
 -- 服务器版本： 5.7.17
 -- PHP Version: 7.3.11
 
@@ -112,20 +112,7 @@ CREATE TABLE `authentication` (
 --
 
 INSERT INTO `authentication` (`id`, `username`, `token`, `salt`, `create_time`, `expire_time`, `permissions`) VALUES
-(2, 'admin', 'i1HyyOu3h0ngabnzVvpbsA==', 'Mk6Pc:mev%', '2020-10-21 08:46:49', '2020-10-28 08:46:49', '[\"roles:save\",\"menus:list\",\"menus:remove\",\"articles:update\",\"taskJobs:disable\",\"users:disable\",\"articles:remove\",\"configs:list\",\"menus:update\",\"users:update\",\"users:remove\",\"logs:list\",\"dict:add\",\"menus:enable\",\"taskJobs:save\",\"dict:del\",\"articles:list\",\"logs:error\",\"dict:list\",\"users:list\",\"demo:save\",\"menus:save\",\"taskJobs:update\",\"configs:remove\",\"taskJobs:execute\",\"articles:save\",\"roles:list\",\"users:enable\",\"taskJobs:remove\",\"demo:list\",\"demo:remove\",\"configs:update\",\"configs:save\",\"taskJobs:list\",\"menus:disable\",\"roles:update\",\"dict:edit\",\"roles:remove\",\"demo:update\",\"users:save\",\"taskJobs:enable\"]');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `auth_code`
---
-
-CREATE TABLE `auth_code` (
-  `uuid` varchar(64) NOT NULL,
-  `code` varchar(100) NOT NULL,
-  `create_time` datetime NOT NULL,
-  `expire_time` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户访问凭证';
+(7, 'admin', 'mvUvQlLSpPydXstUYXAVtQ==', 'Y1>$={p+R6', '2020-10-21 18:30:44', '2020-10-28 18:30:44', '[\"roles:save\",\"menus:list\",\"menus:remove\",\"articles:update\",\"taskJobs:disable\",\"users:disable\",\"articles:remove\",\"configs:list\",\"menus:update\",\"users:update\",\"users:remove\",\"logs:list\",\"dict:add\",\"menus:enable\",\"taskJobs:save\",\"dict:del\",\"articles:list\",\"logs:error\",\"dict:list\",\"users:list\",\"demo:save\",\"menus:save\",\"taskJobs:update\",\"configs:remove\",\"taskJobs:execute\",\"articles:save\",\"roles:list\",\"users:enable\",\"taskJobs:remove\",\"demo:list\",\"demo:remove\",\"configs:update\",\"configs:save\",\"taskJobs:list\",\"menus:disable\",\"roles:update\",\"dict:edit\",\"roles:remove\",\"demo:update\",\"users:save\",\"taskJobs:enable\"]');
 
 -- --------------------------------------------------------
 
@@ -809,8 +796,7 @@ CREATE TABLE `task_job` (
 INSERT INTO `task_job` (`id`, `bean_name`, `cron_expression`, `is_pause`, `job_name`, `method_name`, `params`, `description`, `is_pause_after_failure`, `create_time`, `update_time`) VALUES
 (1, 'testTask', '0/10 * * * * ?', b'1', '无参测试', 'run1', NULL, '无参测试', b'1', '2020-05-05 20:32:41', '2020-05-05 20:36:13'),
 (2, 'testTask', '0/10 * * * * ?', b'1', '带参测试', 'run2', '[\"param1\",\"param2\",100]', '带参测试', b'0', '2019-08-22 14:08:29', '2020-05-05 17:26:19'),
-(18, 'authenticationTask', '0 */10 * * * ?', b'0', '清空过时token', 'run', '', '清空过时token', b'1', '2020-10-15 02:45:56', '2020-10-15 02:50:25'),
-(19, 'authCodeTask', '0 */10 * * * ?', b'0', '清空过期验证码', 'run', '', '清空过期验证码', b'1', '2020-10-21 08:27:38', '2020-10-21 08:29:42');
+(18, 'authenticationTask', '0 */10 * * * ?', b'0', '清空过时token', 'run', '', '清空过时token', b'1', '2020-10-15 02:45:56', '2020-10-15 02:50:25');
 
 -- --------------------------------------------------------
 
@@ -914,12 +900,6 @@ ALTER TABLE `authentication`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `token` (`token`),
   ADD KEY `username` (`username`) USING HASH;
-
---
--- Indexes for table `auth_code`
---
-ALTER TABLE `auth_code`
-  ADD PRIMARY KEY (`uuid`);
 
 --
 -- Indexes for table `code_column_config`
@@ -1131,7 +1111,7 @@ ALTER TABLE `article_category`
 -- 使用表AUTO_INCREMENT `authentication`
 --
 ALTER TABLE `authentication`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- 使用表AUTO_INCREMENT `code_column_config`
 --
