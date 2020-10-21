@@ -85,6 +85,11 @@
             <artifactId>druid</artifactId>
             <version>1.1.23</version>
         </dependency>
+        <!-- redis 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
         <dependency>
@@ -113,9 +118,6 @@
             <artifactId>poi-ooxml</artifactId>
             <version>4.1.2</version>
         </dependency>
-
-
-
 
 
         <!-- https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils -->

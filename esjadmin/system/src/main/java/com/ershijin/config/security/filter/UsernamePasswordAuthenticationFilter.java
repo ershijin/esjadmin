@@ -3,8 +3,8 @@ package com.ershijin.config.security.filter;
 import com.ershijin.constant.ResultCode;
 import com.ershijin.model.ApiResult;
 import com.ershijin.model.entity.AuthCode;
-import com.ershijin.service.AuthCodeService;
 import com.ershijin.util.JsonUtils;
+import com.ershijin.util.RedisUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ObjectUtils;
@@ -30,8 +30,6 @@ import java.time.LocalDateTime;
  * 登录认证类，从json body中取出username，password交给AuthenticationManager
  */
 public class UsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    @Autowired
-    private AuthCodeService authCodeService;
 
     public UsernamePasswordAuthenticationFilter() {
         super(new AntPathRequestMatcher("/login", "POST"));
@@ -91,15 +89,15 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
             writer.close();
             return false;
         }
-        AuthCode authCode = authCodeService.get(uuid);
-        if (ObjectUtils.isEmpty(authCode) || LocalDateTime.now().isAfter(authCode.getExpireTime())) {
+        Object authCode = RedisUtils.get(uuid);
+        if (ObjectUtils.isEmpty(authCode)) {
             response.setContentType("application/json; charset=utf-8");
             Writer writer = response.getWriter();
             writer.write(JsonUtils.toJsonString(ApiResult.error(ResultCode.CLIENT_ERROR, "验证码已失效")));
             writer.close();
             return false;
         }
-        if (!code.equals(authCode.getCode())) {
+        if (!code.equals(authCode.toString())) {
             response.setContentType("application/json; charset=utf-8");
             Writer writer = response.getWriter();
             writer.write(JsonUtils.toJsonString(ApiResult.error(ResultCode.CLIENT_ERROR, "请输入正确的验证码")));
@@ -107,7 +105,7 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
             return false;
         }
 
-        authCodeService.remove(uuid);
+        RedisUtils.del(uuid);
         return true;
     }
 

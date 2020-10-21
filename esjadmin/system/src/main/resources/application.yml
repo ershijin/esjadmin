@@ -19,6 +19,19 @@ spring:
     # 隔离级别为读写提交
     default-transaction-isolation: 2
 
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 5000   #连接超时时间
+    jedis:
+      pool:
+        max-wait: 30000  # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-active: 100 # 连接池最大连接数（使用负值表示没有限制)
+        max-idle: 20 # 连接池中的最大空闲连接
+        min-idle: 0 # 连接池中的最小空闲连接
+
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
@@ -90,8 +103,8 @@ login:
   login-code:
     #  验证码类型配置 查看 LoginProperties 类
     code-type: arithmetic
-    #  登录图形验证码有效时间/分钟
-    expiration: 2
+    #  登录图形验证码有效时间单位秒
+    expiration: 60
     #  验证码高度
     width: 111
     #  验证码宽度
@@ -109,13 +122,13 @@ jwt:
   # 令牌前缀
   token-start-with: Bearer
   # 必须使用最少88位的Base64对该令牌进行编码
-  base64-secret: ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFjZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=
+  base64-secret: RGVwOFNndkxOalBNT1ZSeTVVaG5ETU4wMDBtd085MUtGazEwZ2FnMDIxd0t2OWZrOGtFc0tvRGtFcGR2cUZra2JlMGhjbWdORlpLODdaVmRxSkxnMXpZZg==
   # 令牌过期时间 此处单位/毫秒 ，默认4小时，可在此网站生成 https://www.convertworld.com/zh-hans/time/milliseconds.html
   token-validity-in-seconds: 14400000
   # 在线用户key
   online-key: online-token-
   # 验证码
-  code-key: code-key-
+  code-key: authcode-
   # token 续期检查时间范围（默认30分钟，单位毫秒），在token即将过期的一段时间内用户操作了，则给用户的token续期
   detect: 1800000
   # 续期时间范围，默认1小时，单位毫秒
