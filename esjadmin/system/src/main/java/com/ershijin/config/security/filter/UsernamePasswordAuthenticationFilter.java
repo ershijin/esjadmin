@@ -2,14 +2,12 @@ package com.ershijin.config.security.filter;
 
 import com.ershijin.constant.ResultCode;
 import com.ershijin.model.ApiResult;
-import com.ershijin.model.entity.AuthCode;
 import com.ershijin.util.JsonUtils;
 import com.ershijin.util.RedisUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -24,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.time.LocalDateTime;
 
 /**
  * 登录认证类，从json body中取出username，password交给AuthenticationManager

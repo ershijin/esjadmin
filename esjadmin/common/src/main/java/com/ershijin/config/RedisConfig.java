@@ -5,13 +5,8 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -90,53 +85,4 @@ public class RedisConfig extends CachingConfigurerSupport {
         };
     }
 
-    /**
-     * 对hash类型的数据操作
-     * @param redisTemplate
-     * @return
-     */
-    @Bean
-    public HashOperations<String, String, Object> hashOperations(RedisTemplate<String, Object> redisTemplate) {
-        return redisTemplate.opsForHash();
-    }
-
-    /**
-     * 对redis字符串类型数据操作
-     * @param redisTemplate
-     * @return
-     */
-    @Bean
-    public ValueOperations<String, Object> valueOperations(RedisTemplate<String, Object> redisTemplate) {
-        return redisTemplate.opsForValue();
-    }
-
-    /**
-     * 对链表类型的数据操作
-     * @param redisTemplate
-     * @return
-     */
-    @Bean
-    public ListOperations<String, Object> listOperations(RedisTemplate<String, Object> redisTemplate) {
-        return redisTemplate.opsForList();
-    }
-
-    /**
-     * 对无序集合类型的数据操作
-     * @param redisTemplate
-     * @return
-     */
-    @Bean
-    public SetOperations<String, Object> setOperations(RedisTemplate<String, Object> redisTemplate) {
-        return redisTemplate.opsForSet();
-    }
-
-    /**
-     * 对有序集合类型的数据操作
-     * @param redisTemplate
-     * @return
-     */
-    @Bean
-    public ZSetOperations<String, Object> zSetOperations(RedisTemplate<String, Object>redisTemplate) {
-        return redisTemplate.opsForZSet();
-    }
 }
