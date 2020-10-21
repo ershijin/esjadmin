@@ -1,23 +1,16 @@
 package com.ershijin.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.ershijin.controller.AuthController;
-import com.ershijin.converter.ArticleConverter;
-import com.ershijin.dao.ArticleMapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ershijin.dao.AuthCodeMapper;
-import com.ershijin.model.PageResult;
-import com.ershijin.model.dto.ArticleDTO;
-import com.ershijin.model.entity.Article;
 import com.ershijin.model.entity.AuthCode;
-import com.ershijin.model.query.ArticleQuery;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import com.ershijin.model.entity.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Service
-@Slf4j
 public class AuthCodeService {
     @Autowired
     private AuthCodeMapper authCodeMapper;
@@ -32,6 +25,17 @@ public class AuthCodeService {
 
     public void remove(String uuid) {
         authCodeMapper.deleteById(uuid);
+    }
+
+    /**
+     * 删除过期凭证
+     */
+    public void deleteExpired() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String now = dateTimeFormatter.format(LocalDateTime.now());
+        authCodeMapper.delete(Wrappers.
+                <AuthCode>lambdaQuery()
+                .lt(AuthCode::getExpireTime, now));
     }
 
 }

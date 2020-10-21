@@ -94,7 +94,7 @@ public class TaskManage {
             scheduler.pauseJob(jobKey);
             scheduler.deleteJob(jobKey);
         } catch (Exception e){
-            log.error("删除定时任务失败", e);
+            log.error("删除定时任务失败 {}", e);
             throw new ApiException("删除定时任务失败");
         }
     }

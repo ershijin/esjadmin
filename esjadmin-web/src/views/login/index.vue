@@ -97,7 +97,8 @@ export default {
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        code: [{ required: true, trigger: 'blur', message: '请输入验证码' }]
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -204,6 +205,7 @@ export default {
               this.loading = false
             })
             .catch(() => {
+              this.getCode()
               this.loading = false
             })
         } else {
