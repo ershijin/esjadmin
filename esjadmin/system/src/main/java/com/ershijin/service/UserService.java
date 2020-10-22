@@ -5,20 +5,18 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.component.Config;
+import com.ershijin.config.security.bean.SecurityProperties;
 import com.ershijin.dao.UserMapper;
 import com.ershijin.dao.UserRoleMapper;
 import com.ershijin.exception.ApiException;
 import com.ershijin.model.PageResult;
+import com.ershijin.model.dto.OnlineUserDTO;
 import com.ershijin.model.dto.UserDTO;
-import com.ershijin.model.entity.Authentication;
 import com.ershijin.model.entity.Role;
 import com.ershijin.model.entity.User;
 import com.ershijin.model.entity.UserRole;
 import com.ershijin.model.query.UserQuery;
-import com.ershijin.util.FileUtils;
-import com.ershijin.util.JsonUtils;
-import com.ershijin.util.MyBeanUtils;
-import com.ershijin.util.TokenUtils;
+import com.ershijin.util.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +33,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -46,10 +42,10 @@ public class UserService implements UserDetailsService {
     UserMapper userMapper;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private UserRoleMapper userRoleMapper;
 
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private SecurityProperties properties;
 
     /**
      * 从数据库或者缓存中取出用户信息，详见接口注释
@@ -76,47 +72,54 @@ public class UserService implements UserDetailsService {
     public String saveLoginInfo(User user) {
 
         String token = TokenUtils.generateTokenCode();
-        Authentication authentication = new Authentication();
-        authentication.setUsername(user.getUsername());
-        authentication.setToken(token);
-        LocalDateTime now = LocalDateTime.now();
-        authentication.setCreateTime(now);
-        authentication.setExpireTime(now.plusSeconds(3600 * 24 * 7));
-        // 随机生成10位字符串作为salt,构造UserDetails的password用
-        authentication.setSalt(RandomStringUtils.randomGraph(10));
-
+//        Authentication authentication = new Authentication();
+//        authentication.setUsername(user.getUsername());
+//        authentication.setToken(token);
+//        LocalDateTime now = LocalDateTime.now();
+//        authentication.setCreateTime(now);
+//        authentication.setExpireTime(now.plusSeconds(3600 * 24 * 7));
+//        // 随机生成10位字符串作为salt,构造UserDetails的password用
+//        authentication.setSalt(RandomStringUtils.randomGraph(10));
+//
         List<String> permissions = new ArrayList<>();
         user.getAuthorities().forEach(i -> {
             permissions.add(i.getAuthority());
         });
-        authentication.setPermissions(JsonUtils.toJsonString(permissions));
+//        authentication.setPermissions(JsonUtils.toJsonString(permissions));
+//
+//        authenticationService.insertAuthentication(authentication);
 
-        authenticationService.insertAuthentication(authentication);
+        // 将登录信息保存到redis
+        OnlineUserDTO onlineUserDTO = new OnlineUserDTO();
+        onlineUserDTO.setUsername(user.getUsername());
+        onlineUserDTO.setSalt(RandomStringUtils.randomGraph(10));
+        onlineUserDTO.setAuthorities(JsonUtils.toJsonString(permissions));
+        RedisUtils.set(properties.getOnlineKey() + token, onlineUserDTO, properties.getTokenValidityInSeconds());
         return token;
     }
 
     /**
      * 获取用户登录信息
      *
-     * @param authentication 凭证信息，保存在数据库中的
+     * @param onlineUserDTO 凭证信息，保存在数据库中的
      * @return
      */
-    public UserDetails getLoginInfo(Authentication authentication) {
+    public UserDetails getLoginInfo(OnlineUserDTO onlineUserDTO) {
 //        return loadUserByUsername(username);
 
 
 //        Authentication authentication = authenticationService.getAuthenticationByUsername(username);
         List<GrantedAuthority> authorities = new ArrayList<>();
-        List<String> authoritieList = JsonUtils.toList(authentication.getPermissions());
+        List<String> authoritieList = JsonUtils.toList(onlineUserDTO.getAuthorities());
         authoritieList.forEach(i -> {
             authorities.add(new SimpleGrantedAuthority(i));
         });
-        // 给没一个登录用户添加普通权限
+        // 给每一个登录用户添加普通权限
         authorities.add(new SimpleGrantedAuthority(Config.GENERAL_PERMISSION));
         // 从数据库中取出token生成时用的salt，将salt放到password字段返回
         return org.springframework.security.core.userdetails.User.builder()
-                .username(authentication.getUsername())
-                .password(authentication.getSalt())
+                .username(onlineUserDTO.getUsername())
+                .password(onlineUserDTO.getSalt())
                 .authorities(authorities)
                 .build();
     }
@@ -127,7 +130,8 @@ public class UserService implements UserDetailsService {
      * @param token
      */
     public void deleteLoginInfo(String token) {
-        authenticationService.deleteByToken(token);
+//        authenticationService.deleteByToken(token);
+        RedisUtils.del(properties.getOnlineKey() + token);
     }
 
     public PageResult list(UserQuery userQuery, Page<User> page) {

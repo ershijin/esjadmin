@@ -4,7 +4,6 @@ import com.ershijin.config.security.handler.AuthenticationAccessDeniedHandler;
 import com.ershijin.config.security.handler.LoginSuccessHandler;
 import com.ershijin.config.security.handler.TokenAuthenticationSuccessHandler;
 import com.ershijin.config.security.handler.TokenLogoutHandler;
-import com.ershijin.service.AuthenticationService;
 import com.ershijin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,8 +28,6 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserService userService;
-    @Autowired
-    AuthenticationService authenticationService;
 //    @Autowired
 //    UrlAccessDecisionManager urlAccessDecisionManager;
     @Autowired
@@ -45,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
 
         auth.authenticationProvider(daoAuthenticationProvider)
-                .authenticationProvider(new TokenAuthenticationProvider(userService, authenticationService))
+                .authenticationProvider(new TokenAuthenticationProvider(userService))
         ;
     }
 

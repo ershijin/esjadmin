@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2020-10-21 18:34:39
+-- Generation Time: 2020-10-22 20:53:58
 -- 服务器版本： 5.7.17
 -- PHP Version: 7.3.11
 
@@ -90,29 +90,6 @@ INSERT INTO `article_category` (`id`, `name`, `priority`, `create_time`, `update
 (1, '文章分类1', 0, '2019-07-04 11:47:51', NULL),
 (3, '帮助中心', 2, '2019-07-04 11:48:16', '2019-07-07 15:41:47'),
 (4, '文章分类2', 0, '2020-09-08 16:13:41', '2020-09-08 16:13:52');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `authentication`
---
-
-CREATE TABLE `authentication` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `username` varchar(64) DEFAULT NULL,
-  `token` varchar(100) NOT NULL,
-  `salt` char(10) NOT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `expire_time` datetime NOT NULL,
-  `permissions` varchar(20000) NOT NULL DEFAULT '' COMMENT '用户信息'
-) ENGINE=MEMORY DEFAULT CHARSET=utf8 COMMENT='用户访问凭证';
-
---
--- 转存表中的数据 `authentication`
---
-
-INSERT INTO `authentication` (`id`, `username`, `token`, `salt`, `create_time`, `expire_time`, `permissions`) VALUES
-(7, 'admin', 'mvUvQlLSpPydXstUYXAVtQ==', 'Y1>$={p+R6', '2020-10-21 18:30:44', '2020-10-28 18:30:44', '[\"roles:save\",\"menus:list\",\"menus:remove\",\"articles:update\",\"taskJobs:disable\",\"users:disable\",\"articles:remove\",\"configs:list\",\"menus:update\",\"users:update\",\"users:remove\",\"logs:list\",\"dict:add\",\"menus:enable\",\"taskJobs:save\",\"dict:del\",\"articles:list\",\"logs:error\",\"dict:list\",\"users:list\",\"demo:save\",\"menus:save\",\"taskJobs:update\",\"configs:remove\",\"taskJobs:execute\",\"articles:save\",\"roles:list\",\"users:enable\",\"taskJobs:remove\",\"demo:list\",\"demo:remove\",\"configs:update\",\"configs:save\",\"taskJobs:list\",\"menus:disable\",\"roles:update\",\"dict:edit\",\"roles:remove\",\"demo:update\",\"users:save\",\"taskJobs:enable\"]');
 
 -- --------------------------------------------------------
 
@@ -328,6 +305,30 @@ CREATE TABLE `log` (
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统日志' ROW_FORMAT=COMPACT;
 
+--
+-- 转存表中的数据 `log`
+--
+
+INSERT INTO `log` (`id`, `description`, `type`, `method`, `params`, `ip`, `time`, `username`, `address`, `browser`, `exception_detail`, `create_time`) VALUES
+(1, '文章列表', 'INFO', 'com.ershijin.controller.ArticleController.list()', '{ArticleQuery(keyword=null, categoryId=null) com.ershijin.model.Page@4469652b }', '0:0:0:0:0:0:0:1', 53, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 19:58:08'),
+(2, '文章列表', 'INFO', 'com.ershijin.controller.ArticleController.list()', '{ArticleQuery(keyword=null, categoryId=null) com.ershijin.model.Page@273e9ee7 }', '0:0:0:0:0:0:0:1', 43, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:03:26'),
+(3, '文章列表', 'INFO', 'com.ershijin.controller.ArticleController.list()', '{ArticleQuery(keyword=null, categoryId=null) com.ershijin.model.Page@cfd258b }', '0:0:0:0:0:0:0:1', 25, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:04:17'),
+(4, '文章列表', 'INFO', 'com.ershijin.controller.ArticleController.list()', '{ArticleQuery(keyword=null, categoryId=null) com.ershijin.model.Page@47ea482c }', '0:0:0:0:0:0:0:1', 57, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:06:43'),
+(5, '文章列表', 'INFO', 'com.ershijin.controller.ArticleController.list()', '{ArticleQuery(keyword=null, categoryId=null) com.ershijin.model.Page@77441014 }', '0:0:0:0:0:0:0:1', 47, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:10:01'),
+(6, '文章列表', 'INFO', 'com.ershijin.controller.ArticleController.list()', '{ArticleQuery(keyword=null, categoryId=null) com.ershijin.model.Page@78a04f87 }', '0:0:0:0:0:0:0:1', 16, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:10:13'),
+(7, '文章列表', 'INFO', 'com.ershijin.controller.ArticleController.list()', '{ArticleQuery(keyword=null, categoryId=null) com.ershijin.model.Page@73a2071b }', '0:0:0:0:0:0:0:1', 9, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:17:09'),
+(8, '文章列表', 'INFO', 'com.ershijin.controller.ArticleController.list()', '{ArticleQuery(keyword=null, categoryId=null) com.ershijin.model.Page@2b15e09 }', '0:0:0:0:0:0:0:1', 8, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:17:15'),
+(9, '文章列表', 'INFO', 'com.ershijin.controller.ArticleController.list()', '{ArticleQuery(keyword=null, categoryId=null) com.ershijin.model.Page@776fd09a }', '0:0:0:0:0:0:0:1', 5, 'admin', '内网IP', 'Unknown', NULL, '2020-10-22 20:17:58'),
+(10, '角色列表', 'INFO', 'com.ershijin.controller.RoleController.list()', '{null com.ershijin.model.Page@63403e73 }', '0:0:0:0:0:0:0:1', 14, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:18:25'),
+(11, '用户列表', 'INFO', 'com.ershijin.controller.UserController.list()', '{UserQuery(keyword=null, roleId=null, enabled=null) com.ershijin.model.Page@70cf237f }', '0:0:0:0:0:0:0:1', 39, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:18:25'),
+(12, '用户列表', 'INFO', 'com.ershijin.controller.UserController.list()', '{UserQuery(keyword=null, roleId=null, enabled=null) com.ershijin.model.Page@35ad3c8a }', '0:0:0:0:0:0:0:1', 21, 'admin', '内网IP', 'Unknown', NULL, '2020-10-22 20:18:39'),
+(13, '用户列表', 'INFO', 'com.ershijin.controller.UserController.list()', '{UserQuery(keyword=null, roleId=null, enabled=null) com.ershijin.model.Page@aa6af78 }', '0:0:0:0:0:0:0:1', 12, 'admin', '内网IP', 'Unknown', NULL, '2020-10-22 20:18:50'),
+(14, '操作日志列表', 'INFO', 'com.ershijin.controller.LogController.list()', '{LogQuery(username=null, keyword=null, startTime=null, endTime=null) com.ershijin.model.Page@7fdedc8b }', '0:0:0:0:0:0:0:1', 14, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:20:05'),
+(15, '异常日志列表', 'INFO', 'com.ershijin.controller.LogController.errorList()', '{LogQuery(username=null, keyword=null, startTime=null, endTime=null) com.ershijin.model.Page@2ea39b0c }', '0:0:0:0:0:0:0:1', 4, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:20:13'),
+(16, '异常日志列表', 'INFO', 'com.ershijin.controller.LogController.errorList()', '{LogQuery(username=null, keyword=null, startTime=null, endTime=null) com.ershijin.model.Page@156f71a0 }', '0:0:0:0:0:0:0:1', 4, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:20:17'),
+(17, '异常日志列表', 'INFO', 'com.ershijin.controller.LogController.errorList()', '{LogQuery(username=null, keyword=null, startTime=null, endTime=null) com.ershijin.model.Page@40c8c73 }', '0:0:0:0:0:0:0:1', 3, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:20:30'),
+(18, '查询定时任务', 'INFO', 'com.ershijin.quartz.controller.TaskJobController.list()', '{JobQuery(keyword=null, startTime=null, endTime=null) com.baomidou.mybatisplus.extension.plugins.pagination.Page@1ae7dbf1 }', '0:0:0:0:0:0:0:1', 44, 'admin', '内网IP', 'Chrome 8', NULL, '2020-10-22 20:53:44');
+
 -- --------------------------------------------------------
 
 --
@@ -446,14 +447,6 @@ CREATE TABLE `qrtz_cron_triggers` (
   `TIME_ZONE_ID` varchar(80) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- 转存表中的数据 `qrtz_cron_triggers`
---
-
-INSERT INTO `qrtz_cron_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`, `CRON_EXPRESSION`, `TIME_ZONE_ID`) VALUES
-('MyScheduler', 'TASK_1', 'DEFAULT', '0/5 * * * * ?', 'Asia/Shanghai'),
-('MyScheduler', 'TASK_2', 'DEFAULT', '0/5 * * * * ?', 'Asia/Shanghai');
-
 -- --------------------------------------------------------
 
 --
@@ -495,14 +488,6 @@ CREATE TABLE `qrtz_job_details` (
   `JOB_DATA` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- 转存表中的数据 `qrtz_job_details`
---
-
-INSERT INTO `qrtz_job_details` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`, `DESCRIPTION`, `JOB_CLASS_NAME`, `IS_DURABLE`, `IS_NONCONCURRENT`, `IS_UPDATE_DATA`, `REQUESTS_RECOVERY`, `JOB_DATA`) VALUES
-('MyScheduler', 'TASK_1', 'DEFAULT', NULL, 'com.ershijin.esjadmin.quartz.utils.ExecutionJob', '0', '0', '0', '0', 0xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787000737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f40000000000010770800000010000000007800),
-('MyScheduler', 'TASK_2', 'DEFAULT', NULL, 'com.ershijin.esjadmin.quartz.utils.ExecutionJob', '0', '0', '0', '0', 0xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787000737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f40000000000010770800000010000000007800);
-
 -- --------------------------------------------------------
 
 --
@@ -513,14 +498,6 @@ CREATE TABLE `qrtz_locks` (
   `SCHED_NAME` varchar(120) NOT NULL,
   `LOCK_NAME` varchar(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- 转存表中的数据 `qrtz_locks`
---
-
-INSERT INTO `qrtz_locks` (`SCHED_NAME`, `LOCK_NAME`) VALUES
-('MyScheduler', 'STATE_ACCESS'),
-('MyScheduler', 'TRIGGER_ACCESS');
 
 -- --------------------------------------------------------
 
@@ -545,13 +522,6 @@ CREATE TABLE `qrtz_scheduler_state` (
   `LAST_CHECKIN_TIME` bigint(13) NOT NULL,
   `CHECKIN_INTERVAL` bigint(13) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- 转存表中的数据 `qrtz_scheduler_state`
---
-
-INSERT INTO `qrtz_scheduler_state` (`SCHED_NAME`, `INSTANCE_NAME`, `LAST_CHECKIN_TIME`, `CHECKIN_INTERVAL`) VALUES
-('MyScheduler', 'MacBook-Pro-2.lan1599189127371', 1599189398078, 10000);
 
 -- --------------------------------------------------------
 
@@ -615,14 +585,6 @@ CREATE TABLE `qrtz_triggers` (
   `MISFIRE_INSTR` smallint(2) DEFAULT NULL,
   `JOB_DATA` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- 转存表中的数据 `qrtz_triggers`
---
-
-INSERT INTO `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`, `JOB_NAME`, `JOB_GROUP`, `DESCRIPTION`, `NEXT_FIRE_TIME`, `PREV_FIRE_TIME`, `PRIORITY`, `TRIGGER_STATE`, `TRIGGER_TYPE`, `START_TIME`, `END_TIME`, `CALENDAR_NAME`, `MISFIRE_INSTR`, `JOB_DATA`) VALUES
-('MyScheduler', 'TASK_1', 'DEFAULT', 'TASK_1', 'DEFAULT', NULL, 1599182225000, 1599182220000, 5, 'WAITING', 'CRON', 1599129860000, 0, NULL, 0, 0xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c770800000010000000017400074a4f425f4b45597372002a636f6d2e65727368696a696e2e65736a61646d696e2e71756172747a2e6d6f64656c2e5461736b4a6f624014a3ec4d30707102000b4c00086265616e4e616d657400124c6a6176612f6c616e672f537472696e673b4c000e63726f6e45787072657373696f6e71007e00094c000b6465736372697074696f6e71007e00094c0005656d61696c71007e00094c000269647400104c6a6176612f6c616e672f4c6f6e673b4c0007697350617573657400134c6a6176612f6c616e672f426f6f6c65616e3b4c00076a6f624e616d6571007e00094c000a6d6574686f644e616d6571007e00094c0006706172616d7371007e00094c0011706175736541667465724661696c75726571007e000b4c000e706572736f6e496e43686172676571007e00097870740008746573745461736b74000d302f35202a202a202a202a203f74000ce697a0e58f82e6b58be8af957400007372000e6a6176612e6c616e672e4c6f6e673b8be490cc8f23df0200014a000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b02000078700000000000000001737200116a6176612e6c616e672e426f6f6c65616ecd207280d59cfaee0200015a000576616c756578700074000ce697a0e58f82e6b58be8af9574000472756e31707371007e001401740004746573747800),
-('MyScheduler', 'TASK_2', 'DEFAULT', 'TASK_2', 'DEFAULT', NULL, 1599182225000, 1599182220000, 5, 'WAITING', 'CRON', 1599129860000, 0, NULL, 0, 0xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c770800000010000000017400074a4f425f4b45597372002a636f6d2e65727368696a696e2e65736a61646d696e2e71756172747a2e6d6f64656c2e5461736b4a6f624014a3ec4d30707102000b4c00086265616e4e616d657400124c6a6176612f6c616e672f537472696e673b4c000e63726f6e45787072657373696f6e71007e00094c000b6465736372697074696f6e71007e00094c0005656d61696c71007e00094c000269647400104c6a6176612f6c616e672f4c6f6e673b4c0007697350617573657400134c6a6176612f6c616e672f426f6f6c65616e3b4c00076a6f624e616d6571007e00094c000a6d6574686f644e616d6571007e00094c0006706172616d7371007e00094c0011706175736541667465724661696c75726571007e000b4c000e706572736f6e496e43686172676571007e00097870740008746573745461736b74000d302f35202a202a202a202a203f74000ce5b8a6e58f82e6b58be8af95707372000e6a6176612e6c616e672e4c6f6e673b8be490cc8f23df0200014a000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b02000078700000000000000002737200116a6176612e6c616e672e426f6f6c65616ecd207280d59cfaee0200015a000576616c756578700074000ce5b8a6e58f82e6b58be8af9574000472756e327400175b22706172616d31222c22706172616d32222c3130305d70740006e6b58be8af957800);
 
 -- --------------------------------------------------------
 
@@ -795,8 +757,7 @@ CREATE TABLE `task_job` (
 
 INSERT INTO `task_job` (`id`, `bean_name`, `cron_expression`, `is_pause`, `job_name`, `method_name`, `params`, `description`, `is_pause_after_failure`, `create_time`, `update_time`) VALUES
 (1, 'testTask', '0/10 * * * * ?', b'1', '无参测试', 'run1', NULL, '无参测试', b'1', '2020-05-05 20:32:41', '2020-05-05 20:36:13'),
-(2, 'testTask', '0/10 * * * * ?', b'1', '带参测试', 'run2', '[\"param1\",\"param2\",100]', '带参测试', b'0', '2019-08-22 14:08:29', '2020-05-05 17:26:19'),
-(18, 'authenticationTask', '0 */10 * * * ?', b'0', '清空过时token', 'run', '', '清空过时token', b'1', '2020-10-15 02:45:56', '2020-10-15 02:50:25');
+(2, 'testTask', '0/10 * * * * ?', b'1', '带参测试', 'run2', '[\"param1\",\"param2\",100]', '带参测试', b'0', '2019-08-22 14:08:29', '2020-05-05 17:26:19');
 
 -- --------------------------------------------------------
 
@@ -816,6 +777,49 @@ CREATE TABLE `task_log` (
   `params` varchar(255) DEFAULT NULL,
   `time` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='定时任务日志' ROW_FORMAT=COMPACT;
+
+--
+-- 转存表中的数据 `task_log`
+--
+
+INSERT INTO `task_log` (`id`, `bean_name`, `create_time`, `cron_expression`, `exception_detail`, `is_success`, `job_name`, `method_name`, `params`, `time`) VALUES
+(1, 'authenticationTask', '2020-10-22 14:53:06', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 22),
+(2, 'authenticationTask', '2020-10-22 15:00:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 14),
+(3, 'authenticationTask', '2020-10-22 15:10:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 26),
+(4, 'authenticationTask', '2020-10-22 15:20:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(5, 'authenticationTask', '2020-10-22 15:30:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 9),
+(6, 'authenticationTask', '2020-10-22 15:40:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 6),
+(7, 'authenticationTask', '2020-10-22 15:50:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(8, 'authenticationTask', '2020-10-22 16:00:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 8),
+(9, 'authenticationTask', '2020-10-22 16:10:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(10, 'authenticationTask', '2020-10-22 16:20:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 9),
+(11, 'authenticationTask', '2020-10-22 16:30:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(12, 'authenticationTask', '2020-10-22 16:40:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 6),
+(13, 'authenticationTask', '2020-10-22 16:50:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(14, 'authenticationTask', '2020-10-22 17:00:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 13),
+(15, 'authenticationTask', '2020-10-22 17:10:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(16, 'authenticationTask', '2020-10-22 17:20:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 17),
+(17, 'authenticationTask', '2020-10-22 17:30:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 18),
+(18, 'authenticationTask', '2020-10-22 17:40:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(19, 'authenticationTask', '2020-10-22 17:50:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 6),
+(20, 'authenticationTask', '2020-10-22 18:00:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(21, 'authenticationTask', '2020-10-22 18:10:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 6),
+(22, 'authenticationTask', '2020-10-22 18:20:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(23, 'authenticationTask', '2020-10-22 18:30:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(24, 'authenticationTask', '2020-10-22 18:40:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 8),
+(25, 'authenticationTask', '2020-10-22 18:50:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 6),
+(26, 'authenticationTask', '2020-10-22 19:00:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 12),
+(27, 'authenticationTask', '2020-10-22 19:10:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 13),
+(28, 'authenticationTask', '2020-10-22 19:20:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 19),
+(29, 'authenticationTask', '2020-10-22 19:30:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 9),
+(30, 'authenticationTask', '2020-10-22 19:40:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 7),
+(31, 'authenticationTask', '2020-10-22 19:50:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 26),
+(32, 'authenticationTask', '2020-10-22 20:00:00', '0 */10 * * * ?', NULL, b'1', '清空过时token', 'run', '', 23),
+(33, 'authenticationTask', '2020-10-22 20:10:00', '0 */10 * * * ?', 'java.util.concurrent.ExecutionException: java.lang.reflect.InvocationTargetException\n	at java.util.concurrent.FutureTask.report(FutureTask.java:122)\n	at java.util.concurrent.FutureTask.get(FutureTask.java:192)\n	at com.ershijin.quartz.utils.ExecutionJob.executeInternal(ExecutionJob.java:43)\n	at org.springframework.scheduling.quartz.QuartzJobBean.execute(QuartzJobBean.java:75)\n	at org.quartz.core.JobRunShell.run(JobRunShell.java:202)\n	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:573)\nCaused by: java.lang.reflect.InvocationTargetException\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at com.ershijin.quartz.utils.TaskRunnable.call(TaskRunnable.java:39)\n	at java.util.concurrent.FutureTask.run(FutureTask.java:266)\n	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n	at java.lang.Thread.run(Thread.java:748)\nCaused by: org.springframework.jdbc.BadSqlGrammarException: \n### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n### The error may exist in com/ershijin/dao/AuthenticationMapper.java (best guess)\n### The error may involve defaultParameterMap\n### The error occurred while setting parameters\n### SQL: DELETE FROM authentication     WHERE (expire_time < ?)\n### Cause: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:235)\n	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)\n	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:88)\n	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:440)\n	at com.sun.proxy.$Proxy94.delete(Unknown Source)\n	at org.mybatis.spring.SqlSessionTemplate.delete(SqlSessionTemplate.java:303)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:70)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:148)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)\n	at com.sun.proxy.$Proxy112.delete(Unknown Source)\n	at com.ershijin.service.AuthenticationService.deleteExpired(AuthenticationService.java:40)\n	at com.ershijin.quartz.task.AuthenticationTask.run(AuthenticationTask.java:13)\n	... 9 more\nCaused by: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)\n	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)\n	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)\n	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)\n	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)\n	at com.alibaba.druid.pool.DruidPooledPreparedStatement.execute(DruidPooledPreparedStatement.java:497)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)\n	at com.sun.proxy.$Proxy102.execute(Unknown Source)\n	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)\n	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:63)\n	at com.sun.proxy.$Proxy100.update(Unknown Source)\n	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.doUpdate(MybatisSimpleExecutor.java:56)\n	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)\n	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.update(MybatisCachingExecutor.java:85)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.plugin.Invocation.proceed(Invocation.java:49)\n	at com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor.intercept(MybatisPlusInterceptor.java:82)\n	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:61)\n	at com.sun.proxy.$Proxy99.update(Unknown Source)\n	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)\n	at org.apache.ibatis.session.defaults.DefaultSqlSession.delete(DefaultSqlSession.java:212)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426)\n	... 17 more\n', b'0', '清空过时token', 'run', '', 63),
+(34, 'authenticationTask', '2020-10-22 20:20:00', '0 */10 * * * ?', 'java.util.concurrent.ExecutionException: java.lang.reflect.InvocationTargetException\n	at java.util.concurrent.FutureTask.report(FutureTask.java:122)\n	at java.util.concurrent.FutureTask.get(FutureTask.java:192)\n	at com.ershijin.quartz.utils.ExecutionJob.executeInternal(ExecutionJob.java:43)\n	at org.springframework.scheduling.quartz.QuartzJobBean.execute(QuartzJobBean.java:75)\n	at org.quartz.core.JobRunShell.run(JobRunShell.java:202)\n	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:573)\nCaused by: java.lang.reflect.InvocationTargetException\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at com.ershijin.quartz.utils.TaskRunnable.call(TaskRunnable.java:39)\n	at java.util.concurrent.FutureTask.run(FutureTask.java:266)\n	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n	at java.lang.Thread.run(Thread.java:748)\nCaused by: org.springframework.jdbc.BadSqlGrammarException: \n### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n### The error may exist in com/ershijin/dao/AuthenticationMapper.java (best guess)\n### The error may involve defaultParameterMap\n### The error occurred while setting parameters\n### SQL: DELETE FROM authentication     WHERE (expire_time < ?)\n### Cause: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:235)\n	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)\n	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:88)\n	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:440)\n	at com.sun.proxy.$Proxy94.delete(Unknown Source)\n	at org.mybatis.spring.SqlSessionTemplate.delete(SqlSessionTemplate.java:303)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:70)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:148)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)\n	at com.sun.proxy.$Proxy112.delete(Unknown Source)\n	at com.ershijin.service.AuthenticationService.deleteExpired(AuthenticationService.java:40)\n	at com.ershijin.quartz.task.AuthenticationTask.run(AuthenticationTask.java:13)\n	... 9 more\nCaused by: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)\n	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)\n	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)\n	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)\n	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)\n	at com.alibaba.druid.pool.DruidPooledPreparedStatement.execute(DruidPooledPreparedStatement.java:497)\n	at sun.reflect.GeneratedMethodAccessor136.invoke(Unknown Source)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)\n	at com.sun.proxy.$Proxy102.execute(Unknown Source)\n	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)\n	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:63)\n	at com.sun.proxy.$Proxy100.update(Unknown Source)\n	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.doUpdate(MybatisSimpleExecutor.java:56)\n	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)\n	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.update(MybatisCachingExecutor.java:85)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.plugin.Invocation.proceed(Invocation.java:49)\n	at com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor.intercept(MybatisPlusInterceptor.java:82)\n	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:61)\n	at com.sun.proxy.$Proxy99.update(Unknown Source)\n	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)\n	at org.apache.ibatis.session.defaults.DefaultSqlSession.delete(DefaultSqlSession.java:212)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426)\n	... 17 more\n', b'0', '清空过时token', 'run', '', 8),
+(35, 'authenticationTask', '2020-10-22 20:30:00', '0 */10 * * * ?', 'java.util.concurrent.ExecutionException: java.lang.reflect.InvocationTargetException\n	at java.util.concurrent.FutureTask.report(FutureTask.java:122)\n	at java.util.concurrent.FutureTask.get(FutureTask.java:192)\n	at com.ershijin.quartz.utils.ExecutionJob.executeInternal(ExecutionJob.java:43)\n	at org.springframework.scheduling.quartz.QuartzJobBean.execute(QuartzJobBean.java:75)\n	at org.quartz.core.JobRunShell.run(JobRunShell.java:202)\n	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:573)\nCaused by: java.lang.reflect.InvocationTargetException\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at com.ershijin.quartz.utils.TaskRunnable.call(TaskRunnable.java:39)\n	at java.util.concurrent.FutureTask.run(FutureTask.java:266)\n	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n	at java.lang.Thread.run(Thread.java:748)\nCaused by: org.springframework.jdbc.BadSqlGrammarException: \n### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n### The error may exist in com/ershijin/dao/AuthenticationMapper.java (best guess)\n### The error may involve defaultParameterMap\n### The error occurred while setting parameters\n### SQL: DELETE FROM authentication     WHERE (expire_time < ?)\n### Cause: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:235)\n	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)\n	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:88)\n	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:440)\n	at com.sun.proxy.$Proxy94.delete(Unknown Source)\n	at org.mybatis.spring.SqlSessionTemplate.delete(SqlSessionTemplate.java:303)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:70)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:148)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)\n	at com.sun.proxy.$Proxy112.delete(Unknown Source)\n	at com.ershijin.service.AuthenticationService.deleteExpired(AuthenticationService.java:40)\n	at com.ershijin.quartz.task.AuthenticationTask.run(AuthenticationTask.java:13)\n	... 9 more\nCaused by: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)\n	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)\n	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)\n	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)\n	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)\n	at com.alibaba.druid.pool.DruidPooledPreparedStatement.execute(DruidPooledPreparedStatement.java:497)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)\n	at com.sun.proxy.$Proxy102.execute(Unknown Source)\n	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)\n	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:63)\n	at com.sun.proxy.$Proxy100.update(Unknown Source)\n	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.doUpdate(MybatisSimpleExecutor.java:56)\n	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)\n	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.update(MybatisCachingExecutor.java:85)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.plugin.Invocation.proceed(Invocation.java:49)\n	at com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor.intercept(MybatisPlusInterceptor.java:82)\n	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:61)\n	at com.sun.proxy.$Proxy99.update(Unknown Source)\n	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)\n	at org.apache.ibatis.session.defaults.DefaultSqlSession.delete(DefaultSqlSession.java:212)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426)\n	... 17 more\n', b'0', '清空过时token', 'run', '', 75),
+(36, 'authenticationTask', '2020-10-22 20:40:00', '0 */10 * * * ?', 'java.util.concurrent.ExecutionException: java.lang.reflect.InvocationTargetException\n	at java.util.concurrent.FutureTask.report(FutureTask.java:122)\n	at java.util.concurrent.FutureTask.get(FutureTask.java:192)\n	at com.ershijin.quartz.utils.ExecutionJob.executeInternal(ExecutionJob.java:43)\n	at org.springframework.scheduling.quartz.QuartzJobBean.execute(QuartzJobBean.java:75)\n	at org.quartz.core.JobRunShell.run(JobRunShell.java:202)\n	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:573)\nCaused by: java.lang.reflect.InvocationTargetException\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at com.ershijin.quartz.utils.TaskRunnable.call(TaskRunnable.java:39)\n	at java.util.concurrent.FutureTask.run(FutureTask.java:266)\n	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n	at java.lang.Thread.run(Thread.java:748)\nCaused by: org.springframework.jdbc.BadSqlGrammarException: \n### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n### The error may exist in com/ershijin/dao/AuthenticationMapper.java (best guess)\n### The error may involve defaultParameterMap\n### The error occurred while setting parameters\n### SQL: DELETE FROM authentication     WHERE (expire_time < ?)\n### Cause: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:235)\n	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)\n	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:88)\n	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:440)\n	at com.sun.proxy.$Proxy94.delete(Unknown Source)\n	at org.mybatis.spring.SqlSessionTemplate.delete(SqlSessionTemplate.java:303)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:70)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:148)\n	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)\n	at com.sun.proxy.$Proxy112.delete(Unknown Source)\n	at com.ershijin.service.AuthenticationService.deleteExpired(AuthenticationService.java:40)\n	at com.ershijin.quartz.task.AuthenticationTask.run(AuthenticationTask.java:13)\n	... 9 more\nCaused by: java.sql.SQLSyntaxErrorException: Table \'esjadmin.authentication\' doesn\'t exist\n	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)\n	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)\n	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)\n	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)\n	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)\n	at com.alibaba.druid.pool.DruidPooledPreparedStatement.execute(DruidPooledPreparedStatement.java:497)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)\n	at com.sun.proxy.$Proxy102.execute(Unknown Source)\n	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)\n	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:63)\n	at com.sun.proxy.$Proxy100.update(Unknown Source)\n	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.doUpdate(MybatisSimpleExecutor.java:56)\n	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)\n	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.update(MybatisCachingExecutor.java:85)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.apache.ibatis.plugin.Invocation.proceed(Invocation.java:49)\n	at com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor.intercept(MybatisPlusInterceptor.java:82)\n	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:61)\n	at com.sun.proxy.$Proxy99.update(Unknown Source)\n	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)\n	at org.apache.ibatis.session.defaults.DefaultSqlSession.delete(DefaultSqlSession.java:212)\n	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n	at java.lang.reflect.Method.invoke(Method.java:498)\n	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426)\n	... 17 more\n', b'0', '清空过时token', 'run', '', 10),
+(37, 'authenticationTask', '2020-10-22 20:52:11', '0 */10 * * * ?', 'org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named \'authenticationTask\' available\n	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanDefinition(DefaultListableBeanFactory.java:816)\n	at org.springframework.beans.factory.support.AbstractBeanFactory.getMergedLocalBeanDefinition(AbstractBeanFactory.java:1288)\n	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:298)\n	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)\n	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1109)\n	at com.ershijin.util.SpringContextHolder.getBean(SpringContextHolder.java:71)\n	at com.ershijin.quartz.utils.TaskRunnable.<init>(TaskRunnable.java:23)\n	at com.ershijin.quartz.utils.ExecutionJob.executeInternal(ExecutionJob.java:41)\n	at org.springframework.scheduling.quartz.QuartzJobBean.execute(QuartzJobBean.java:75)\n	at org.quartz.core.JobRunShell.run(JobRunShell.java:202)\n	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:573)\n', b'0', '清空过时token', 'run', '', 1);
 
 -- --------------------------------------------------------
 
@@ -892,14 +896,6 @@ ALTER TABLE `article`
 --
 ALTER TABLE `article_category`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `authentication`
---
-ALTER TABLE `authentication`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `token` (`token`),
-  ADD KEY `username` (`username`) USING HASH;
 
 --
 -- Indexes for table `code_column_config`
@@ -1108,11 +1104,6 @@ ALTER TABLE `article`
 ALTER TABLE `article_category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
--- 使用表AUTO_INCREMENT `authentication`
---
-ALTER TABLE `authentication`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
---
 -- 使用表AUTO_INCREMENT `code_column_config`
 --
 ALTER TABLE `code_column_config`
@@ -1141,7 +1132,7 @@ ALTER TABLE `file`
 -- 使用表AUTO_INCREMENT `log`
 --
 ALTER TABLE `log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID';
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=19;
 --
 -- 使用表AUTO_INCREMENT `menu`
 --
@@ -1171,12 +1162,12 @@ ALTER TABLE `sys_dict_detail`
 -- 使用表AUTO_INCREMENT `task_job`
 --
 ALTER TABLE `task_job`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=20;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=19;
 --
 -- 使用表AUTO_INCREMENT `task_log`
 --
 ALTER TABLE `task_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID';
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=38;
 --
 -- 使用表AUTO_INCREMENT `user`
 --

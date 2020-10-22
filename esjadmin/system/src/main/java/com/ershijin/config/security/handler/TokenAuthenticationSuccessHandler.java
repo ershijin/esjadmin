@@ -45,8 +45,7 @@ public class TokenAuthenticationSuccessHandler implements AuthenticationSuccessH
 //            System.out.println("-------- 刷新 token -------");
 //            System.out.println("新token= " + newToken);
 //        }
-        logger.debug("------ token 验证成功 -----------");
-        logger.debug(((AuthenticationToken) authentication).getToken());
+        logger.debug("------ token 验证成功: {}", ((AuthenticationToken) authentication).getToken());
     }
 
     protected boolean shouldTokenRefresh(Date issueAt){

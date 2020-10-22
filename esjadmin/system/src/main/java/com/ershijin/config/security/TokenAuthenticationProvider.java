@@ -1,7 +1,11 @@
 package com.ershijin.config.security;
 
-import com.ershijin.service.AuthenticationService;
+import com.ershijin.config.security.bean.SecurityProperties;
+import com.ershijin.model.dto.OnlineUserDTO;
 import com.ershijin.service.UserService;
+import com.ershijin.util.RedisUtils;
+import com.ershijin.util.SpringContextHolder;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -19,11 +23,8 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
 
     private UserService userService;
 
-    private AuthenticationService authenticationService;
-
-    public TokenAuthenticationProvider(UserService userService, AuthenticationService authenticationService) {
+    public TokenAuthenticationProvider(UserService userService) {
         this.userService = userService;
-        this.authenticationService = authenticationService;
     }
 
     /**
@@ -36,16 +37,17 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String token = ((AuthenticationToken) authentication).getToken();
         // 判断token是否有效
-        com.ershijin.model.entity.Authentication dbAuthentication = authenticationService.getAuthenticationByToken(token);
-        if (dbAuthentication == null) {
-            throw new BadCredentialsException("无效的token");
+//        com.ershijin.model.entity.Authentication dbAuthentication = authenticationService.getAuthenticationByToken(token);
+
+        SecurityProperties properties = SpringContextHolder.getBean(SecurityProperties.class);
+        OnlineUserDTO onlineUserDTO = (OnlineUserDTO) RedisUtils.get(properties.getOnlineKey() + token);
+
+        if (ObjectUtils.isEmpty(onlineUserDTO)) {
+            throw new BadCredentialsException("无效的token或token已过期");
         }
-        // 判断token是否过期
-        if (LocalDateTime.now().isAfter(dbAuthentication.getExpireTime())) {
-            throw new NonceExpiredException("token已过期");
-        }
+
         // token验证通过，创建凭证
-        UserDetails user = userService.getLoginInfo(dbAuthentication);
+        UserDetails user = userService.getLoginInfo(onlineUserDTO);
         AuthenticationToken authenticationToken = new AuthenticationToken(user, token, user.getAuthorities());
             return authenticationToken;
     }

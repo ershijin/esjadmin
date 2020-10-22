@@ -15,7 +15,7 @@ public class ConfigBeanConfiguration {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "jwt", ignoreUnknownFields = true)
+    @ConfigurationProperties(prefix = "token", ignoreUnknownFields = true)
     public SecurityProperties securityProperties() {
         return new SecurityProperties();
     }
