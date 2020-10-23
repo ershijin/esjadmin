@@ -3,6 +3,7 @@ package com.ershijin.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.component.Config;
 import com.ershijin.config.security.bean.SecurityProperties;
@@ -31,10 +32,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -69,7 +70,7 @@ public class UserService implements UserDetailsService {
      * @param user
      * @return
      */
-    public String saveLoginInfo(User user) {
+    public String saveLoginInfo(User user, HttpServletRequest request) {
 
         String token = TokenUtils.generateTokenCode();
 //        Authentication authentication = new Authentication();
@@ -90,11 +91,25 @@ public class UserService implements UserDetailsService {
 //        authenticationService.insertAuthentication(authentication);
 
         // 将登录信息保存到redis
+        String ip = RequestUtils.getIp(request);
+        LocalDateTime lastLoginTime = LocalDateTime.now();
+
         OnlineUserDTO onlineUserDTO = new OnlineUserDTO();
         onlineUserDTO.setUsername(user.getUsername());
         onlineUserDTO.setSalt(RandomStringUtils.randomGraph(10));
         onlineUserDTO.setAuthorities(JsonUtils.toJsonString(permissions));
+        onlineUserDTO.setKey(token);
+        onlineUserDTO.setName(user.getName());
+        onlineUserDTO.setIp(ip);
+        onlineUserDTO.setAddress(RequestUtils.getCityInfo(ip));
+        onlineUserDTO.setBrowser(RequestUtils.getBrowser(request));
+        onlineUserDTO.setLoginTime(lastLoginTime);
         RedisUtils.set(properties.getOnlineKey() + token, onlineUserDTO, properties.getTokenValidityInSeconds());
+
+        // 更新用户登录时间和ip
+        userMapper.update(null,
+                Wrappers.<User>lambdaUpdate().eq(User::getId, user.getId()).set(User::getLastIp, ip).set(User::getLastLoginTime,
+                lastLoginTime));
         return token;
     }
 

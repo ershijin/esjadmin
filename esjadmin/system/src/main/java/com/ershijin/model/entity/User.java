@@ -2,6 +2,11 @@ package com.ershijin.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.ershijin.model.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.Alias;
@@ -10,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +39,13 @@ public class User extends BaseEntity implements UserDetails, Serializable {
     private boolean enabled;
 
     private String remark;
+
+    private String lastIp;
+
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastLoginTime;
 
     @TableField(exist = false)
     private List<Role> roles;

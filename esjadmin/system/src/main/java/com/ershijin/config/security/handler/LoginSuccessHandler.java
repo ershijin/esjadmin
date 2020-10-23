@@ -30,7 +30,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        String token = userService.saveLoginInfo((User) authentication.getPrincipal());
+        String token = userService.saveLoginInfo((User) authentication.getPrincipal(), request);
         response.setHeader(Config.AUTHORIZATION_NAME, token);
         response.setContentType("application/json; charset=utf-8");
         Map<String, Object> result = new HashMap<>();

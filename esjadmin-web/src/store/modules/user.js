@@ -59,7 +59,7 @@ const actions = {
         const data = response
 
         if (!data) {
-          reject('Verification failed, please Login again.')
+          reject('登录信息失效，请重新登录.')
         }
 
         const { username, name, avatar, menus, permissions, introduction } = data

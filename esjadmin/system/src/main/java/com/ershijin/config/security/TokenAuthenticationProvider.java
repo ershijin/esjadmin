@@ -37,8 +37,6 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String token = ((AuthenticationToken) authentication).getToken();
         // 判断token是否有效
-//        com.ershijin.model.entity.Authentication dbAuthentication = authenticationService.getAuthenticationByToken(token);
-
         SecurityProperties properties = SpringContextHolder.getBean(SecurityProperties.class);
         OnlineUserDTO onlineUserDTO = (OnlineUserDTO) RedisUtils.get(properties.getOnlineKey() + token);
 

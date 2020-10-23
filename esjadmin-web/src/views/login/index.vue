@@ -46,14 +46,14 @@
       </el-tooltip>
 
       <el-form-item prop="code">
-        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">
+        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" tabindex="3" style="width: 63%" @keyup.enter.native="handleLogin" @click.native.prevent="loginForm.code=''">
           <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
         </el-input>
         <div class="login-code">
           <img :src="codeUrl" @click="getCode">
         </div>
       </el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;">
+      <el-checkbox v-model="loginForm.rememberMe" tabindex="4" style="margin:0 0 25px 0;">
         记住我
       </el-checkbox>
 
@@ -126,8 +126,6 @@ export default {
     this.getCode()
     // 获取用户名密码等Cookie
     this.getCookie()
-    // token 过期提示
-    this.point()
   },
   mounted() {
     if (this.loginForm.username === '') {
@@ -158,18 +156,6 @@ export default {
         password: password,
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
         code: ''
-      }
-    },
-    point() {
-      const point = Cookies.get('point') !== undefined
-      if (point) {
-        this.$notify({
-          title: '提示',
-          message: '当前登录状态已过期，请重新登录！',
-          type: 'warning',
-          duration: 5000
-        })
-        Cookies.remove('point')
       }
     },
     checkCapslock(e) {
