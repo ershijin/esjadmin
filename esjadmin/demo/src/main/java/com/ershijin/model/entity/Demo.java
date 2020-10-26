@@ -2,10 +2,6 @@ package com.ershijin.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import lombok.Data;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,7 +13,7 @@ import java.io.Serializable;
 /**
 * @description /
 * @author ershijin
-* @date 2020-10-15
+* @date 2020-10-26
 **/
 @Data
 @TableName("demo")
@@ -43,14 +39,10 @@ public class Demo implements Serializable {
 
     @TableField(fill = FieldFill.INSERT, updateStrategy = FieldStrategy.NEVER)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ApiModelProperty(value = "createTime")
     private LocalDateTime createTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @ApiModelProperty(value = "updateTime")
     private LocalDateTime updateTime;
 

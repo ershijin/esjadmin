@@ -10,6 +10,7 @@ import com.ershijin.model.entity.Log;
 import com.ershijin.model.query.LogQuery;
 import com.ershijin.util.RequestUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -73,8 +74,8 @@ public class LogService {
         QueryWrapper<Log> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(!StringUtils.isEmpty(type), "type", type);
         queryWrapper.eq(!StringUtils.isEmpty(query.getUsername()), "username", query.getUsername());
-        queryWrapper.ge(!StringUtils.isEmpty(query.getStartTime()), "create_time", query.getStartTime());
-        queryWrapper.le(!StringUtils.isEmpty(query.getEndTime()), "create_time", query.getEndTime());
+        queryWrapper.ge(ObjectUtils.isNotEmpty(query.getStartTime()), "create_time", query.getStartTime());
+        queryWrapper.le(ObjectUtils.isNotEmpty(query.getEndTime()), "create_time", query.getEndTime());
         queryWrapper.and(!StringUtils.isEmpty(query.getKeyword()), i -> {
             i.eq("username", query.getKeyword())
                     .or().eq("description", query.getKeyword())

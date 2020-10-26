@@ -3,10 +3,6 @@ package ${package}.model.entity;
 import com.baomidou.mybatisplus.annotation.*;
 <#if hasDateAnnotation>
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 </#if>
 
 import lombok.Data;
@@ -53,8 +49,6 @@ public class ${className} implements Serializable {
     @TableField(fill = FieldFill.UPDATE)
     </#if>
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     </#if>
     <#if column.remark != ''>
     @ApiModelProperty(value = "${column.remark}")

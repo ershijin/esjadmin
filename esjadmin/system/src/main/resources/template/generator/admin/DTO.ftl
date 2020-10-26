@@ -3,10 +3,6 @@ package ${package}.model.dto;
 import lombok.Data;
 <#if hasDateAnnotation>
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 </#if>
 <#if hasTimestamp>
 import java.time.LocalDateTime;
@@ -41,8 +37,6 @@ public class ${className}DTO implements Serializable {
     </#if>
     <#if (column.dateAnnotation)??>
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     </#if>
     private ${column.columnType} ${column.changeColumnName};
     </#list>

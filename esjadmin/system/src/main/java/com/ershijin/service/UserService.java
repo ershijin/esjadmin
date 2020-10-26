@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.component.Config;
 import com.ershijin.config.security.bean.SecurityProperties;
+import com.ershijin.converter.UserConverter;
 import com.ershijin.dao.UserMapper;
 import com.ershijin.dao.UserRoleMapper;
 import com.ershijin.exception.ApiException;
@@ -44,6 +45,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRoleMapper userRoleMapper;
+
+    @Autowired
+    private UserConverter userConverter;
 
     @Autowired
     private SecurityProperties properties;
@@ -162,8 +166,7 @@ public class UserService implements UserDetailsService {
         page.setOrders(OrderItem.descs("id"));
 
         IPage<User> result = userMapper.selectPage(page, queryWrapper);
-        result.setRecords(MyBeanUtils.convert(result.getRecords(), UserDTO.class));
-        return new PageResult(result.getTotal(), result.getRecords());
+        return new PageResult(result.getTotal(), userConverter.toDto(result.getRecords()));
     }
 
     @Transactional

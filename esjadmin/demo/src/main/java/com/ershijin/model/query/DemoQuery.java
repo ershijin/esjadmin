@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
 * @author ershijin
-* @date 2020-10-15
+* @date 2020-10-26
 **/
 @Data
 public class DemoQuery{
@@ -21,7 +21,7 @@ public class DemoQuery{
     private Integer categoryId;
 
     /** 模糊 */
-    @Query(blurry = "link,title")
+    @Query(type = Query.Type.LIKE, tableField = "link")
     private String link;
 
     /** BETWEEN */

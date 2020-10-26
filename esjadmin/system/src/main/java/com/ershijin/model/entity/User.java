@@ -42,8 +42,6 @@ public class User extends BaseEntity implements UserDetails, Serializable {
 
     private String lastIp;
 
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLoginTime;
 

@@ -5,7 +5,7 @@ import com.ershijin.model.entity.Demo;
 
 /**
 * @author ershijin
-* @date 2020-10-15
+* @date 2020-10-26
 **/
 public interface DemoMapper extends BaseMapper<Demo> {
 
