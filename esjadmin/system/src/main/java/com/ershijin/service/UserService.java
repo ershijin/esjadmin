@@ -14,6 +14,7 @@ import com.ershijin.exception.ApiException;
 import com.ershijin.model.PageResult;
 import com.ershijin.model.dto.OnlineUserDTO;
 import com.ershijin.model.dto.UserDTO;
+import com.ershijin.model.dto.UserPrincipal;
 import com.ershijin.model.entity.Role;
 import com.ershijin.model.entity.User;
 import com.ershijin.model.entity.UserRole;
@@ -77,29 +78,20 @@ public class UserService implements UserDetailsService {
     public String saveLoginInfo(User user, HttpServletRequest request) {
 
         String token = TokenUtils.generateTokenCode();
-//        Authentication authentication = new Authentication();
-//        authentication.setUsername(user.getUsername());
-//        authentication.setToken(token);
-//        LocalDateTime now = LocalDateTime.now();
-//        authentication.setCreateTime(now);
-//        authentication.setExpireTime(now.plusSeconds(3600 * 24 * 7));
-//        // 随机生成10位字符串作为salt,构造UserDetails的password用
-//        authentication.setSalt(RandomStringUtils.randomGraph(10));
-//
+
         List<String> permissions = new ArrayList<>();
         user.getAuthorities().forEach(i -> {
             permissions.add(i.getAuthority());
         });
-//        authentication.setPermissions(JsonUtils.toJsonString(permissions));
-//
-//        authenticationService.insertAuthentication(authentication);
 
         // 将登录信息保存到redis
         String ip = RequestUtils.getIp(request);
         LocalDateTime lastLoginTime = LocalDateTime.now();
 
         OnlineUserDTO onlineUserDTO = new OnlineUserDTO();
+        onlineUserDTO.setId(user.getId());
         onlineUserDTO.setUsername(user.getUsername());
+        // 随机生成10位字符串作为salt,构造UserDetails的password用
         onlineUserDTO.setSalt(RandomStringUtils.randomGraph(10));
         onlineUserDTO.setAuthorities(JsonUtils.toJsonString(permissions));
         onlineUserDTO.setKey(token);
@@ -124,23 +116,19 @@ public class UserService implements UserDetailsService {
      * @return
      */
     public UserDetails getLoginInfo(OnlineUserDTO onlineUserDTO) {
-//        return loadUserByUsername(username);
-
-
-//        Authentication authentication = authenticationService.getAuthenticationByUsername(username);
-        List<GrantedAuthority> authorities = new ArrayList<>();
+        Set<GrantedAuthority> authorities = new HashSet<>();
         List<String> authoritieList = JsonUtils.toList(onlineUserDTO.getAuthorities());
         authoritieList.forEach(i -> {
             authorities.add(new SimpleGrantedAuthority(i));
         });
         // 给每一个登录用户添加普通权限
         authorities.add(new SimpleGrantedAuthority(Config.GENERAL_PERMISSION));
-        // 从数据库中取出token生成时用的salt，将salt放到password字段返回
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(onlineUserDTO.getUsername())
-                .password(onlineUserDTO.getSalt())
-                .authorities(authorities)
-                .build();
+        UserPrincipal userPrincipal = new UserPrincipal();
+        userPrincipal.setId(onlineUserDTO.getId());
+        userPrincipal.setUsername(onlineUserDTO.getUsername());
+        userPrincipal.setPassword(onlineUserDTO.getSalt());
+        userPrincipal.setAuthorities(authorities);
+        return userPrincipal;
     }
 
     /**
@@ -149,7 +137,6 @@ public class UserService implements UserDetailsService {
      * @param token
      */
     public void deleteLoginInfo(String token) {
-//        authenticationService.deleteByToken(token);
         RedisUtils.del(properties.getOnlineKey() + token);
     }
 

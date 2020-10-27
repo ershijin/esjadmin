@@ -22,8 +22,8 @@ public class AuthenticationToken extends AbstractAuthenticationToken {
         this.token = token;
     }
 
-    public AuthenticationToken(UserDetails principal, String token, Collection<? extends GrantedAuthority> authorities) {
-        super(authorities);
+    public AuthenticationToken(UserDetails principal, String token) {
+        super(principal.getAuthorities());
         this.principal = principal;
         this.token = token;
     }

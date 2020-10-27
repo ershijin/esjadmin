@@ -1,10 +1,11 @@
 package com.ershijin.util;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.ershijin.model.dto.UserPrincipal;
+
 
 public class UserUtils {
-    public static UserDetails getCurrentUser() {
-        return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public static UserPrincipal getCurrentUser() {
+        return  (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

@@ -28,7 +28,6 @@ public class TokenLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        logger.debug("------ logout -------");
         clearToken(authentication);
 
         response.setContentType("application/json; charset=utf-8");
