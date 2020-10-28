@@ -1,7 +1,7 @@
 package com.ershijin.util;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-import com.ershijin.model.dto.UserPrincipal;
+import com.ershijin.model.UserPrincipal;
 
 
 public class UserUtils {

@@ -1,11 +1,8 @@
 package com.ershijin.config.security;
 
-import com.ershijin.component.Config;
 import com.ershijin.config.security.bean.SecurityProperties;
 import com.ershijin.model.dto.OnlineUserDTO;
-import com.ershijin.model.dto.UserPrincipal;
 import com.ershijin.service.UserService;
-import com.ershijin.util.JsonUtils;
 import com.ershijin.util.RedisUtils;
 import com.ershijin.util.SpringContextHolder;
 import org.apache.commons.lang3.ObjectUtils;
@@ -13,13 +10,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * 认证的具体实现类，每个provider通过实现一个supports方法来表示自己支持那种Token的认证

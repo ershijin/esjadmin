@@ -1,7 +1,10 @@
 package com.ershijin.config.security.handler;
 
 import com.ershijin.config.security.AuthenticationToken;
+import com.ershijin.config.security.bean.SecurityProperties;
 import com.ershijin.service.UserService;
+import com.ershijin.util.RedisUtils;
+import com.ershijin.util.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -11,9 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 
 /**
  * token 验证成功处理
@@ -22,8 +22,6 @@ import java.util.Date;
 public class TokenAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationSuccessHandler.class);
-
-    private static final int tokenRefreshInterval = 300;  //刷新间隔5分钟
 
     private UserService userService;
 
@@ -46,11 +44,23 @@ public class TokenAuthenticationSuccessHandler implements AuthenticationSuccessH
 //            System.out.println("新token= " + newToken);
 //        }
         logger.debug("------ token 验证成功: {}", ((AuthenticationToken) authentication).getToken());
+        String token = ((AuthenticationToken) authentication).getToken();
+        checkRenewToken(token);
     }
 
-    protected boolean shouldTokenRefresh(Date issueAt){
-        LocalDateTime issueTime = LocalDateTime.ofInstant(issueAt.toInstant(), ZoneId.systemDefault());
-        return LocalDateTime.now().minusSeconds(tokenRefreshInterval).isAfter(issueTime);
+    /**
+     * 检查token到期时间，如果续期检查的范围内，则续期
+     * @param token
+     */
+    protected void checkRenewToken(String token){
+        SecurityProperties properties = SpringContextHolder.getBean(SecurityProperties.class);
+        // 判断是否续期token,计算token的过期时间
+        long expireTime = RedisUtils.getExpire(properties.getOnlineKey() + token);
+        // 如果在续期检查的范围内，则续期
+        if (expireTime <= properties.getDetect()) {
+            long renew = expireTime + properties.getRenew();
+            RedisUtils.expire(properties.getOnlineKey() + token, renew);
+        }
     }
 
 }

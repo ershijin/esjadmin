@@ -9,7 +9,7 @@ import lombok.Data;
 public class SecurityProperties {
 
     /**
-     * Request Headers ： Authorization
+     * Request Headers ： token
      */
     private String header;
 
