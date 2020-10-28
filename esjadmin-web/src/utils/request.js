@@ -70,15 +70,13 @@ service.interceptors.response.use(
         //     location.reload()
         //   })
         // }).catch()
+        store.dispatch('user/resetToken').then(() => {
+        })
 
         MessageBox.alert('登录信息失效，请重新登录！', '提示', {
           confirmButtonText: '重新登录',
           type: 'warning',
-          callback: action => {
-            store.dispatch('user/resetToken').then(() => {
-              location.reload()
-            })
-          }
+          callback: action => location.reload()
         })
         return
       }
