@@ -24,11 +24,12 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * 上传文件路径配置
+     * 路径配置
      * @param registry
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 上传文件路径配置
         registry.addResourceHandler("/upload/**").addResourceLocations("classpath:/upload/");
     }
 

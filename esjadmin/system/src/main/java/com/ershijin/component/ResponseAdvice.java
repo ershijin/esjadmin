@@ -34,7 +34,7 @@ import javax.validation.ConstraintViolationException;
  * 统一异常拦截
  * 统一包装返回数据
  */
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.ershijin.controller")
 @Slf4j
 public class ResponseAdvice implements ResponseBodyAdvice<Object> {
 
