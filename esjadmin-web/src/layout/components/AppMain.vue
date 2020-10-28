@@ -5,6 +5,11 @@
       <router-view :key="key" />
     </keep-alive>
     <!-- </transition> -->
+    <div v-if="$store.state.settings.showFooter" id="el-main-footer">
+      <span v-html="$store.state.settings.footerTxt" />
+      <span> ⋅ </span>
+      <a href="https://beian.miit.gov.cn" target="_blank">{{ $store.state.settings.icpNumber }}</a>
+    </div>
   </section>
 </template>
 
@@ -53,5 +58,20 @@ export default {
   .fixed-header {
     padding-right: 15px;
   }
+}
+#el-main-footer {
+  background: none repeat scroll 0 0 white;
+  border-top: 1px solid #e7eaec;
+  overflow: hidden;
+  padding: 10px 6px 0 6px;
+  height: 33px;
+  font-size: 0.7rem !important;
+  color: #7a8b9a;
+  letter-spacing: 0.8px;
+  font-family: Arial, sans-serif !important;
+  position: fixed;
+  bottom: 0;
+  z-index: 99;
+  width: 100%;
 }
 </style>
