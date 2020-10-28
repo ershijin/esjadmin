@@ -7,6 +7,8 @@ import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
 import Layout from '@/layout'
+import { getConfigs } from '@/api/config'
+import Vue from 'vue'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -55,6 +57,13 @@ router.beforeEach(async(to, from, next) => {
 
   // set page title
   document.title = getPageTitle(to.meta.title)
+
+  // 获取全局配置
+  if (!Vue.prototype.$config) {
+    await getConfigs().then(data => {
+      Vue.prototype.$config = data
+    })
+  }
 
   // determine whether the user has logged in
   const hasToken = getToken()

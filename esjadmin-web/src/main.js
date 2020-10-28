@@ -19,7 +19,7 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
-import { getConfigs } from '@/api/config'
+// import { getConfigs } from '@/api/config'
 
 // 权限指令
 import permission from './directive/permission'
@@ -55,10 +55,10 @@ Object.keys(filters).forEach(key => {
 
 Vue.config.productionTip = false
 
-// 获取全局配置
-getConfigs().then(data => {
-  Vue.prototype.$config = data
-})
+// // 获取全局配置
+// getConfigs().then(data => {
+//   Vue.prototype.$config = data
+// })
 
 new Vue({
   el: '#app',
