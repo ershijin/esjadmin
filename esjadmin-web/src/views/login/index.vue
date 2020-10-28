@@ -46,9 +46,18 @@
       </el-tooltip>
 
       <el-form-item prop="code">
-        <el-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" tabindex="3" style="width: 63%" @keyup.enter.native="handleLogin" @click.native.prevent="loginForm.code=''">
-          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
-        </el-input>
+        <span class="svg-container">
+          <svg-icon icon-class="validCode" />
+        </span>
+        <el-input
+          v-model="loginForm.code"
+          auto-complete="off"
+          placeholder="验证码"
+          tabindex="3"
+          style="width: 50%"
+          @keyup.enter.native="handleLogin"
+          @click.native.prevent="loginForm.code=''"
+        />
         <div class="login-code">
           <img :src="codeUrl" @click="getCode">
         </div>
@@ -290,7 +299,7 @@ $light_gray:#eee;
 
   .login-form {
     position: relative;
-    width: 520px;
+    width: 400px;
     max-width: 100%;
     padding: 160px 35px 0;
     margin: 0 auto;
@@ -346,13 +355,13 @@ $light_gray:#eee;
   }
 
   .login-code {
-    width: 33%;
+    width: 36%;
     display: inline-block;
-    height: 38px;
     float: right;
     img{
       cursor: pointer;
-      vertical-align:middle
+      vertical-align:middle;
+      margin-top: 5px;
     }
   }
 
