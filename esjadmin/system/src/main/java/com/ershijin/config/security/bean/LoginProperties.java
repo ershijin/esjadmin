@@ -19,6 +19,7 @@ public class LoginProperties {
     private boolean singleLogin = false;
 
     private LoginCode loginCode;
+
     /**
      * 用户登录信息缓存
      */

@@ -52,6 +52,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private SecurityProperties properties;
 
+    @Autowired
+    private OnlineUserService onlineUserService;
+
     /**
      * 从数据库或者缓存中取出用户信息，详见接口注释
      *
@@ -136,7 +139,7 @@ public class UserService implements UserDetailsService {
      * @param token
      */
     public void deleteLoginInfo(String token) {
-        RedisUtils.del(properties.getOnlineKey() + token);
+        onlineUserService.kickOut(token);
     }
 
     public PageResult list(UserQuery userQuery, Page<User> page) {

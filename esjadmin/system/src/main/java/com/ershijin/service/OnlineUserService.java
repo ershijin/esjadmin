@@ -1,11 +1,13 @@
 package com.ershijin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.EncryptUtils;
 import com.ershijin.config.security.bean.SecurityProperties;
 import com.ershijin.model.PageResult;
 import com.ershijin.model.dto.OnlineUserDTO;
 import com.ershijin.util.PageUtil;
 import com.ershijin.util.RedisUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import java.util.Map;
  * 在线用户服务
  */
 @Service
+@Slf4j
 public class OnlineUserService {
     @Autowired
     private SecurityProperties properties;
@@ -68,5 +71,30 @@ public class OnlineUserService {
     public void kickOut(String key){
         key = properties.getOnlineKey() + key;
         RedisUtils.del(key);
+    }
+
+    /**
+     * 检测用户是否在之前已经登录，已经登录踢下线
+     * @param userName 用户名
+     */
+    public void checkLoginOnUser(String userName, String igoreToken){
+        List<OnlineUserDTO> onlineUserDtos = list(userName);
+        if(onlineUserDtos ==null || onlineUserDtos.isEmpty()){
+            return;
+        }
+        for(OnlineUserDTO onlineUserDto : onlineUserDtos){
+            if(onlineUserDto.getUsername().equals(userName)){
+                try {
+                    String token = onlineUserDto.getKey();
+                    if(StringUtils.isNotBlank(igoreToken)&&!igoreToken.equals(token)){
+                        this.kickOut(token);
+                    }else if(StringUtils.isBlank(igoreToken)){
+                        this.kickOut(token);
+                    }
+                } catch (Exception e) {
+                    log.error("checkUser is error",e);
+                }
+            }
+        }
     }
 }

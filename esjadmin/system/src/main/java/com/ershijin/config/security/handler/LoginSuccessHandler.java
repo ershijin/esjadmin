@@ -1,10 +1,13 @@
 package com.ershijin.config.security.handler;
 
 import com.ershijin.component.Config;
+import com.ershijin.config.security.bean.LoginProperties;
 import com.ershijin.model.ApiResult;
 import com.ershijin.model.entity.User;
+import com.ershijin.service.OnlineUserService;
 import com.ershijin.service.UserService;
 import com.ershijin.util.JsonUtils;
+import com.ershijin.util.SpringContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -30,7 +33,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        String token = userService.saveLoginInfo((User) authentication.getPrincipal(), request);
+        User user = (User) authentication.getPrincipal();
+        String token = userService.saveLoginInfo(user, request);
         response.setHeader(Config.AUTHORIZATION_NAME, token);
         response.setContentType("application/json; charset=utf-8");
         Map<String, Object> result = new HashMap<>();
@@ -38,6 +42,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Writer writer = response.getWriter();
         writer.write(JsonUtils.toJsonString(ApiResult.success(result)));
         writer.close();
+
+        LoginProperties loginProperties = SpringContextHolder.getBean(LoginProperties.class);
+        if (loginProperties.isSingleLogin()) {
+            System.out.println(token);
+            SpringContextHolder.getBean(OnlineUserService.class).checkLoginOnUser(user.getUsername(), token);
+        }
     }
 
 }
