@@ -76,7 +76,7 @@ token:
   token-start-with: token
   # 必须使用最少88位的Base64对该令牌进行编码
   base64-secret: RGVwOFNndkxOalBNT1ZSeTVVaG5ETU4wMDBtd085MUtGazEwZ2FnMDIxd0t2OWZrOGtFc0tvRGtFcGR2cUZra2JlMGhjbWdORlpLODdaVmRxSkxnMXpZZg==
-  # 令牌过期时间 此处单位/秒 ，默认4小时，可在此网站生成 https://www.convertworld.com/zh-hans/time/milliseconds.html
+  # 令牌过期时间 单位 秒 ，默认4小时
   token-validity-in-seconds: 14400
   # 在线用户key
   online-key: online-token-

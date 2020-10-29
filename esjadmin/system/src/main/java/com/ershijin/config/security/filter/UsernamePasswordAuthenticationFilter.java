@@ -75,9 +75,16 @@ public class UsernamePasswordAuthenticationFilter extends AbstractAuthentication
         if(StringUtils.isNotBlank(body)) {
             JsonNode jsonNode = new ObjectMapper().readTree(body);
 
-            uuid = jsonNode.get("uuid").asText();
-            code = jsonNode.get("code").asText();
+            uuid = ObjectUtils.isNotEmpty(jsonNode.get("uuid")) ? jsonNode.get("uuid").asText() : null;
+            code = ObjectUtils.isNotEmpty(jsonNode.get("code")) ? jsonNode.get("code").asText() : null;
 
+        }
+        if (StringUtils.isEmpty(uuid)) {
+            response.setContentType("application/json; charset=utf-8");
+            Writer writer = response.getWriter();
+            writer.write(JsonUtils.toJsonString(ApiResult.error(ResultCode.CLIENT_ERROR, "参数错误")));
+            writer.close();
+            return false;
         }
         if (StringUtils.isEmpty(code)) {
             response.setContentType("application/json; charset=utf-8");

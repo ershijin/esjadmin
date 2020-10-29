@@ -35,11 +35,20 @@ public class OnlineUserService {
      */
     public PageResult list(String keyword, IPage page){
         List<OnlineUserDTO> onlineUserDtos = list(keyword);
-//        return PageUtil.toPage(
-//                PageUtil.toPage(pageable.getPageNumber(),pageable.getPageSize(), onlineUserDtos),
-//                onlineUserDtos.size()
-//        );
-        return new PageResult(onlineUserDtos.size(), onlineUserDtos);
+
+        long current = page.getCurrent();
+        long size = page.getSize();
+        long fromIndex = (current - 1) * size;
+        long toIndex = current * size;
+
+        if(fromIndex > onlineUserDtos.size()){
+            return new PageResult(onlineUserDtos.size(), Collections.EMPTY_LIST) ;
+        } else if(toIndex >= onlineUserDtos.size()) {
+            return new PageResult(onlineUserDtos.size(), onlineUserDtos.subList((int) fromIndex,
+                    onlineUserDtos.size()));
+        }
+
+        return new PageResult(onlineUserDtos.size(), onlineUserDtos.subList((int) fromIndex,(int) toIndex));
     }
     /**
      * 查询全部数据，不分页
@@ -53,7 +62,7 @@ public class OnlineUserService {
         for (String key : keys) {
             OnlineUserDTO onlineUserDto = (OnlineUserDTO) RedisUtils.get(key);
             if(StringUtils.isNotBlank(keyword)){
-                if(onlineUserDto.toString().contains(keyword)){
+                if(onlineUserDto.getUsername().contains(keyword) || onlineUserDto.getName().contains(keyword)){
                     onlineUsers.add(onlineUserDto);
                 }
             } else {
