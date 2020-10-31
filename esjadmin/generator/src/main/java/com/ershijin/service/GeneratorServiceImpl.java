@@ -7,11 +7,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ershijin.dao.ColumnInfoMapper;
 import com.ershijin.exception.ApiException;
+import com.ershijin.model.PageResult;
+import com.ershijin.model.dto.TableInfo;
 import com.ershijin.model.entity.ColumnInfo;
 import com.ershijin.model.entity.GenConfig;
-import com.ershijin.model.dto.TableInfo;
 import com.ershijin.util.FileUtils;
-import com.ershijin.util.PageUtil;
 import com.ershijin.utils.GenUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -51,7 +51,7 @@ public class GeneratorServiceImpl extends ServiceImpl<ColumnInfoMapper,ColumnInf
         return jdbcTemplate.queryForList(sql);
     }
 
-    public Object getTables(String name, int[] startEnd) {
+    public PageResult getTables(String name, int[] startEnd) {
         // 使用预编译防止sql注入
         String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " +
                 "where table_schema = (select database()) " +
@@ -70,9 +70,10 @@ public class GeneratorServiceImpl extends ServiceImpl<ColumnInfoMapper,ColumnInf
                     )
             );
         }
-        Object totalElements = jdbcTemplate.queryForObject("SELECT COUNT(*) from information_schema.tables where " +
-                "table_schema = (select database()) and table_name like ?", Integer.class, StringUtils.isNotBlank(name) ? ("%" + name + "%") : "%");
-        return PageUtil.toPage(tableInfos, totalElements);
+        long total = jdbcTemplate.queryForObject("SELECT COUNT(*) from information_schema.tables where " +
+                "table_schema = (select database()) and table_name like ?", Long.class, StringUtils.isNotBlank(name) ?
+                ("%" + name + "%") : "%");
+        return new PageResult(total, tableInfos);
     }
 
     public List<ColumnInfo> getColumns(String tableName) {

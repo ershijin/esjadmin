@@ -1,11 +1,10 @@
 package com.ershijin.controller;
 
-import com.ershijin.annotation.NoApiResult;
 import com.ershijin.exception.ApiException;
+import com.ershijin.model.PageResult;
 import com.ershijin.model.entity.ColumnInfo;
 import com.ershijin.service.GenConfigService;
 import com.ershijin.service.GeneratorServiceImpl;
-import com.ershijin.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -46,9 +45,9 @@ public class GeneratorController {
 
     // 查询字段数据
     @GetMapping(value = "/columns")
-    public Object queryColumns(@RequestParam String tableName){
+    public PageResult queryColumns(@RequestParam String tableName){
         List<ColumnInfo> columnInfos = generatorService.getColumns(tableName);
-        return PageUtil.toPage(columnInfos,columnInfos.size());
+        return new PageResult(columnInfos.size(), columnInfos);
     }
 
     // 保存字段数据

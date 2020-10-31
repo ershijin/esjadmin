@@ -1,22 +1,18 @@
 package com.ershijin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.EncryptUtils;
 import com.ershijin.config.security.bean.SecurityProperties;
 import com.ershijin.model.PageResult;
 import com.ershijin.model.dto.OnlineUserDTO;
-import com.ershijin.util.PageUtil;
 import com.ershijin.util.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 在线用户服务
