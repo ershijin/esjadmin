@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+/**
+ * mybatis-plus 时间类型自动填充策略
+ */
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
 

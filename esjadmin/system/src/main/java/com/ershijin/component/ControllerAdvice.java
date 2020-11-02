@@ -36,7 +36,7 @@ import javax.validation.ConstraintViolationException;
  */
 @RestControllerAdvice(basePackages = "com.ershijin")
 @Slf4j
-public class ResponseAdvice implements ResponseBodyAdvice<Object> {
+public class ControllerAdvice implements ResponseBodyAdvice<Object> {
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
