@@ -12,13 +12,14 @@ import com.ershijin.dao.UserMapper;
 import com.ershijin.dao.UserRoleMapper;
 import com.ershijin.exception.ApiException;
 import com.ershijin.model.PageResult;
-import com.ershijin.model.dto.OnlineUserDTO;
 import com.ershijin.model.UserPrincipal;
+import com.ershijin.model.dto.OnlineUserDTO;
 import com.ershijin.model.entity.Role;
 import com.ershijin.model.entity.User;
 import com.ershijin.model.entity.UserRole;
 import com.ershijin.model.query.UserQuery;
 import com.ershijin.util.*;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -80,6 +84,11 @@ public class UserService implements UserDetailsService {
     public String saveLoginInfo(User user, HttpServletRequest request) {
 
         String token = TokenUtils.generateTokenCode();
+
+        // token重复就登录失败
+        if (ObjectUtils.isNotEmpty(RedisUtils.get(properties.getOnlineKey() + token))) {
+            throw new ApiException("服务器忙，请重试");
+        }
 
         List<String> permissions = new ArrayList<>();
         user.getAuthorities().forEach(i -> {

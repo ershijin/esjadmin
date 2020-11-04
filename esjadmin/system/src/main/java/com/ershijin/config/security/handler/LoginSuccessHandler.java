@@ -44,8 +44,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         writer.close();
 
         LoginProperties loginProperties = SpringContextHolder.getBean(LoginProperties.class);
+
+        // 单用户登录踢掉之前的用户
         if (loginProperties.isSingleLogin()) {
-            System.out.println(token);
             SpringContextHolder.getBean(OnlineUserService.class).checkLoginOnUser(user.getUsername(), token);
         }
     }
