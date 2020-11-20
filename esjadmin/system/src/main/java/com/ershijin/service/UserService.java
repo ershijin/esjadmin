@@ -14,6 +14,7 @@ import com.ershijin.exception.ApiException;
 import com.ershijin.model.PageResult;
 import com.ershijin.model.UserPrincipal;
 import com.ershijin.model.dto.OnlineUserDTO;
+import com.ershijin.model.dto.UserDTO;
 import com.ershijin.model.entity.Role;
 import com.ershijin.model.entity.User;
 import com.ershijin.model.entity.UserRole;

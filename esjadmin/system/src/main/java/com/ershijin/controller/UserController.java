@@ -5,6 +5,7 @@ import com.ershijin.annotation.Log;
 import com.ershijin.exception.ApiException;
 import com.ershijin.exception.NotFoundException;
 import com.ershijin.model.PageResult;
+import com.ershijin.model.dto.UserDTO;
 import com.ershijin.model.entity.Menu;
 import com.ershijin.model.entity.Role;
 import com.ershijin.model.entity.User;
@@ -94,7 +95,7 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAuthority('users:list')")
     @Log("用户列表")
-    public PageResult list(UserQuery query, Page page) {
+    public PageResult<UserDTO> list(UserQuery query, Page page) {
         return userService.list(query, page);
     }
 
