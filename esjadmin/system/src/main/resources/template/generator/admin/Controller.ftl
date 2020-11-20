@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 * @date ${date}
 **/
 @RestController
-@Api(tags = "${apiAlias}管理")
+@Api(tags = "${apiAlias}")
 @RequestMapping("/${changeClassName}")
 public class ${className}Controller {
 

@@ -62,9 +62,9 @@ public class UserService implements UserDetailsService {
     /**
      * 从数据库或者缓存中取出用户信息，详见接口注释
      *
-     * @param username
-     * @return
-     * @throws UsernameNotFoundException
+     * @param username /
+     * @return /
+     * @throws UsernameNotFoundException /
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -78,7 +78,7 @@ public class UserService implements UserDetailsService {
     /**
      * 保存用户登录信息，并返回 token
      *
-     * @param user
+     * @param user /
      * @return
      */
     public String saveLoginInfo(User user, HttpServletRequest request) {
