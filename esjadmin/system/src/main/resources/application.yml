@@ -16,6 +16,10 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     format:
       date: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
 
 # mybatis-plus配置
 mybatis-plus:

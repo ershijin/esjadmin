@@ -20,9 +20,10 @@ public class FileService {
     @Autowired
     private FileMapper fileMapper;
 
+    // @todo 文件大小限制配置
     public String save(String directory, MultipartFile multipartFile, String name) {
         try {
-            if (multipartFile.getSize() > (2 * 1024 * 1024)) {
+            if (multipartFile.getSize() > (20 * 1024 * 1024)) {
                 throw new ApiException("文件超出规定大小");
             }
             String hashCode = FileUtils.getMd5(multipartFile.getBytes());

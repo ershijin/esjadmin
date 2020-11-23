@@ -1,18 +1,11 @@
 package com.ershijin.model.dto;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.FieldStrategy;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.ershijin.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ArticleDTO implements Serializable {
@@ -21,6 +14,7 @@ public class ArticleDTO implements Serializable {
 
     private Long id;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     private String title;
@@ -29,5 +23,7 @@ public class ArticleDTO implements Serializable {
     private String link;
     private String summary;
     private String detail;
+
+    private List<ArticlePictureDTO> pictures;
 
 }

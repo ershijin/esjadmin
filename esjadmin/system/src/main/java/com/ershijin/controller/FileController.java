@@ -3,6 +3,7 @@ package com.ershijin.controller;
 import com.ershijin.component.Config;
 import com.ershijin.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ public class FileController {
     private FileService fileService;
 
     @PostMapping("/images")
+    @PreAuthorize("hasAuthority(@config.GENERAL_PERMISSION)")
     public Map<String, String> images(MultipartFile file) {
         String fileName = fileService.save("images", file, null);
         return result(fileName);

@@ -20,18 +20,40 @@
         <el-form-item label="封面">
           <el-upload
             class="image-uploader"
-            :action="upload_api"
-            :headers="headers"
+            action="#"
             :show-file-list="false"
             :before-upload="beforeUpload"
           >
-            <img v-if="coverPicturePreview" :src="coverPicturePreview" class="image">
+            <div v-if="coverPicturePreview">
+              <el-image
+                class="image"
+                :src="coverPicturePreview"
+                fit="scale-down">
+              </el-image>
+              <i class="el-icon-delete image-tools" @click.stop="removeCoverPicture" title="点击删除" />
+            </div>
+
             <i v-else class="el-icon-plus image-uploader-icon" />
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt>
-          </el-dialog>
           <input v-model="form.coverPicture" type="hidden">
+        </el-form-item>
+
+        <el-form-item label="图片墙">
+          <el-upload
+            action="#"
+            list-type="picture-card"
+            multiple
+            :limit="5"
+            :file-list="form.pictures"
+            :before-upload="beforePictureUpload"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handlePictureCardRemove"
+            :on-exceed="handleExceed">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="picturePreviewDialogVisible">
+            <img width="100%" :src="picturePreviewDialogImageUrl" alt="">
+          </el-dialog>
         </el-form-item>
 
         <el-form-item label="链接" prop="link">
@@ -66,8 +88,8 @@ import Tinymce from '@/components/Tinymce'
 
 import { createArticle, getArticle, updateArticle } from '@/api/article.js'
 import { getList as fetchCategories } from '@/api/articlecat.js'
-import { getToken } from '@/utils/auth'
 import { uploadImage } from '@/api/file'
+import { MessageBox, Notification } from 'element-ui'
 
 const defaultForm = {
   id: undefined,
@@ -75,12 +97,9 @@ const defaultForm = {
   categoryId: 1,
   link: '',
   coverPicture: '',
-  // pictures: [{
-  //   url: 'http://localhost:8080/bonusmall/upload/2019/05/19/22591082672.png',
-  //   rela_url: '2019/05/19/22591082672.png'
-  // }],
+  pictures: [],
   summary: '',
-  detail: '文章默认的内容'
+  detail: ''
 }
 
 export default {
@@ -95,14 +114,8 @@ export default {
   data() {
     return {
       upload_api: this.$config.upload_api,
-      dialogImageUrl: '',
-      dialogVisible: false,
-      // uploadAction: process.env.VUE_APP_BASE_API + '/upload',
       coverPicturePreview: '',
-      categories: [{ id: 1, name: '11111' }],
-      headers: {
-        'X-Token': getToken()
-      },
+      categories: [],
       form: {},
       rules: {
         categoryId: [{
@@ -116,15 +129,17 @@ export default {
           message: '请输入标题',
           trigger: 'blur'
         }]
-      }
+      },
+      picturePreviewDialogVisible: false,
+      picturePreviewDialogImageUrl: ''
     }
   },
   created() {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
-      getArticle(id).then(response => {
-        this.form = response
-        this.coverPicturePreview = response.coverPicture
+      getArticle(id).then(data => {
+        this.form = data
+        this.coverPicturePreview = data.coverPicture
       })
     } else {
       this.form = Object.assign({}, defaultForm)
@@ -135,8 +150,8 @@ export default {
     // https://github.com/PanJiaChen/vue-element-admin/issues/1221
     this.tempRoute = Object.assign({}, this.$route)
     // 获取分类列表
-    fetchCategories().then(response => {
-      this.categories = response
+    fetchCategories().then(data => {
+      this.categories = data
     })
   },
   mounted() {
@@ -187,7 +202,36 @@ export default {
         this.form.coverPicture = data.location
       })
       return false
+    },
+    removeCoverPicture() {
+      this.coverPicturePreview = ''
+      this.form.coverPicture = ''
+    },
+
+    beforePictureUpload(file) {
+      const formData = new FormData()
+      formData.append('file', file)
+      uploadImage(formData).then((data) => {
+        if (!this.form.pictures) {
+          this.form.pictures = []
+        }
+        this.form.pictures.push({ url: data.location })
+      })
+      return false
+    },
+    handlePictureCardPreview(file) {
+      this.picturePreviewDialogImageUrl = file.url
+      this.picturePreviewDialogVisible = true
+    },
+    handlePictureCardRemove(file, fileList) {
+      this.form.pictures = fileList
+    },
+    handleExceed(files, fileList) {
+      MessageBox.alert('最多只能上传5长图片！', '', {
+        type: 'warning'
+      })
     }
+
   }
 }
 </script>
@@ -250,14 +294,26 @@ export default {
 .image-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
+  width: 146px;
+  height: 146px;
+  line-height: 146px;
   text-align: center;
 }
-.image {
-  max-width: 200px;
-  max-height: 200px;
+.image-tools {
+  color: #8c939d;
+  width: 28px;
+  font-size: 28px;
   display: block;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+.image-tools:hover {
+  color: #409eff;
+}
+.image {
+  width: 148px;
+  height: 148px;
+  margin-bottom: -10px;
 }
 </style>

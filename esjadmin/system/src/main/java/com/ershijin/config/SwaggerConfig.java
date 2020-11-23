@@ -1,6 +1,7 @@
 package com.ershijin.config;
 
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.ershijin.component.Config;
 import com.fasterxml.classmate.TypeResolver;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,12 +12,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.data.domain.Pageable;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -25,6 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +43,15 @@ public class SwaggerConfig {
 
     @Bean
     public Docket buildDocket() {
+        ParameterBuilder ticketPar = new ParameterBuilder();
+        List<Parameter> pars = new ArrayList<>();
+        ticketPar.name(Config.AUTHORIZATION_NAME).description("token")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(true)
+                .build();
+        pars.add(ticketPar.build());
+
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(buildApiInfo())
                 .directModelSubstitute(com.ershijin.model.Page.class, Page.class)
@@ -49,7 +63,8 @@ public class SwaggerConfig {
                 // 要扫描的API（Controller）基础包
                 .apis(RequestHandlerSelectors.basePackage("com.ershijin.controller"))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .globalOperationParameters(pars);
     }
 
     private ApiInfo buildApiInfo() {

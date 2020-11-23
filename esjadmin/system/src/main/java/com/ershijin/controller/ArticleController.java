@@ -34,15 +34,15 @@ public class ArticleController {
     @PostMapping
     @Log("添加文章")
     @PreAuthorize("hasAuthority('articles:save')")
-    public void save(@RequestBody Article article) {
-        articleService.save(article);
+    public void save(@RequestBody ArticleDTO articleDTO) {
+        articleService.save(articleDTO);
     }
 
     @PutMapping("/{id}")
     @Log("更新文章")
     @PreAuthorize("hasAuthority('articles:update')")
-    public void update(@PathVariable long id, @RequestBody Article article) {
-        articleService.update(article);
+    public void update(@PathVariable long id, @RequestBody ArticleDTO articleDTO) {
+        articleService.update(articleDTO);
     }
 
     @DeleteMapping("/{id}")
