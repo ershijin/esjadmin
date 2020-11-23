@@ -71,6 +71,8 @@ export default {
       font-size: 14px;
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       vertical-align: middle;
+      width: 130px;
+      text-align: left;
     }
   }
 
