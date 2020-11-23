@@ -11,6 +11,6 @@ public class ArticleCategory extends BaseEntity implements Serializable {
 
     private String name;
 
-    private Integer priority;
+    private Integer sortId;
 
 }

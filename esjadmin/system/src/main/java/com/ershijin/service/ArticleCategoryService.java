@@ -15,7 +15,7 @@ public class ArticleCategoryService {
 
     public List<ArticleCategory> list() {
         QueryWrapper<ArticleCategory> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByAsc("priority");
+        queryWrapper.orderByAsc("sort_id");
         return articleCategoryMapper.selectList(queryWrapper);
     }
 

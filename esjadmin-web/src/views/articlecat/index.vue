@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column label="排序" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.priority }}</span>
+          <span>{{ scope.row.sortId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -55,8 +55,8 @@
         <el-form-item label="名称" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
-        <el-form-item label="排序" prop="priority">
-          <el-input-number v-model="temp.priority" label="描述文字" />
+        <el-form-item label="排序" prop="sortId">
+          <el-input-number v-model="temp.sortId" label="描述文字" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -77,7 +77,7 @@ export default {
       listLoading: true,
       temp: {
         id: undefined,
-        priority: 0,
+        sortId: 0,
         name: ''
       },
       dialogFormVisible: false,
@@ -87,7 +87,7 @@ export default {
         create: '添加'
       },
       rules: {
-        priority: [
+        sortId: [
           {
             type: 'number',
             required: true,
@@ -119,7 +119,7 @@ export default {
     resetTemp() {
       this.temp = {
         id: undefined,
-        priority: 0,
+        sortId: 0,
         title: ''
       }
     },

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2020-11-23 14:53:13
+-- Generation Time: 2020-11-23 15:03:03
 -- 服务器版本： 5.7.17-log
 -- PHP Version: 7.3.11
 
@@ -76,7 +76,7 @@ INSERT INTO `article` (`id`, `title`, `category_id`, `cover_picture`, `link`, `s
 (31, '正式添加一篇文章', 1, 'http://localhost:8081/upload/images/2020/11/22/18493244884.png', 'http://www.baidu.com', '呢张的摘要不嫩，呢张的摘要不嫩，呢张的摘要不嫩，呢张的摘要不嫩，呢张的摘要不嫩。。。。。。', '<p><img src=\"http://localhost:8081/upload/images/2020/11/22/18493244884.png\" alt=\"\" width=\"425\" height=\"425\" /></p>\n<h1>这个详情怎么样？？？</h1>', 1, '2020-11-23 11:14:47', '2020-11-23 11:33:32'),
 (32, '第二个', 4, 'http://localhost:8081/upload/images/2020/11/22/18500334384.png', '', '', '', 1, '2020-11-23 11:15:21', '2020-11-23 11:17:26'),
 (33, 'e111111', 1, '', '', '', '', 1, '2020-11-23 11:18:31', NULL),
-(34, 'e111111', 1, 'http://localhost:8081/upload/images/2020/11/22/18493244884.png', '', '', '', 1, '2020-11-23 11:27:51', '2020-11-23 12:01:45'),
+(34, 'e111111', 1, 'http://localhost:8081/upload/images/2020/11/22/18493244884.png', '', '', '', 1, '2020-11-23 11:27:51', '2020-11-23 14:57:05'),
 (35, 'e111111', 1, '', '', '', '', 1, '2020-11-23 11:29:20', NULL);
 
 -- --------------------------------------------------------
@@ -88,7 +88,7 @@ INSERT INTO `article` (`id`, `title`, `category_id`, `cover_picture`, `link`, `s
 CREATE TABLE `article_category` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL DEFAULT '',
-  `priority` int(11) DEFAULT '0',
+  `sort_id` int(11) DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类';
@@ -97,8 +97,8 @@ CREATE TABLE `article_category` (
 -- 转存表中的数据 `article_category`
 --
 
-INSERT INTO `article_category` (`id`, `name`, `priority`, `create_time`, `update_time`) VALUES
-(1, '文章分类1', 0, '2019-07-04 11:47:51', NULL),
+INSERT INTO `article_category` (`id`, `name`, `sort_id`, `create_time`, `update_time`) VALUES
+(1, '文章分类1', -3, '2019-07-04 11:47:51', '2020-11-23 15:02:04'),
 (3, '帮助中心', 2, '2019-07-04 11:48:16', '2019-07-07 15:41:47'),
 (4, '文章分类2', 0, '2020-09-08 16:13:41', '2020-09-08 16:13:52');
 
@@ -133,10 +133,11 @@ INSERT INTO `article_picture` (`id`, `article_id`, `url`, `sort_id`, `create_tim
 (32, 35, 'http://localhost:8081/upload/images/2020/11/22/18495128190.png', 1, '2020-11-23 11:29:20', NULL),
 (45, 31, 'http://localhost:8081/upload/images/2020/11/22/18495128190.png', 0, '2020-11-23 11:33:32', NULL),
 (46, 31, 'http://localhost:8081/upload/images/2020/11/22/18493244884.png', 1, '2020-11-23 11:33:32', NULL),
-(47, 34, 'http://localhost:8081/upload/images/2020/11/23/11151210580.png', 0, '2020-11-23 12:01:45', NULL),
-(48, 34, 'http://localhost:8081/upload/images/2020/11/22/18495128190.png', 1, '2020-11-23 12:01:45', NULL),
-(49, 34, 'http://localhost:8081/upload/images/2020/11/23/12013899024.jpeg', 2, '2020-11-23 12:01:45', NULL),
-(50, 34, 'http://localhost:8081/upload/images/2020/11/23/11134890088.JPG', 3, '2020-11-23 12:01:45', NULL);
+(51, 34, 'http://localhost:8081/upload/images/2020/11/23/11151210580.png', 0, '2020-11-23 14:57:05', NULL),
+(52, 34, 'http://localhost:8081/upload/images/2020/11/22/18495128190.png', 1, '2020-11-23 14:57:05', NULL),
+(53, 34, 'http://localhost:8081/upload/images/2020/11/23/11134890088.JPG', 2, '2020-11-23 14:57:05', NULL),
+(54, 34, 'http://localhost:8081/upload/images/2020/11/22/18493244884.png', 3, '2020-11-23 14:57:05', NULL),
+(55, 34, 'http://localhost:8081/upload/images/2020/11/22/18493244884.png', 4, '2020-11-23 14:57:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -369,6 +370,14 @@ CREATE TABLE `log` (
   `exception_detail` text,
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统日志' ROW_FORMAT=COMPACT;
+
+--
+-- 转存表中的数据 `log`
+--
+
+INSERT INTO `log` (`id`, `description`, `type`, `method`, `params`, `ip`, `time`, `username`, `address`, `browser`, `exception_detail`, `create_time`) VALUES
+(1, '更新文章', 'INFO', 'com.ershijin.controller.ArticleController.update()', '{34 ArticleDTO(id=34, createTime=2020-11-23T11:27:51, title=e111111, categoryId=1, coverPicture=http://localhost:8081/upload/images/2020/11/22/18493244884.png, link=, summary=, detail=, pictures=[ArticlePictureDTO(id=47, articleId=34, url=http://localhost:8081/upload/images/2020/11/23/11151210580.png, sortId=0), ArticlePictureDTO(id=48, articleId=34, url=http://localhost:8081/upload/images/2020/11/22/18495128190.png, sortId=1), ArticlePictureDTO(id=50, articleId=34, url=http://localhost:8081/upload/images/2020/11/23/11134890088.JPG, sortId=2), ArticlePictureDTO(id=null, articleId=34, url=http://localhost:8081/upload/images/2020/11/22/18493244884.png, sortId=3), ArticlePictureDTO(id=null, articleId=34, url=http://localhost:8081/upload/images/2020/11/22/18493244884.png, sortId=4)]) }', '0:0:0:0:0:0:0:1', 12, 'admin', '内网IP', 'Chrome 8', NULL, '2020-11-23 14:57:05'),
+(2, '文章列表', 'INFO', 'com.ershijin.controller.ArticleController.list()', '{ArticleQuery(keyword=null, categoryId=null) com.ershijin.model.Page@70180f4b }', '0:0:0:0:0:0:0:1', 5, 'admin', '内网IP', 'Chrome 8', NULL, '2020-11-23 14:57:34');
 
 -- --------------------------------------------------------
 
@@ -1557,12 +1566,12 @@ ALTER TABLE `article`
 -- 使用表AUTO_INCREMENT `article_category`
 --
 ALTER TABLE `article_category`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- 使用表AUTO_INCREMENT `article_picture`
 --
 ALTER TABLE `article_picture`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 --
 -- 使用表AUTO_INCREMENT `code_column_config`
 --
@@ -1592,7 +1601,7 @@ ALTER TABLE `file`
 -- 使用表AUTO_INCREMENT `log`
 --
 ALTER TABLE `log`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID';
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=3;
 --
 -- 使用表AUTO_INCREMENT `menu`
 --
@@ -1781,7 +1790,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 --
 
 INSERT INTO `qrtz_scheduler_state` (`SCHED_NAME`, `INSTANCE_NAME`, `LAST_CHECKIN_TIME`, `CHECKIN_INTERVAL`) VALUES
-('MyScheduler', 'MacBook-Pro-2.lan1606102152238', 1606114388110, 10000);
+('MyScheduler', 'MacBook-Pro-2.lan1606114844489', 1606114976341, 10000);
 
 -- --------------------------------------------------------
 
