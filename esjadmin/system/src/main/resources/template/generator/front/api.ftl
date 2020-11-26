@@ -18,7 +18,7 @@ export function update(data) {
 
 export function remove(ids) {
   return request({
-    url: '${changeClassName}/',
+    url: '${changeClassName}',
     method: 'delete',
     data: ids
   })

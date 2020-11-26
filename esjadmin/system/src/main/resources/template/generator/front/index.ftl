@@ -141,7 +141,7 @@ export default {
   dicts: [<#if hasDict??><#list dicts as dict>'${dict}'<#if dict_has_next>, </#if></#list></#if>],
   </#if>
   cruds() {
-    return CRUD({ title: '${apiAlias}', url: '${changeClassName}', sort: '', crudMethod: { ...crud${className}}<#if pkColName != 'id'>, idField:'${pkColName}'</#if> })
+    return CRUD({ title: '${apiAlias}', url: '${changeClassName}', sort: '', crudMethod: { ...crud${className} }<#if pkChangeColName != 'id'>, idField: '${pkChangeColName}'</#if> })
   },
   data() {
     return {
