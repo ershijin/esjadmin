@@ -516,7 +516,10 @@ function CRUD(options) {
           return
         }
         const lazyTreeNodeMap = table.store.states.lazyTreeNodeMap
-        const children = lazyTreeNodeMap[row.id]
+        const children = lazyTreeNodeMap[row[this.idField]]
+        if (!children) {
+          return
+        }
         row.children = children
         children.forEach(ele => {
           const id = crud.getDataId(ele)
