@@ -50,7 +50,6 @@ public class DictService {
                     .or()
                     .like("description", query.getKeyword());
         }
-        Wrappers.lambdaQuery()
         return dictMapper.selectList(queryWrapper);
     }
 
