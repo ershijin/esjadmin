@@ -59,11 +59,13 @@
         plain
         type="info"
         icon="el-icon-search"
+        class="filter-item"
         @click="toggleSearch()"
       />
       <el-button
         size="mini"
         icon="el-icon-refresh"
+        class="filter-item"
         @click="crud.refresh()"
       />
       <el-popover
@@ -74,6 +76,7 @@
         <el-button
           slot="reference"
           size="mini"
+          class="filter-item"
           icon="el-icon-s-grid"
         >
           <i

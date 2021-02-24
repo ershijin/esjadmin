@@ -1,8 +1,10 @@
 package com.ershijin.service;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ershijin.dao.DictMapper;
 import com.ershijin.model.PageResult;
@@ -48,6 +50,7 @@ public class DictService {
                     .or()
                     .like("description", query.getKeyword());
         }
+        Wrappers.lambdaQuery()
         return dictMapper.selectList(queryWrapper);
     }
 
