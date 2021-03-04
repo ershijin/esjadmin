@@ -21,6 +21,31 @@ spring:
       max-file-size: 100MB
       max-request-size: 1000MB
 
+quartz:
+  org:
+    quartz:
+      dataSource:
+        quartzDS:
+          URL: jdbc:mysql://127.0.0.1:3306/esjadmin_quartz?useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+          connectionProvider:
+            class: com.ershijin.quartz.config.DruidConnectionProvider
+          driver: com.mysql.cj.jdbc.Driver
+          maxConnections: 5
+          password: ''
+          user: root
+      jobStore:
+        class: org.quartz.impl.jdbcjobstore.JobStoreTX
+        clusterCheckinInterval: 10000
+        dataSource: quartzDS
+        driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+        isClustered: true
+        tablePrefix: qrtz_
+      scheduler:
+        instanceId: AUTO
+        instanceName: MyScheduler
+      threadPool:
+        threadCount: 10
+
 # mybatis-plus配置
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
